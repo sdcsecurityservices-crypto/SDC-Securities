@@ -34,3 +34,9 @@ Tests use a local auth fixture, not live Supabase Auth. Storage policies require
 Foundation code is prepared locally. Production Supabase migration, owner bootstrap and authenticated acceptance remain blocked by project access. GitHub push remains blocked while kishorraj-rgb has pull-only repository access. Railway release status is recorded separately after deployment verification. No later Phase 2 module should start until Foundation is demonstrated and accepted.
 
 Local storage policy fixture testing also passed: unscoped users cannot read/write objects, and an operator can clean up an upload whose metadata insertion failed. Cross-origin login submission returns 403. See tests/foundation/README.md for reproducible database checks.
+
+## Railway release
+
+Release `8a37011e-d8a2-4a8f-a228-f4c3bb90b8c1` reached SUCCESS in Singapore on 21 September 2026. Public URL: https://sdc-command-production-ec49.up.railway.app . Project: a8de7007-fb58-4fa1-8861-2d3ca230061e; production environment: c41618c9-6833-4f73-8bbc-8cdad07398a2; service: b7adb2bc-8882-487a-8123-3715c791b092. The release contains foundation code at commit 7d028e6. Subsequent commits only add verification/release documentation.
+
+This release deliberately returns NOT_CONFIGURED for workspace APIs until the Supabase publishable key and database migrations are in place. Deployment success is not Foundation operational acceptance.
