@@ -31,7 +31,7 @@ Tests use a local auth fixture, not live Supabase Auth. Storage policies require
 
 ## Release status
 
-Foundation code is prepared locally. Production Supabase migration, owner bootstrap and authenticated acceptance remain blocked by project access. GitHub push remains blocked while kishorraj-rgb has pull-only repository access. Railway release status is recorded separately after deployment verification. No later Phase 2 module should start until Foundation is demonstrated and accepted.
+Foundation is deployed and connected to the specified Supabase project. GitHub main is pushed and connected as the Railway deployment source. The SDC administrator invitation has been prepared locally for sdc.securityservices@gmail.com; the account holder must choose a password through the private activation link. No later Phase 2 module should start until Foundation is demonstrated and accepted.
 
 Local storage policy fixture testing also passed: unscoped users cannot read/write objects, and an operator can clean up an upload whose metadata insertion failed. Cross-origin login submission returns 403. See tests/foundation/README.md for reproducible database checks.
 
@@ -40,3 +40,19 @@ Local storage policy fixture testing also passed: unscoped users cannot read/wri
 Release `8a37011e-d8a2-4a8f-a228-f4c3bb90b8c1` reached SUCCESS in Singapore on 21 September 2026. Public URL: https://sdc-command-production-ec49.up.railway.app . Project: a8de7007-fb58-4fa1-8861-2d3ca230061e; production environment: c41618c9-6833-4f73-8bbc-8cdad07398a2; service: b7adb2bc-8882-487a-8123-3715c791b092. The release contains foundation code at commit 7d028e6. Subsequent commits only add verification/release documentation.
 
 This release deliberately returns NOT_CONFIGURED for workspace APIs until the Supabase publishable key and database migrations are in place. Deployment success is not Foundation operational acceptance.
+
+## Connected release and live acceptance — 21 September 2026
+
+Railway deployment `2cb48907-1dc7-4096-abe2-45bbc8f3fb04` reached SUCCESS from GitHub commit `33907c21d284561ef64b2937edb64902b73e28bc`. Three Supabase migrations are applied; all 13 public foundation tables have RLS. The private document bucket is configured. Seeded 3 fictional clients, 8 sites, 40 posts, 4 shift templates and 120 staffing requirements. `supabase/seed.sql` supports data seeding through project-scoped MCP without database passwords.
+
+Live acceptance passed: real Supabase password login, HTTP-only session cookies, logout, membership loading, administrator/client/employee data isolation, employee write rejection, joined site queries, client creation/update, stale-write rejection, audit entries, private PDF upload and signed download. Single-use invitation activation succeeded and replay was rejected. The authenticated workspace rendered in a real browser without recorded JavaScript errors. Temporary test users, memberships, client and document were removed; their audit history remains.
+
+The administrator invitation is in ignored local `outputs/SDC-admin-activation.html` with owner-only filesystem permissions. Its token is in a URL fragment and is removed from browser history on page load. It is never committed, emailed automatically or stored in Railway variables. Only the Supabase publishable key is configured in the application runtime. Server administration credentials were used in memory for setup/tests.
+
+### Remaining Auth hardening before real personnel rollout
+
+Supabase's security advisor reports leaked-password protection disabled. Its authenticated SECURITY DEFINER warning for `audit_document_access` is intentional: this narrow function verifies auth.uid and document visibility before recording a download-link event; ordinary clients cannot insert arbitrary audit records. Supabase's bootstrap event-trigger execute grants were restricted in migration 3.
+
+The OAuth grant can administer database and keys but the Auth-configuration API rejects requests for lack of `auth_config_read`; therefore public-signup and project-level password policy settings were not changed or verified. Application activation requires at least 12 characters, exposes no self-signup form and grants no workspace membership to new unaffiliated Auth users. Configure invitation-only signup, the production Auth site URL and leaked-password protection in Supabase before live staff onboarding. See https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection .
+
+Earlier sections recording pending integration describe the initial release; this connected-release section supersedes those status notes.
