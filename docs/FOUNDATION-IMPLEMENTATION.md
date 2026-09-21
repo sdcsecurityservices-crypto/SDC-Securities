@@ -32,3 +32,5 @@ Tests use a local auth fixture, not live Supabase Auth. Storage policies require
 ## Release status
 
 Foundation code is prepared locally. Production Supabase migration, owner bootstrap and authenticated acceptance remain blocked by project access. GitHub push remains blocked while kishorraj-rgb has pull-only repository access. Railway release status is recorded separately after deployment verification. No later Phase 2 module should start until Foundation is demonstrated and accepted.
+
+Local storage policy fixture testing also passed: unscoped users cannot read/write objects, and an operator can clean up an upload whose metadata insertion failed. Cross-origin login submission returns 403. See tests/foundation/README.md for reproducible database checks.
