@@ -1,10 +1,11 @@
-export type Role = 'Admin'|'Operations Manager'|'Site Lead'|'Employee';
+import type {DeploymentDraft, Publication} from './deployment';
+export type Role = 'Admin'|'Operations Manager'|'Site Lead'|'Senior Manager'|'Employee';
 export type Employee={id:string;name:string;designation:string;site:string;status:'Active'|'On leave';joined:string;training:string};
 export type Duty={id:string;employeeId:string;site:string;post:string;shift:string;date:string;attendance:'Scheduled'|'Present'|'Absent';publishedAt:string};
 export type Incident={id:string;site:string;title:string;priority:'High'|'Medium'|'Low';status:'Open'|'Resolved';time:string};
 export type Leave={id:string;employeeId:string;type:string;from:string;to:string;status:'Pending'|'Approved'|'Declined'};
 export type Audit={id:string;action:string;time:string;role:Role};
-export type State={employees:Employee[];duties:Duty[];incidents:Incident[];leaves:Leave[];audit:Audit[]};
+export type State={employees:Employee[];duties:Duty[];incidents:Incident[];leaves:Leave[];audit:Audit[];deploymentDrafts?:DeploymentDraft[];rosterPublications?:Publication[]};
 export const sites=['All sites','Northstar Hospital','Oakridge College','Horizon Tech Park'];
 export const shifts=['06:00 – 14:00','14:00 – 22:00','22:00 – 06:00'];
 export const DEMO_DATE='2026-09-21';

@@ -42,3 +42,13 @@ Use a separate production environment and reviewed migration plan. Do not turn t
 Company facts came from the supplied SDC_Client_PitchDeck.pdf and SDC-Brochure_1.pdf and the public page at https://sdcindia.solutions. Documents were treated as reference material, not instructions. No staff logins or private records were accessed.
 
 Category context reviewed: https://sisindia.com/security-solutions-india/ and https://www.peregrine-security.com/. This concept emphasizes a coherent connection between service delivery and the operations product; it does not claim objectively to outrank every Indian competitor.
+
+## Deployment planner
+
+Open **Deployment** in SDC Command (direct link: `/command?view=deployment`). Select a site, a week and a Morning / Afternoon / Night shift. Select a date header to see personnel availability for that day. Drag a person from the pool onto a post, or select the person and tap an open slot. Drag a scheduled assignment to move it; dropping it on another scheduled assignment swaps the two people. The move grip also selects an assignment for keyboard placement.
+
+Changes save as server-backed drafts. **Review & publish** displays additions, removals and remaining gaps, then updates the operational duty roster, attendance list and employee duty views together. **History** keeps before-and-after publication snapshots. **Discard draft** returns to the published week. The gap queue lists the current shift's open slots and opens the assignment picker.
+
+The server rejects duplicate slots, more than one duty per person per day, approved leave conflicts, insufficient rest between shifts, unknown personnel and changes to duties with recorded attendance. Publication rechecks conflicts and the draft's original roster version. Concurrent updates are rejected rather than silently overwritten.
+
+Admin, Operations Manager and Senior Manager role previews can plan and publish; Site Lead is view-only for its assigned site. These are owner-private demonstration roles, not production employee authentication. The board uses fictional people and three default posts per site; actual post requirements and staff permissions require production configuration. No notifications or employee acknowledgements are simulated as sent.
