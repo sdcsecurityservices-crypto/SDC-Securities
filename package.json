@@ -8,12 +8,13 @@
   "scripts": {
     "install:ci": "node scripts/install-ci.mjs",
     "dev": "vinext dev --port 5173",
-    "build": "vinext build",
+    "build": "vinext build && node scripts/complete-standalone-dependencies.mjs",
     "start": "node dist/standalone/server.js",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
     "test:foundation": "node tests/foundation/database.mjs",
-    "seed:foundation": "node scripts/seed-foundation.mjs"
+    "seed:foundation": "node scripts/seed-foundation.mjs",
+    "test:employees": "node tests/employees/database.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -27,11 +28,15 @@
     "date-fns": "^4.4.0",
     "drizzle-orm": "0.45.2",
     "embla-carousel-react": "^8.6.0",
+    "exceljs": "4.4.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^1.31.0",
     "next": "16.3.4",
     "next-themes": "^0.4.6",
+    "pdf-lib": "1.17.1",
+    "pdfkit": "0.20.2",
     "postgres": "3.4.9",
+    "qrcode": "1.5.4",
     "radix-ui": "^1.6.7",
     "react": "19.2.6",
     "react-day-picker": "^10.0.1",
@@ -39,6 +44,7 @@
     "react-hook-form": "^7.85.0",
     "react-resizable-panels": "^4.12.2",
     "recharts": "^3.8.0",
+    "sharp": "0.35.4",
     "sonner": "^2.0.8",
     "tailwind-merge": "3.6.0",
     "vaul": "^1.1.2",
@@ -49,6 +55,8 @@
     "@cloudflare/workers-types": "4.20260515.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
+    "@types/pdfkit": "0.17.6",
+    "@types/qrcode": "1.5.6",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
@@ -68,6 +76,9 @@
   "overrides": {
     "miniflare": {
       "sharp": "0.35.4"
+    },
+    "exceljs": {
+      "uuid": "11.1.1"
     }
   }
 }
