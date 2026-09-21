@@ -1,6 +1,6 @@
 # SDC client demonstration
 
-Start on the public website. The positioning is veteran-led people supported by connected operational systems. The navy / mint direction and simplified wordmark are a proposed visual identity, not a claim that the existing company identity has already changed. The campus image is generated, illustrative photography; it is not an SDC location or employee.
+Start on the public website. The positioning is veteran-led people supported by connected operational systems. The website and portal use the user-supplied SDC eagle crest and its navy-and-yellow brand palette. The campus image is generated, illustrative photography; it is not an SDC location or employee.
 
 ## Five-minute walkthrough
 
