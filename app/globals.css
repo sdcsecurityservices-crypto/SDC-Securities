@@ -179,3 +179,29 @@
 @media(max-width:900px){.client-showcase-heading{align-items:flex-start;flex-direction:column}.client-showcase-footnote{align-items:flex-start;flex-direction:column;gap:10px}.client-showcase-footnote p{text-align:left}.client-showcase{padding-top:42px}.client-logo-group li{width:180px}.client-mark{padding:16px 10px;min-height:144px}.client-mark img{max-width:150px}.client-showcase.is-expanded .client-logo-group{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.client-showcase-actions{gap:8px;flex-wrap:wrap}.client-showcase-actions button{font-size:12px;padding:10px}.client-showcase.is-expanded .client-logo-wall{padding:0 16px}.client-showcase.is-expanded .client-logo-group{gap:10px}.client-showcase.is-expanded .client-mark img{max-width:128px}}
 @media(prefers-reduced-motion:reduce){.client-marquee-track{animation:none;transform:none;will-change:auto}.client-marquee{overflow-x:auto;mask-image:none}.client-logo-duplicate,.client-motion-toggle{display:none}.client-showcase-actions button{transition:none}.client-marquee{padding:0 5.2%}}
+
+/* Mentors and advisors: service credentials supplied separately from company remit. */
+.advisor-section{padding:76px 5.2% 42px;background:#0b2545;color:white}
+.advisor-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:50px;margin-bottom:36px}
+.advisor-eyebrow{font-size:12px;letter-spacing:2px;color:#ffdb56;font-weight:700;display:block;margin-bottom:20px}
+.advisor-intro h2{font-size:clamp(30px,3.2vw,46px);font-weight:550;line-height:1.25;letter-spacing:-1.4px}
+.advisor-intro h2 em{font-style:normal;color:#ffdb56}
+.advisor-intro>p{max-width:440px;color:#cfdaea;font-size:16px;line-height:1.85}
+.advisor-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.advisor-card{border:1px solid #3b5471;border-radius:12px;background:linear-gradient(135deg,#163657,#102d4c);padding:32px}
+.advisor-person{display:flex;align-items:center;gap:20px;padding-bottom:26px;border-bottom:1px solid #ffffff25}
+.advisor-monogram{width:78px;height:88px;display:grid;place-items:center;flex-shrink:0;border:1px solid #d0ac53;background:#203c55;color:#ffe293;border-radius:8px;font-size:30px;letter-spacing:1px;font-family:'Manrope',sans-serif}
+.advisor-person h3{font-size:26px;font-weight:650;letter-spacing:-.5px;margin-bottom:9px}
+.advisor-person p{font-size:14px;color:#e3eaf4;line-height:1.6}
+.advisor-person>div>span{display:block;margin-top:6px;font-size:13px;color:#bfcfe2}
+.advisor-remit{padding-top:27px}
+.advisor-remit>span{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:1.5px;font-weight:700;color:#ffdb56}
+.advisor-remit h4{font-size:22px;line-height:1.4;font-weight:600;margin:16px 0 12px}
+.advisor-remit p{font-size:15px;line-height:1.85;color:#d2dfed;max-width:520px}
+.advisor-card ul{padding:21px 0 0;list-style:none;margin:22px 0 0;border-top:1px solid #ffffff25;display:flex;flex-direction:column;gap:14px}
+.advisor-card li{display:flex;align-items:center;gap:11px;font-size:14px;line-height:1.6;color:#edf2f9}
+.advisor-card li svg{flex-shrink:0;color:#ffdb56}
+.advisor-context{display:flex;align-items:flex-start;gap:12px;margin-top:28px;color:#bdcee1;font-size:13px;line-height:1.8;max-width:940px}
+.advisor-context svg{flex-shrink:0;margin-top:3px;color:#ffdb56}
+@media(max-width:1050px){.site-header nav{gap:18px;font-size:13px}.advisor-person{align-items:flex-start;gap:15px}.advisor-person h3{font-size:22px}.advisor-card{padding:25px}.advisor-monogram{width:62px;height:72px;font-size:25px}}
+@media(max-width:760px){.advisor-section{padding:48px 6% 30px}.advisor-intro{flex-direction:column;align-items:flex-start;gap:22px}.advisor-intro>p{font-size:15px}.advisor-grid{grid-template-columns:1fr;gap:20px}.advisor-card{padding:23px}.advisor-person h3{font-size:23px}.advisor-remit h4{font-size:21px}.advisor-intro h2{letter-spacing:-.8px}.advisor-person{flex-wrap:wrap}}
