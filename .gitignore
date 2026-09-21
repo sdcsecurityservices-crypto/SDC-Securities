@@ -45,3 +45,7 @@ next-env.d.ts
 /outputs/
 /work/
 *.tsbuildinfo
+
+# Client source documents and local Supabase state
+/assets/
+/supabase/.temp/

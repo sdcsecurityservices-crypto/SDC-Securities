@@ -36,6 +36,7 @@ const localBindingConfig = {
 };
 
 export default defineConfig(async () => {
+  if(process.env.SDC_RUNTIME!=="sites")return {plugins:[vinext()],resolve:{alias:{"cloudflare:workers":new URL("./lib/no-cloudflare.ts",import.meta.url).pathname}},server:{host:"127.0.0.1"}};
   // Use Miniflare's local Request.cf placeholder unless fetching is requested.
   process.env.CLOUDFLARE_CF_FETCH_ENABLED ??= "false";
   process.env.WRANGLER_SEND_METRICS ??= "false";
