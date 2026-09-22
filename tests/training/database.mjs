@@ -1,0 +1,38 @@
+import assert from 'node:assert/strict';import postgres from 'postgres';import {randomUUID} from 'node:crypto';import {seedFoundation} from '../../scripts/seed-foundation.mjs';
+const url=process.env.SDC_TEST_DATABASE_URL;if(!url||!['127.0.0.1','localhost'].includes(new URL(url).hostname))throw Error('Disposable local database required');
+const sql=postgres(url,{max:5,onnotice:()=>{}}),ids=Object.fromEntries(['admin','trainer','guard','outsider','ops'].map(k=>[k,randomUUID()]));
+const as=(user,fn)=>sql.begin(async tx=>{await tx.unsafe('set local role authenticated');await tx`select set_config('request.jwt.claim.sub',${ids[user]},true)`;return fn(tx)});
+try{
+ for(const [name,id] of Object.entries(ids))await sql`insert into auth.users(id,email) values(${id},${name+'@test.invalid'})`;
+ const f=await seedFoundation(sql,{ownerId:ids.admin,code:'TRAIN-'+randomUUID()}),t=f.tenant.id;
+ for(const [key,role] of [['trainer','trainer'],['guard','employee'],['ops','operations_manager']])await sql`insert into memberships(tenant_id,user_id,display_name,role) values(${t},${ids[key]},${key},${role})`;
+ const [trainer]=await sql`select id from memberships where user_id=${ids.trainer}`,[guard]=await sql`select id from memberships where user_id=${ids.guard}`;
+ const [e]=await as('admin',tx=>tx`insert into employees(tenant_id,employee_code,full_name,grade_id,category,joined_on,membership_id) values(${t},'TEST-1','Fictional trainee',${f.grades[0].id},'trainee',current_date,${guard.id}) returning *`);
+ const [c]=await as('trainer',tx=>tx`insert into training_courses(tenant_id,code,title,category,mandatory_for,duration_hours,question_count,reviewed) values(${t},'CORE','Core training','induction',array['trainee'],1,2,true) returning *`);
+ const [s]=await as('trainer',tx=>tx`insert into training_sessions(tenant_id,course_id,title,trainer_id,venue,starts_at,ends_at,capacity) values(${t},${c.id},'Test batch',${trainer.id},'Test venue',now()-interval '2 hours',now()-interval '1 hour',1) returning *`);
+ const [en]=await as('trainer',tx=>tx`insert into training_enrollments(tenant_id,employee_id,session_id) values(${t},${e.id},${s.id}) returning *`);
+ assert.equal((await as('guard',tx=>tx`select * from training_sessions where tenant_id=${t}`)).length,1);
+ assert.equal((await as('outsider',tx=>tx`select * from training_courses where tenant_id=${t}`)).length,0);
+ await assert.rejects(()=>as('guard',tx=>tx`select training_start(${t},${en.id})`),/attendance/);
+ await as('trainer',tx=>tx`update training_enrollments set attendance='present',hours_completed=1,practical_score=90,row_version=row_version+1 where tenant_id=${t} and id=${en.id}`);
+ await assert.rejects(()=>as('guard',tx=>tx`select training_start(${t},${en.id})`),/enough reviewed questions/);
+ const qs=await as('trainer',tx=>tx`insert into training_questions(tenant_id,course_id,prompt,options,correct_index) values(${t},${c.id},'Who receives a report?',${sql.json(['Supervisor','Nobody'])},0),(${t},${c.id},'When should you report?',${sql.json(['Immediately','Never'])},0) returning *`);
+ assert.equal((await as('guard',tx=>tx`select * from training_questions where tenant_id=${t}`)).length,0);
+ await assert.rejects(()=>as('guard',tx=>tx`select * from training_attempts`),/permission denied/);
+ const [elig]=await as('ops',tx=>tx`select training_eligibility(${t},${e.id}) as result`);assert.equal(elig.result.missing.length,1);
+ const [started]=await as('guard',tx=>tx`select training_start(${t},${en.id}) as result`),a=started.result;assert.equal(a.questions.length,2);assert(!JSON.stringify(a).includes('correct_index'));
+ const [again]=await as('guard',tx=>tx`select training_start(${t},${en.id}) as result`);assert.equal(again.result.id,a.id);
+ await assert.rejects(()=>as('outsider',tx=>tx`select training_submit(${t},${a.id},'{}')`),/Access denied/);
+ await assert.rejects(()=>as('guard',tx=>tx`select training_submit(${t},${a.id},'{}')`),/every question/);
+ const answers=Object.fromEntries(qs.map(q=>[q.id,0]));
+ const [pass]=await as('guard',tx=>tx`select training_submit(${t},${a.id},${sql.json(answers)}) as result`);assert.equal(pass.result.score,100);assert(pass.result.passed);
+ await as('guard',tx=>tx`select training_submit(${t},${a.id},${sql.json(answers)})`);
+ const awards=await as('guard',tx=>tx`select * from training_awards where tenant_id=${t}`);assert.equal(awards.length,1);
+ const [ready]=await as('ops',tx=>tx`select training_eligibility(${t},${e.id}) as result`);assert.equal(ready.result.missing.length,0);
+ await assert.rejects(()=>as('guard',tx=>tx`select training_revoke(${t},${awards[0].id},'Invalid certificate')`),/Access denied/);
+ await as('trainer',tx=>tx`select training_revoke(${t},${awards[0].id},'Record correction test')`);
+ const [verify]=await sql`select training_verify(${awards[0].token}) as result`;assert.equal(verify.result.status,'revoked');
+ const [notReady]=await as('ops',tx=>tx`select training_eligibility(${t},${e.id}) as result`);assert.equal(notReady.result.missing.length,1);
+ const logs=await as('ops',tx=>tx`select * from audit_events where tenant_id=${t}`);assert(!JSON.stringify(logs).includes('answer_key'));assert(!JSON.stringify(logs).includes('correct_index'));
+ console.log('PASS training: tenant isolation, trainer permissions, self-service, private question bank, readiness checks, attempt reuse, required answers, server scoring, idempotent issuance, revocation, masked audit.');
+}finally{await sql.end()}

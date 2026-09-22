@@ -1,0 +1,440 @@
+import { z } from "zod";
+const text = z.string().trim().max(8000),
+  uuid = z.string().uuid(),
+  date = z.string().date(),
+  time = z.string().datetime({ offset: true }),
+  severity = z.enum(["critical", "high", "medium", "low"]);
+export type Field = {
+  key: string;
+  label: string;
+  type?:
+    "text" | "textarea" | "number" | "date" | "datetime-local" | "json" | "ids";
+  options?: string[];
+  source?: string;
+  optional?: boolean;
+};
+export const fieldSchemas = {
+  surveys: z.object({
+    site_id: uuid,
+    title: text.min(3),
+    surveyed_on: date,
+    next_due: date,
+    template: text.min(2),
+    checklist: z.record(z.unknown()),
+    notes: text,
+    score: z.number().int().min(0).max(100),
+  }),
+  findings: z.object({
+    site_id: uuid,
+    survey_id: uuid.nullable(),
+    kind: z.enum(["strength", "weakness"]),
+    category: text.min(2),
+    title: text.min(3),
+    description: text.min(5),
+    location: text,
+    latitude: z.number().min(-90).max(90).nullable(),
+    longitude: z.number().min(-180).max(180).nullable(),
+    severity,
+    likelihood: z.number().int().min(1).max(5),
+    remedy: text.min(3),
+    effort: text,
+    responsible_party: z.enum(["client", "agency"]),
+    target_date: date,
+  }),
+  incidents: z.object({
+    site_id: uuid,
+    title: text.min(3),
+    category: text.min(2),
+    severity,
+    description: text.min(5),
+    occurred_at: time,
+    post_id: uuid.nullable(),
+    employee_id: uuid.nullable(),
+    sop_checklist: z.record(z.unknown()),
+    investigation: text,
+    resolution: text,
+  }),
+  sos: z.object({
+    site_id: uuid,
+    title: text.min(3),
+    description: text.min(3),
+    latitude: z.number().min(-90).max(90),
+    longitude: z.number().min(-180).max(180),
+  }),
+  handovers: z.object({
+    site_id: uuid,
+    title: text.min(3),
+    work_date: date,
+    shift_id: uuid,
+    notes: text.min(3),
+    keys_and_equipment: text.min(1),
+    pending_issues: text,
+    incoming_employee: uuid,
+  }),
+  gate_passes: z.object({
+    site_id: uuid,
+    title: text.min(3),
+    kind: z.enum(["visitor", "vehicle", "material"]),
+    purpose: text.min(3),
+    host_name: text.min(2),
+    vehicle_number: text,
+    items: text,
+    entered_at: time,
+  }),
+  audits: z.object({
+    site_id: uuid,
+    title: text.min(3),
+    audited_at: time,
+    employee_id: uuid.nullable(),
+    checklist: z.record(z.unknown()),
+    score: z.number().int().min(0).max(100),
+    notes: text.min(3),
+    followup_on: date.nullable(),
+  }),
+  checkpoints: z.object({
+    site_id: uuid,
+    title: text.min(3),
+    location: text.min(3),
+    latitude: z.number().min(-90).max(90),
+    longitude: z.number().min(-180).max(180),
+    radius_metres: z.number().int().min(10).max(1000),
+  }),
+  patrols: z.object({
+    site_id: uuid,
+    title: text.min(3),
+    employee_id: uuid,
+    starts_at: time,
+    ends_at: time,
+    checkpoint_ids: z.array(uuid).min(1).max(100),
+    notes: text,
+  }),
+};
+export type FieldResource = keyof typeof fieldSchemas;
+const f = (
+  key: string,
+  label: string,
+  type: Field["type"] = "text",
+  extra: Partial<Field> = {},
+): Field => ({ key, label, type, ...extra });
+const title = f("title", "Title"),
+  notes = f("notes", "Notes", "textarea"),
+  sev = f("severity", "Severity", "text", {
+    options: ["low", "medium", "high", "critical"],
+  }),
+  employee = f("employee_id", "Employee", "text", {
+    source: "people",
+    optional: true,
+  });
+export const fieldResources: Record<
+  FieldResource,
+  {
+    label: string;
+    description: string;
+    fields: Field[];
+    initial: Record<string, unknown>;
+  }
+> = {
+  surveys: {
+    label: "Site surveys",
+    description:
+      "Assess every layer of protection and schedule the next review.",
+    fields: [
+      title,
+      f("surveyed_on", "Survey date", "date"),
+      f("next_due", "Next review", "date"),
+      f("template", "Site type checklist", "text", {
+        options: [
+          "IT park",
+          "Residential",
+          "Hospital",
+          "Factory",
+          "Bank",
+          "School",
+          "Event",
+          "Warehouse",
+          "College",
+        ],
+      }),
+      f("checklist", "Survey checklist", "json"),
+      f("score", "Baseline security score", "number"),
+      notes,
+    ],
+    initial: {
+      title: "",
+      surveyed_on: "",
+      next_due: "",
+      template: "IT park",
+      checklist: {
+        perimeter: false,
+        lighting: false,
+        access_points: false,
+        cctv_coverage: false,
+        fire_systems: false,
+        alarms: false,
+        key_control: false,
+        visitors: false,
+        vehicles: false,
+        neighbourhood: false,
+        past_incidents: false,
+        emergency_exits: false,
+        power_backup: false,
+        communication: false,
+      },
+      score: 100,
+      notes: "",
+    },
+  },
+  findings: {
+    label: "Risk register",
+    description: "Identify risks, agree ownership and verify every resolution.",
+    fields: [
+      title,
+      f("survey_id", "Survey", "text", { source: "surveys", optional: true }),
+      f("kind", "Finding", "text", { options: ["weakness", "strength"] }),
+      f("category", "Category", "text", {
+        options: [
+          "Perimeter",
+          "Lighting",
+          "Access control",
+          "CCTV",
+          "Fire safety",
+          "Alarms",
+          "Key control",
+          "Visitors",
+          "Vehicles",
+          "Neighbourhood",
+          "Emergency exits",
+          "Power backup",
+          "Communication",
+        ],
+      }),
+      f("description", "Finding details", "textarea"),
+      f("location", "Location on site"),
+      f("latitude", "Latitude", "number", { optional: true }),
+      f("longitude", "Longitude", "number", { optional: true }),
+      sev,
+      f("likelihood", "Likelihood (1–5)", "number"),
+      f("remedy", "Recommended remedy", "textarea"),
+      f("effort", "Estimated effort"),
+      f("responsible_party", "Responsibility", "text", {
+        options: ["client", "agency"],
+      }),
+      f("target_date", "Target date", "date"),
+    ],
+    initial: {
+      title: "",
+      survey_id: null,
+      kind: "weakness",
+      category: "Perimeter",
+      description: "",
+      location: "",
+      latitude: null,
+      longitude: null,
+      severity: "medium",
+      likelihood: 3,
+      remedy: "",
+      effort: "",
+      responsible_party: "client",
+      target_date: "",
+    },
+  },
+  incidents: {
+    label: "Incidents",
+    description:
+      "Report, investigate and close incidents with a clear evidence trail.",
+    fields: [
+      title,
+      f("category", "Category", "text", {
+        options: [
+          "Access breach",
+          "Fire",
+          "Medical",
+          "Theft",
+          "Safety",
+          "Equipment",
+          "Other",
+        ],
+      }),
+      sev,
+      f("description", "What happened?", "textarea"),
+      f("occurred_at", "Occurred at (IST)", "datetime-local"),
+      f("post_id", "Post", "text", { source: "posts", optional: true }),
+      employee,
+      f("sop_checklist", "Response checklist", "json"),
+      f("investigation", "Investigation notes", "textarea"),
+      f("resolution", "Resolution notes", "textarea"),
+    ],
+    initial: {
+      title: "",
+      category: "Safety",
+      severity: "medium",
+      description: "",
+      occurred_at: "",
+      post_id: null,
+      employee_id: null,
+      sop_checklist: {
+        ensure_personal_safety: false,
+        alert_supervisor: false,
+        contact_emergency_services_if_needed: false,
+        preserve_evidence: false,
+      },
+      investigation: "",
+      resolution: "",
+    },
+  },
+  sos: {
+    label: "SOS response",
+    description:
+      "Emergency alerts with GPS, response acknowledgement and closure.",
+    fields: [
+      title,
+      f("description", "Emergency details", "textarea"),
+      f("latitude", "Latitude", "number"),
+      f("longitude", "Longitude", "number"),
+    ],
+    initial: {
+      title: "Emergency assistance requested",
+      description: "",
+      latitude: 0,
+      longitude: 0,
+    },
+  },
+  handovers: {
+    label: "Occurrence & handover",
+    description:
+      "Carry forward keys, equipment and unresolved issues between shifts.",
+    fields: [
+      title,
+      f("work_date", "Duty date", "date"),
+      f("shift_id", "Shift", "text", { source: "shift_templates" }),
+      f("notes", "Occurrence and handover notes", "textarea"),
+      f("keys_and_equipment", "Keys and equipment", "textarea"),
+      f("pending_issues", "Pending issues", "textarea"),
+      f("incoming_employee", "Incoming employee", "text", { source: "people" }),
+    ],
+    initial: {
+      title: "",
+      work_date: "",
+      shift_id: "",
+      notes: "",
+      keys_and_equipment: "",
+      pending_issues: "",
+      incoming_employee: "",
+    },
+  },
+  gate_passes: {
+    label: "Gate passes",
+    description:
+      "A shared register for visitors, vehicles and material movement.",
+    fields: [
+      f("title", "Visitor / driver / material name"),
+      f("kind", "Pass type", "text", {
+        options: ["visitor", "vehicle", "material"],
+      }),
+      f("purpose", "Purpose", "textarea"),
+      f("host_name", "Host / approving person"),
+      f("vehicle_number", "Vehicle number"),
+      f("items", "Material details", "textarea"),
+      f("entered_at", "Entry time (IST)", "datetime-local"),
+    ],
+    initial: {
+      title: "",
+      kind: "visitor",
+      purpose: "",
+      host_name: "",
+      vehicle_number: "",
+      items: "",
+      entered_at: "",
+    },
+  },
+  audits: {
+    label: "Supervisor audits",
+    description:
+      "Record site inspections, turnout checks and follow-up actions.",
+    fields: [
+      title,
+      f("audited_at", "Audit time (IST)", "datetime-local"),
+      employee,
+      f("checklist", "Audit checklist", "json"),
+      f("score", "Audit score (0–100)", "number"),
+      notes,
+      f("followup_on", "Follow-up date", "date", { optional: true }),
+    ],
+    initial: {
+      title: "",
+      audited_at: "",
+      employee_id: null,
+      checklist: {
+        uniform: false,
+        identity_card: false,
+        alertness: false,
+        registers: false,
+        equipment: false,
+        post_knowledge: false,
+      },
+      score: 0,
+      notes: "",
+      followup_on: null,
+    },
+  },
+  checkpoints: {
+    label: "Patrol checkpoints",
+    description:
+      "Register checkpoints and print QR markers for supervised rounds.",
+    fields: [
+      title,
+      f("location", "Location description"),
+      f("latitude", "Latitude", "number"),
+      f("longitude", "Longitude", "number"),
+      f("radius_metres", "Check-in radius (metres)", "number"),
+    ],
+    initial: {
+      title: "",
+      location: "",
+      latitude: 0,
+      longitude: 0,
+      radius_metres: 100,
+    },
+  },
+  patrols: {
+    label: "Patrol rounds",
+    description:
+      "Assign checkpoint rounds and verify visits with time and location.",
+    fields: [
+      title,
+      { ...employee, optional: false },
+      f("starts_at", "Starts (IST)", "datetime-local"),
+      f("ends_at", "Ends (IST)", "datetime-local"),
+      f("checkpoint_ids", "Checkpoints", "ids", { source: "checkpoints" }),
+      notes,
+    ],
+    initial: {
+      title: "",
+      employee_id: "",
+      starts_at: "",
+      ends_at: "",
+      checkpoint_ids: [],
+      notes: "",
+    },
+  },
+};
+export const transitions: Record<string, Record<string, string[]>> = {
+  findings: {
+    identified: ["flagged"],
+    flagged: ["acknowledged", "risk_accepted"],
+    acknowledged: ["in_progress", "resolved", "risk_accepted"],
+    in_progress: ["resolved", "risk_accepted"],
+    resolved: ["verified", "in_progress"],
+    verified: ["closed"],
+  },
+  incidents: {
+    reported: ["acknowledged"],
+    acknowledged: ["investigating"],
+    investigating: ["resolved"],
+    resolved: ["closed", "investigating"],
+  },
+  sos: { open: ["acknowledged"], acknowledged: ["resolved"] },
+  handovers: { open: ["acknowledged"] },
+  gate_passes: { inside: ["exited", "denied"] },
+  audits: { open: ["closed"] },
+};

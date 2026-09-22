@@ -1,0 +1,4 @@
+import {spawnSync} from 'node:child_process';import {readdirSync} from 'node:fs';
+const url=process.env.SDC_TEST_DATABASE_URL;if(!url||!['localhost','127.0.0.1'].includes(new URL(url).hostname))throw Error('Use a disposable localhost database only');
+if(process.argv.includes('--migrate'))for(const file of ['tests/foundation/local-auth.sql','tests/foundation/local-storage.sql',...readdirSync('supabase/migrations').filter(f=>f.endsWith('.sql')).sort().map(f=>'supabase/migrations/'+f)]){const r=spawnSync('psql',[url,'-v','ON_ERROR_STOP=1','-f',file],{encoding:'utf8'});if(r.status!==0){console.error(file,r.stderr);process.exit(1)}}
+for(const module of ['foundation','employees','training','roster','field','cctv','business']){const r=spawnSync(process.execPath,[`tests/${module}/database.mjs`],{stdio:'inherit',env:process.env});if(r.status!==0)process.exit(r.status)}

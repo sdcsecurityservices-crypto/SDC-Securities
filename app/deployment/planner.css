@@ -1,0 +1,127 @@
+.roster-dates {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.roster-dates button {
+  background: white;
+  border: 1px solid #b9cbdc;
+  border-radius: 5px;
+  padding: 12px;
+  color: #15395f;
+  cursor: pointer;
+}
+.roster-scroll {
+  overflow: auto;
+  border: 1px solid #becfe0;
+  border-radius: 10px;
+  background: white;
+}
+.roster-board {
+  border-collapse: collapse;
+  min-width: 100%;
+  font-size: 13px;
+}
+.roster-board thead th {
+  background: #e8eef6;
+  color: #3c5671;
+  padding: 18px 12px;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+.roster-board tbody th {
+  padding: 20px;
+  min-width: 180px;
+  max-width: 220px;
+  position: sticky;
+  left: 0;
+  background: #fff;
+  z-index: 1;
+  border-bottom: 1px solid #d4dfeb;
+  text-align: left;
+  box-shadow: 1px 0 #d4dfeb;
+}
+.roster-board tbody th strong {
+  font-size: 15px;
+  display: block;
+  color: #173759;
+}
+.roster-board tbody th small {
+  font-weight: 400;
+  display: block;
+  color: #5a6e84;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.roster-board td {
+  min-width: 180px;
+  vertical-align: top;
+  padding: 8px;
+  border: 1px solid #e3eaf2;
+}
+.roster-slot {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #b7cee5;
+  background: #eef5fc;
+  border-radius: 7px;
+  padding: 12px 10px;
+  min-height: 82px;
+  margin-bottom: 6px;
+  color: #153858;
+  cursor: pointer;
+}
+.roster-slot span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  font-size: 13px;
+}
+.roster-slot small {
+  display: block;
+  color: #46647e;
+  font-size: 11px;
+  line-height: 1.5;
+  margin-top: 6px;
+}
+.roster-slot.published {
+  background: #eaf6ed;
+  border-color: #a8cfb4;
+}
+.roster-slot.gap {
+  background: #fff8f0;
+  border: 1px dashed #cc9356;
+  color: #8b5520;
+}
+.roster-slot.gap small {
+  color: #875e34;
+}
+.roster-slot:focus,
+.roster-slot:hover {
+  outline: 2px solid #c59b00;
+  outline-offset: 1px;
+}
+.roster-no-duty {
+  display: block;
+  padding: 20px;
+  color: #748396;
+  font-size: 12px;
+}
+@media (max-width: 850px) {
+  .roster-board tbody th {
+    min-width: 125px;
+    max-width: 125px;
+    padding: 12px;
+  }
+  .roster-board tbody th strong {
+    font-size: 13px;
+  }
+  .roster-board td {
+    min-width: 160px;
+  }
+}

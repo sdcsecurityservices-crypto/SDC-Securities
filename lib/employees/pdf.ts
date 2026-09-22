@@ -9,6 +9,7 @@ export async function brandedPdf(
   title: string,
   sections: Array<{ heading: string; lines: string[] }>,
   password?: string,
+  verificationUrl?: string,
 ) {
   const doc = new PDFDocument({
     size: "A4",
@@ -58,6 +59,11 @@ export async function brandedPdf(
       doc.fontSize(10).fillColor("#334155").text(line, { lineGap: 5 });
     }
     doc.moveDown();
+  }
+  if (verificationUrl) {
+    if (doc.y > 650) doc.addPage();
+    const qr = await QRCode.toBuffer(verificationUrl, {width: 160, margin: 1});
+    doc.image(qr, 45, doc.y + 8, {width: 90});
   }
   const pages = doc.bufferedPageRange();
   for (let i = 0; i < pages.count; i++) {
