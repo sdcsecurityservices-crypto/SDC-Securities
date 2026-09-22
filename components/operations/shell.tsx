@@ -90,6 +90,7 @@ export function OperationsShell({
         <nav>
           {[
             { href: "/control", label: "Command centre", icon: ShieldCheck },
+            { href: "/client-portal", label: "Client portal", icon: Building2 },
             {
               href: "/analytics",
               label: "Service analytics",
@@ -140,6 +141,7 @@ export function OperationsShell({
                   "site_lead",
                   "client_user",
                 ].includes(role || "");
+              if (n.href === "/client-portal") return role === "client_user";
               if (n.href === "/workspace")
                 return role !== "employee" && role !== "trainer";
               return true;
