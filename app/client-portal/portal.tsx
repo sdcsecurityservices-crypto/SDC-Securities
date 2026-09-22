@@ -44,6 +44,14 @@ function Portal() {
       setLoading(false);
     }
   }, [member.tenant_id]);
+  const action = async (body: Row) => {
+    try {
+      await request("/api/client-portal", { tenant_id: member.tenant_id, ...body });
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  };
   useEffect(() => {
     void load();
   }, [load]);
@@ -143,6 +151,34 @@ function Portal() {
                 <span className="ops-badge warn">{f.severity}</span> {f.status}{" "}
                 · target {dateLabel(f.target_date)}
               </p>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {f.status === "flagged" && (
+                  <button
+                    className="ops-button secondary"
+                    onClick={() => {
+                      const signoff = window.prompt("Named client sign-off");
+                      const comment = window.prompt("Comment for the risk register");
+                      if (signoff && comment)
+                        void action({ action: "risk_transition", id: f.id, row_version: f.row_version, status: "acknowledged", signoff, comment });
+                    }}
+                  >
+                    Acknowledge
+                  </button>
+                )}
+                {!["risk_accepted", "closed", "verified"].includes(f.status) && (
+                  <button
+                    className="ops-button secondary"
+                    onClick={() => {
+                      const signoff = window.prompt("Named client sign-off");
+                      const comment = window.prompt("Why is this risk accepted?");
+                      if (signoff && comment)
+                        void action({ action: "risk_transition", id: f.id, row_version: f.row_version, status: "risk_accepted", signoff, comment });
+                    }}
+                  >
+                    Accept risk
+                  </button>
+                )}
+              </div>
             </article>
           ))}
           {!openRisks && <p>No open weaknesses require your attention.</p>}
@@ -200,8 +236,9 @@ function Portal() {
       <section className="ops-card" style={{ marginTop: 24 }}>
         <h2>Latest workspace notifications</h2>
         {(data?.notifications || []).slice(0, 5).map((n: Row) => (
-          <p key={n.id}>
-            <strong>{n.title}</strong> · {n.body}
+          <p key={n.id} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <span style={{ flex: 1 }}><strong>{n.title}</strong> · {n.body}</span>
+            {!n.read_at && <button className="ops-button secondary" onClick={() => void action({ action: "notification_read", id: n.id })}>Mark read</button>}
           </p>
         ))}
         {!data?.notifications?.length && <p>You are up to date.</p>}
