@@ -131,6 +131,14 @@ function Portal() {
                   ? `${Math.round((s.rostered / s.required) * 100)}% coverage`
                   : "No staffing requirement"}
               </span>
+              <div style={{ marginTop: 10 }}>
+                <a
+                  className="ops-button secondary"
+                  href={`/api/field-report?tenant=${member.tenant_id}&site=${s.id}&kind=findings`}
+                >
+                  Download site risk report
+                </a>
+              </div>
             </article>
           ))}
           {!analytics.length && (
@@ -223,6 +231,12 @@ function Portal() {
                 {i.month} · {money(i.total_paise)} · balance{" "}
                 {money(i.balance_paise)}
               </p>
+              <a
+                className="ops-button secondary"
+                href={`/api/business/invoice_pdf?tenant=${member.tenant_id}&id=${i.id}`}
+              >
+                Download invoice PDF
+              </a>
             </article>
           ))}
           {!data?.invoices?.length && (
