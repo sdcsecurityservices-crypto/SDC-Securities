@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { ChevronsUpDown, LogOut, Menu, X } from "lucide-react";
-import { navFor, navGroups, navItems, roleLabels } from "@/lib/navigation";
+import { homeFor, navFor, navGroups, navItems, roleLabels } from "@/lib/navigation";
 import "./shell.css";
 export type Membership = {
   id: string;
@@ -102,6 +102,12 @@ export function OperationsShell({
   const current = navItems.find(
     (n) => pathname === n.href || pathname.startsWith(n.href + "/"),
   );
+  // Screens hidden from a role send that person to their own home screen.
+  // Presentation only: every API still enforces the caller's role.
+  const denied = !!member && !!current && !nav.some((n) => n.href === current.href);
+  useEffect(() => {
+    if (denied) window.location.replace(homeFor(member?.role));
+  }, [denied, member?.role]);
   const chooseTenant = (id: string) => {
     setTenant(id);
     try {
@@ -253,7 +259,7 @@ export function OperationsShell({
             <div role="alert" className="ops-error">
               {error}
             </div>
-          ) : member ? (
+          ) : member && !denied ? (
             <Context.Provider value={member}>{children}</Context.Provider>
           ) : (
             <div className="ops-loading" role="status" aria-label="Loading your workspace">
