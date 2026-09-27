@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Users,
@@ -23,10 +22,8 @@ import {
   LockKeyhole,
   Activity,
   IdCard,
-  LogOut,
   ChevronRight,
   LoaderCircle,
-  Building2,
 } from "lucide-react";
 import {
   Dialog,
@@ -39,7 +36,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { fields, initialValues, type Field } from "@/lib/employees/fields";
 import { hrRoles, operationsRoles } from "@/lib/employees/validation";
-import { roleNames } from "@/lib/foundation/validation";
+import { OperationsShell, useWorkspace } from "@/components/operations/shell";
 // Field descriptors select heterogeneous, server-validated record values.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = Record<string, any>;
@@ -434,12 +431,20 @@ function RecordEditor({
     </Dialog>
   );
 }
-export default function Workforce() {
-  const [memberships, setMemberships] = useState<Row[]>([]),
-    [tenant, setTenant] = useState(""),
-    [ready, setReady] = useState(false),
-    [fatal, setFatal] = useState(""),
-    [rows, setRows] = useState<Row[]>([]),
+export default function PeopleAndWorkforce() {
+  return (
+    <OperationsShell
+      title="People & workforce"
+      subtitle="Every person. Every posting. One connected record."
+    >
+      <Workforce />
+    </OperationsShell>
+  );
+}
+function Workforce() {
+  const membership = useWorkspace() as Row,
+    tenant: string = membership.tenant_id;
+  const [rows, setRows] = useState<Row[]>([]),
     [total, setTotal] = useState(0),
     [next, setNext] = useState<string | null>(null),
     [loading, setLoading] = useState(false),
@@ -464,18 +469,8 @@ export default function Workforce() {
     [importing, setImporting] = useState(false),
     [payroll, setPayroll] = useState(false);
   const seq = useRef(0),
-    membership = memberships.find((m) => m.tenant_id === tenant),
-    role = membership?.role || "",
+    role: string = membership.role || "",
     hr = hrRoles.includes(role);
-  useEffect(() => {
-    api("/api/foundation/context")
-      .then((d) => {
-        setMemberships(d.memberships);
-        setTenant(d.memberships[0]?.tenant_id || "");
-        setReady(true);
-      })
-      .catch((e) => setFatal(e.message));
-  }, []);
   const load = useCallback(
     async (cursor?: string) => {
       if (!tenant) return;
@@ -541,141 +536,15 @@ export default function Workforce() {
       .catch(() => {});
     return () => abort.abort();
   }, [tenant, revision]);
-  if (fatal)
-    return (
-      <main className="foundation-state">
-        <ShieldCheck size={40} />
-        <h1>Connection unavailable</h1>
-        <p>{fatal}</p>
-        <button className="button brand-navy" onClick={() => location.reload()}>
-          Retry
-        </button>
-      </main>
-    );
-  if (!ready)
-    return (
-      <main className="foundation-state">
-        <LoaderCircle className="spin" />
-        <p>Opening people & workforce…</p>
-      </main>
-    );
-  if (!membership)
-    return (
-      <main className="foundation-state">
-        <h1>Workspace access needed</h1>
-        <p>Your account needs an assigned role.</p>
-        <a href="/workspace">Return to workspace</a>
-      </main>
-    );
   return (
-    <div className="foundation-app people-app">
-      <aside className="foundation-sidebar">
-        <Link href="/" className="foundation-brand">
-          <img src="/brand/sdc-logo.png" alt="SDC crest" />
-          <span>
-            SDC <b>COMMAND</b>
-            <small>CONNECTED OPERATIONS</small>
-          </span>
-        </Link>
-        <div className="foundation-tenant">
-          <Building2 size={18} />
-          <span>
-            {membership.tenants?.name}
-            <small>
-              {membership.tenants?.is_demo
-                ? "Demonstration workspace"
-                : "Operations workspace"}
-            </small>
-          </span>
-        </div>
-        <span className="foundation-nav-label">YOUR WORKSPACE</span>
-        <nav>
-          <a className="workforce-nav-link" href="/workspace">
-            <Building2 size={18} /> Clients & sites
-          </a>
-          <button className="active" onClick={() => setPerson(null)}>
-            <Users size={18} /> People & workforce
-          </button>
+    <div className="people-app foundation-embed">
+      {person && (
+        <nav className="people-crumbs" aria-label="Breadcrumb">
+          <button onClick={() => setPerson(null)}>People</button>
+          <ChevronRight size={14} aria-hidden />
+          <b>{person.employee_code}</b>
         </nav>
-        <div className="people-sidebar-note">
-          <ShieldCheck size={24} />
-          <h3>
-            People first.
-            <br />
-            Every detail connected.
-          </h3>
-          <p>One secure record for every person protecting your clients.</p>
-        </div>
-        <div className="foundation-sidebar-bottom">
-          <div className="foundation-profile">
-            <span>{membership.display_name.slice(0, 2).toUpperCase()}</span>
-            <div>
-              <strong>{membership.display_name}</strong>
-              <small>{roleNames[role]}</small>
-            </div>
-          </div>
-        </div>
-      </aside>
-      <div className="foundation-main">
-        <header className="foundation-header">
-          <div>
-            <a className="people-mobile-home" href="/workspace">
-              SDC
-            </a>
-            <span>
-              Workspace <ChevronRight size={13} />
-              <button onClick={() => setPerson(null)}>People</button>
-              {person && (
-                <>
-                  <ChevronRight size={13} />
-                  <b>{person.employee_code}</b>
-                </>
-              )}
-            </span>
-          </div>
-          <div>
-            {memberships.length > 1 && (
-              <select
-                aria-label="Workspace"
-                value={tenant}
-                onChange={(e) => {
-                  setTenant(e.target.value);
-                  setPerson(null);
-                }}
-              >
-                {memberships.map((m) => (
-                  <option key={m.id} value={m.tenant_id}>
-                    {m.tenants?.name}
-                  </option>
-                ))}
-              </select>
-            )}
-            <span className="foundation-role">
-              <ShieldCheck size={13} />
-              {roleNames[role]}
-            </span>
-            <button
-              aria-label="Sign out"
-              onClick={async () => {
-                try {
-                  await api("/api/auth/logout", { method: "POST" });
-                  location.assign("/login");
-                } catch (e) {
-                  toast.error((e as Error).message);
-                }
-              }}
-            >
-              <LogOut size={17} />
-            </button>
-          </div>
-        </header>
-        <main className="foundation-content">
-          {membership.tenants?.is_demo && (
-            <div className="foundation-demo">
-              <b>DEMO</b> Fictional employee records · Do not use demonstration
-              salary rules for live payroll
-            </div>
-          )}
+      )}
           {person ? (
             <Profile
               key={tenant + person.id}
@@ -691,15 +560,6 @@ export default function Workforce() {
           ) : (
             <>
               <div className="foundation-title">
-                <div>
-                  <span className="foundation-eyebrow">
-                    SDC COMMAND / PEOPLE & WORKFORCE
-                  </span>
-                  <h1>
-                    Your people<span>.</span>
-                  </h1>
-                  <p>Every person. Every posting. One connected record.</p>
-                </div>
                 <div className="people-actions">
                   <button
                     className="button outline"
@@ -1044,8 +904,6 @@ export default function Workforce() {
               </section>
             </>
           )}
-        </main>
-      </div>
       {edit && (
         <RecordEditor
           resource="employees"
