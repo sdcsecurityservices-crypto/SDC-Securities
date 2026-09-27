@@ -41,7 +41,7 @@ const managers: Role[] = ["admin", "operations_manager", "senior_manager"];
 export const navItems: NavItem[] = [
   { href: "/control", label: "Command centre", icon: LayoutDashboard, group: "Overview", roles: [...managers, "site_lead", "hr_payroll", "trainer"] },
   { href: "/client-portal", label: "Client portal", icon: Landmark, group: "Overview", roles: ["client_user"] },
-  { href: "/attendance", label: "My attendance", icon: Fingerprint, group: "Overview", roles: ["employee"] },
+  { href: "/attendance", label: "Guard app", icon: Fingerprint, group: "Overview", roles: ["employee"] },
   { href: "/analytics", label: "Service analytics", icon: BarChart3, group: "Overview", roles: [...managers, "site_lead", "client_user"] },
   { href: "/deployment", label: "Deployment planner", icon: CalendarRange, group: "Operations", labels: { employee: "My roster" } },
   { href: "/operations", label: "Site operations", icon: Route, group: "Operations", labels: { employee: "Patrols & reports" } },
