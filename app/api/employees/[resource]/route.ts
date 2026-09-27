@@ -16,6 +16,7 @@ import {
 import { seal, unseal, masks, documentPassword } from "@/lib/employees/crypto";
 import { z } from "zod";
 import sharp from "sharp";
+import { cappedText } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ resource: string }> };
 const extraTables = [
@@ -130,10 +131,10 @@ export async function GET(req: Request, { params }: Context) {
           .is("employee_postings.deleted_at", null)
           .lte(
             "employee_postings.starts_on",
-            new Date().toISOString().slice(0, 10),
+            new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" }),
           )
           .or(
-            `ends_on.is.null,ends_on.gte.${new Date().toISOString().slice(0, 10)}`,
+            `ends_on.is.null,ends_on.gte.${new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" })}`,
             { referencedTable: "employee_postings" },
           );
         if (availability === "unassigned") q = q.is("employee_postings", null);
@@ -145,11 +146,11 @@ export async function GET(req: Request, { params }: Context) {
         if (certification === "expired")
           q = q.lt(
             "employee_certificates.expires_on",
-            new Date().toISOString().slice(0, 10),
+            new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" }),
           );
         else
           q = q.or(
-            `expires_on.is.null,expires_on.gte.${new Date().toISOString().slice(0, 10)}`,
+            `expires_on.is.null,expires_on.gte.${new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" })}`,
             { referencedTable: "employee_certificates" },
           );
       }
@@ -261,8 +262,8 @@ export async function POST(req: Request, { params }: Context) {
     if (auth.error) return auth.error;
     const { db, user } = auth;
     const { resource } = await params;
-    const raw = await req.text();
-    if (raw.length > 60000) return json({ error: "Request too large." }, 413);
+    const raw = await cappedText(req, 60000);
+    if (raw === null) return json({ error: "Request too large." }, 413);
     let body;
     try {
       body = JSON.parse(raw);

@@ -6,6 +6,7 @@ import {
 } from "@/lib/foundation/http";
 import { tenantId } from "@/lib/foundation/validation";
 import { hrRoles } from "@/lib/employees/validation";
+import { cappedForm } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   try {
@@ -69,9 +70,8 @@ export async function POST(req: Request) {
     const auth = await identity();
     if (auth.error) return auth.error;
     const { db, user } = auth;
-    if (Number(req.headers.get("content-length")) > 11000000)
-      return json({ error: "Maximum file size is 10 MB." }, 413);
-    const f = await req.formData();
+    const f = await cappedForm(req, 11000000);
+    if (!f) return json({ error: "Maximum file size is 10 MB." }, 413);
     const tenant = tenantId.safeParse(f.get("tenant")),
       employee = tenantId.safeParse(f.get("employee"));
     if (!tenant.success || !employee.success)

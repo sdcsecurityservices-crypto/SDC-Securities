@@ -7,6 +7,7 @@ import {
 import { brandedPdf } from "@/lib/employees/pdf";
 import { hrRoles } from "@/lib/employees/validation";
 import { z } from "zod";
+import { cappedJson } from "@/lib/foundation/body";
 export async function POST(req: Request) {
   try {
     if (!sameOrigin(req))
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
         issuer: z.string().trim().min(3).max(150),
       })
       .strict()
-      .safeParse(await req.json());
+      .safeParse(await cappedJson(req, 20000));
     if (!p.success)
       return json(
         {

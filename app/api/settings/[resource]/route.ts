@@ -3,8 +3,10 @@ import {
   json,
   sameOrigin,
   databaseError,
+  failure,
 } from "@/lib/foundation/http";
 import { z } from "zod";
+import { cappedText } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 type C = { params: Promise<{ resource: string }> };
 const uuid = z.string().uuid();
@@ -36,8 +38,8 @@ export async function GET(req: Request, { params }: C) {
       .limit(1)
       .maybeSingle();
     return error ? databaseError(error) : json({ record: data });
-  } catch {
-    return json({ error: "Settings unavailable" }, 400);
+  } catch (e) {
+    return failure(e, "Settings unavailable");
   }
 }
 export async function POST(req: Request, { params }: C) {
@@ -45,8 +47,8 @@ export async function POST(req: Request, { params }: C) {
     if (!sameOrigin(req)) return json({ error: "Invalid origin" }, 403);
     const a = await identity();
     if (a.error) return a.error;
-    const raw = await req.text();
-    if (raw.length > 15000) return json({ error: "Request too large" }, 413);
+    const raw = await cappedText(req, 15000);
+    if (raw === null) return json({ error: "Request too large" }, 413);
     const b = JSON.parse(raw),
       t = uuid.parse(b.tenant_id),
       { resource } = await params;

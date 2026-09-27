@@ -3,10 +3,12 @@ import {
   json,
   sameOrigin,
   databaseError,
+  failure,
 } from "@/lib/foundation/http";
 import { businessSchemas } from "@/lib/business/resources";
 import { z } from "zod";
 import { brandedPdf, inr } from "@/lib/employees/pdf";
+import { cappedText } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 type C = { params: Promise<{ resource: string }> };
 const uuid = z.string().uuid(),
@@ -105,8 +107,8 @@ export async function GET(req: Request, { params }: C) {
       q = q.eq("client_id", uuid.parse(u.searchParams.get("client")));
     const { data, error, count } = await q;
     return error ? databaseError(error) : json({ rows: data, total: count });
-  } catch {
-    return json({ error: "Business records unavailable" }, 400);
+  } catch (e) {
+    return failure(e, "Business records unavailable");
   }
 }
 export async function POST(req: Request, { params }: C) {
@@ -115,8 +117,8 @@ export async function POST(req: Request, { params }: C) {
     const a = await identity();
     if (a.error) return a.error;
     const { resource } = await params,
-      raw = await req.text();
-    if (raw.length > 25000) return json({ error: "Request too large" }, 413);
+      raw = await cappedText(req, 25000);
+    if (raw === null) return json({ error: "Request too large" }, 413);
     const b = JSON.parse(raw),
       t = uuid.parse(b.tenant_id);
     let rpc = "",

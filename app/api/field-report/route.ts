@@ -1,4 +1,4 @@
-import { identity, json, databaseError } from "@/lib/foundation/http";
+import { identity, json, databaseError, failure } from "@/lib/foundation/http";
 import { brandedPdf } from "@/lib/employees/pdf";
 import { z } from "zod";
 import { fieldResources, type FieldResource } from "@/lib/field/resources";
@@ -82,7 +82,7 @@ export async function GET(req: Request) {
         "Cache-Control": "private, no-store",
       },
     });
-  } catch {
-    return json({ error: "Report could not be generated" }, 400);
+  } catch (e) {
+    return failure(e, "Report could not be generated");
   }
 }

@@ -1,5 +1,6 @@
 import {resources,writeRequest,tenantId,operatorRoles,type Resource} from '@/lib/foundation/validation';
 import {identity,json,databaseError,sameOrigin} from '@/lib/foundation/http';
+import {cappedText} from '@/lib/foundation/body';
 export const dynamic='force-dynamic';
 type Context={params:Promise<{resource:string}>};
 export async function GET(req:Request,{params}:Context){
@@ -40,7 +41,7 @@ export async function POST(req:Request,{params}:Context){
  if(!sameOrigin(req))return json({error:'Invalid request origin.'},403);
  const auth=await identity();if(auth.error)return auth.error;const {db,user}=auth;const {resource}=await params;
  if(!(resource in resources))return json({error:'Unknown resource.'},404);
- const raw=await req.text();if(raw.length>25000)return json({error:'Request is too large.'},413);
+ const raw=await cappedText(req,25000);if(raw===null)return json({error:'Request is too large.'},413);
  let payload;try{payload=writeRequest.parse(JSON.parse(raw))}catch{return json({error:'Invalid request.'},400)}
  const {data:membership}=await db.from('memberships').select('role').eq('tenant_id',payload.tenant_id).eq('user_id',user.id).eq('active',true).maybeSingle();
  if(!membership||!operatorRoles.includes(membership.role))return json({error:'Only an authorized operations manager can change these records.'},403);

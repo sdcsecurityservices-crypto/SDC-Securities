@@ -1,4 +1,4 @@
-import { identity, json, databaseError } from "@/lib/foundation/http";
+import { identity, json, databaseError, failure } from "@/lib/foundation/http";
 import { brandedPdf } from "@/lib/employees/pdf";
 import { z } from "zod";
 export const dynamic = "force-dynamic";
@@ -64,7 +64,7 @@ export async function GET(req: Request) {
         "Cache-Control": "private, no-store",
       },
     });
-  } catch {
-    return json({ error: "Certificate unavailable" }, 400);
+  } catch (e) {
+    return failure(e, "Certificate unavailable");
   }
 }

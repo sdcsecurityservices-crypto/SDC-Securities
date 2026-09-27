@@ -3,8 +3,10 @@ import {
   json,
   sameOrigin,
   databaseError,
+  failure,
 } from "@/lib/foundation/http";
 import { z } from "zod";
+import { cappedText } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 type C = { params: Promise<{ action: string }> };
 const uuid = z.string().uuid(),
@@ -70,8 +72,8 @@ export async function GET(req: Request, { params }: C) {
     if (!args) return json({ error: "Unknown roster view" }, 404);
     const { data, error } = await db.rpc("roster_" + action, args);
     return error ? databaseError(error) : json({ rows: data });
-  } catch {
-    return json({ error: "Invalid roster filters" }, 400);
+  } catch (e) {
+    return failure(e, "Invalid roster filters");
   }
 }
 export async function POST(req: Request, { params }: C) {
@@ -80,8 +82,8 @@ export async function POST(req: Request, { params }: C) {
     const auth = await identity();
     if (auth.error) return auth.error;
     const { action } = await params,
-      raw = await req.text();
-    if (raw.length > 5000) return json({ error: "Request too large" }, 413);
+      raw = await cappedText(req, 5000);
+    if (raw === null) return json({ error: "Request too large" }, 413);
     const b = JSON.parse(raw),
       t = uuid.parse(b.tenant_id);
     let args: Record<string, unknown>;
@@ -131,7 +133,7 @@ export async function POST(req: Request, { params }: C) {
       args,
     );
     return error ? databaseError(error) : json({ record: data });
-  } catch {
-    return json({ error: "Invalid roster request" }, 400);
+  } catch (e) {
+    return failure(e, "Invalid roster request");
   }
 }

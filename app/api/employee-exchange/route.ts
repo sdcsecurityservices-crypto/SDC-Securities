@@ -7,6 +7,8 @@ import {
 } from "@/lib/foundation/http";
 import { tenantId } from "@/lib/foundation/validation";
 import { definitions, hrRoles } from "@/lib/employees/validation";
+import { cappedForm } from "@/lib/foundation/body";
+import { zipWithinLimits } from "@/lib/foundation/zip-guard";
 const columns = [
   "employee_code",
   "full_name",
@@ -87,8 +89,9 @@ export async function POST(req: Request) {
     const auth = await identity();
     if (auth.error) return auth.error;
     const { db, user } = auth;
-    const form = await req.formData(),
-      tenant = tenantId.safeParse(form.get("tenant"));
+    const form = await cappedForm(req, 5500000);
+    if (!form) return json({ error: "Upload an .xlsx workbook up to 5 MB." }, 413);
+    const tenant = tenantId.safeParse(form.get("tenant"));
     if (!tenant.success) return json({ error: "Choose a workspace." }, 400);
     const { data: member } = await db
       .from("memberships")
@@ -109,8 +112,11 @@ export async function POST(req: Request) {
       !file.name.toLowerCase().endsWith(".xlsx")
     )
       return json({ error: "Upload an .xlsx workbook up to 5 MB." }, 400);
+    const bytes = await file.arrayBuffer();
+    if (!zipWithinLimits(bytes))
+      return json({ error: "This workbook is not a valid .xlsx file or is too large when unpacked." }, 400);
     const wb = new ExcelJS.Workbook();
-    await wb.xlsx.load(await file.arrayBuffer());
+    await wb.xlsx.load(bytes);
     const sheet = wb.worksheets[0];
     if (!sheet || sheet.rowCount > 1001)
       return json(

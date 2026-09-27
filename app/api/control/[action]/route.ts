@@ -3,9 +3,11 @@ import {
   json,
   sameOrigin,
   databaseError,
+  failure,
 } from "@/lib/foundation/http";
 import { z } from "zod";
 import { brandedPdf } from "@/lib/employees/pdf";
+import { cappedJson, TOO_LARGE } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 type C = { params: Promise<{ action: string }> };
 export async function GET(req: Request, { params }: C) {
@@ -65,8 +67,8 @@ export async function GET(req: Request, { params }: C) {
       });
     }
     return json(data);
-  } catch {
-    return json({ error: "Command summary unavailable" }, 400);
+  } catch (e) {
+    return failure(e, "Command summary unavailable");
   }
 }
 export async function POST(req: Request) {
@@ -74,12 +76,13 @@ export async function POST(req: Request) {
     if (!sameOrigin(req)) return json({ error: "Invalid origin" }, 403);
     const a = await identity();
     if (a.error) return a.error;
-    const b = (await req.json()) as { tenant_id: string };
+    const b = await cappedJson<{ tenant_id: string }>(req, 2000);
+    if (!b) return json(TOO_LARGE, 413);
     const { data, error } = await a.db.rpc("run_operational_checks", {
       p_tenant: z.string().uuid().parse(b.tenant_id),
     });
     return error ? databaseError(error) : json(data);
-  } catch {
-    return json({ error: "Checks could not be run" }, 400);
+  } catch (e) {
+    return failure(e, "Checks could not be run");
   }
 }

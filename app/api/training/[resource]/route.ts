@@ -3,12 +3,14 @@ import {
   json,
   databaseError,
   sameOrigin,
+  failure,
 } from "@/lib/foundation/http";
 import {
   trainingSchemas,
   type TrainingResource,
 } from "@/lib/training/validation";
 import { z } from "zod";
+import { cappedText } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ resource: string }> };
 const uuid = z.string().uuid();
@@ -91,8 +93,8 @@ export async function GET(req: Request, { params }: Context) {
           nextOffset:
             offset + (data?.length || 0) < (count || 0) ? offset + 50 : null,
         });
-  } catch {
-    return json({ error: "Training records could not be loaded." }, 400);
+  } catch (e) {
+    return failure(e, "Training records could not be loaded.");
   }
 }
 export async function POST(req: Request, { params }: Context) {
@@ -102,8 +104,8 @@ export async function POST(req: Request, { params }: Context) {
     if (auth.error) return auth.error;
     const { db } = auth;
     const { resource } = await params,
-      raw = await req.text();
-    if (raw.length > 40000) return json({ error: "Request too large" }, 413);
+      raw = await cappedText(req, 40000);
+    if (raw === null) return json({ error: "Request too large" }, 413);
     const body = JSON.parse(raw),
       tenant = uuid.parse(body.tenant_id);
     if (["start", "submit", "revoke"].includes(resource)) {

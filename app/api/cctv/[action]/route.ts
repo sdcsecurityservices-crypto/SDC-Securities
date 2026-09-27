@@ -3,10 +3,12 @@ import {
   json,
   sameOrigin,
   databaseError,
+  failure,
 } from "@/lib/foundation/http";
 import { seal } from "@/lib/employees/crypto";
 import { openGateway } from "@/lib/cctv/gateway";
 import { z } from "zod";
+import { cappedText } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 const uuid = z.string().uuid();
 type C = { params: Promise<{ action: string }> };
@@ -33,13 +35,38 @@ const consent = z.object({
   signed_document_id: uuid,
   allow_recording: z.boolean().default(false),
 });
+// Camera sources normally sit on the client's private network, so private
+// addresses are allowed; loopback and cloud metadata endpoints are not.
+function validSource(v: string) {
+  try {
+    const u = new URL(v);
+    if (!["rtsp:", "rtsps:", "http:", "https:"].includes(u.protocol)) return false;
+    const host = u.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+    return !(
+      host === "localhost" ||
+      host.endsWith(".localhost") ||
+      host === "::1" ||
+      /^127\./.test(host) ||
+      /^0\./.test(host) ||
+      host === "169.254.169.254" ||
+      host === "metadata.google.internal" ||
+      host === "fd00:ec2::254"
+    );
+  } catch {
+    return false;
+  }
+}
 const camera = z.object({
   site_id: uuid,
   consent_id: uuid,
   title: z.string().min(2).max(100),
   location: z.string().min(2).max(500),
   stream_type: z.enum(["mock", "rtsp", "onvif", "hls", "vendor"]),
-  source: z.string().max(4000).optional(),
+  source: z
+    .string()
+    .max(4000)
+    .refine(validSource, "Use an rtsp://, rtsps://, http:// or https:// camera address.")
+    .optional(),
   post_ids: z.array(uuid).max(100),
   latitude: z.number().min(-90).max(90).nullable().default(null),
   longitude: z.number().min(-180).max(180).nullable().default(null),
@@ -84,8 +111,8 @@ export async function GET(req: Request, { params }: C) {
     if (action !== "access_log") q = q.is("deleted_at", null);
     const { data, error, count } = await q;
     return error ? databaseError(error) : json({ rows: data, total: count });
-  } catch {
-    return json({ error: "Camera records unavailable" }, 400);
+  } catch (e) {
+    return failure(e, "Camera records unavailable");
   }
 }
 export async function POST(req: Request, { params }: C) {
@@ -93,8 +120,8 @@ export async function POST(req: Request, { params }: C) {
     if (!sameOrigin(req)) return json({ error: "Invalid origin" }, 403);
     const a = await identity();
     if (a.error) return a.error;
-    const raw = await req.text();
-    if (raw.length > 15000) return json({ error: "Request too large" }, 413);
+    const raw = await cappedText(req, 15000);
+    if (raw === null) return json({ error: "Request too large" }, 413);
     const b = JSON.parse(raw),
       t = uuid.parse(b.tenant_id),
       { action } = await params;
@@ -129,7 +156,11 @@ export async function POST(req: Request, { params }: C) {
           p_session: s.session_id,
           p_close: true,
         });
-        return json({ error: (e as Error).message }, 503);
+        console.error("CCTV gateway failed", { name: (e as Error)?.name });
+        return json(
+          { error: "The camera gateway is unavailable right now. Try again shortly or contact the control room." },
+          503,
+        );
       }
     }
     if (action === "revoke") {
@@ -161,8 +192,20 @@ export async function POST(req: Request, { params }: C) {
       values = rest;
       if (source)
         values.encrypted_source = seal({ url: source }, `${t}:camera:${id}`);
-      else if (!b.id && p.stream_type !== "mock")
-        return json({ error: "Enter the camera source address" }, 400);
+      else if (p.stream_type !== "mock") {
+        // A camera switched from mock to a live type must be given a source.
+        let needsSource = !b.id;
+        if (b.id) {
+          const { data: existing } = await a.db
+            .from("cctv_cameras")
+            .select("stream_type")
+            .eq("tenant_id", t)
+            .eq("id", id)
+            .maybeSingle();
+          needsSource = !existing || existing.stream_type === "mock";
+        }
+        if (needsSource) return json({ error: "Enter the camera source address" }, 400);
+      }
     }
     if (b.id) {
       const v = z.number().int().nonnegative().parse(b.row_version);
@@ -187,14 +230,7 @@ export async function POST(req: Request, { params }: C) {
       .single();
     return error ? databaseError(error) : json({ record: data }, 201);
   } catch (e) {
-    return json(
-      {
-        error:
-          e instanceof z.ZodError
-            ? e.issues.map((x) => x.message).join(" · ")
-            : "Camera request failed",
-      },
-      400,
-    );
+    if (!(e instanceof z.ZodError)) return failure(e, "Camera request failed");
+    return json({ error: e.issues.map((x) => x.message).join(" · ") }, 400);
   }
 }
