@@ -26,7 +26,7 @@ const clients = [
 
 function ClientMark({client}:{client:typeof clients[number]}) {
   return <div className="client-mark">
-    <div className="client-mark-image">{client.file?<img src={'/clients/'+client.file} alt="" width={160} height={76} loading="lazy" decoding="async"/>:<span className="client-name-only">Satellite Club</span>}</div>
+    <div className="client-mark-image">{client.file?<img src={'/clients/'+client.file} alt="" width={160} height={76} loading="lazy" decoding="async"/>:<span className="client-monogram" aria-hidden="true">{client.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</span>}</div>
     <span>{client.name}</span>
   </div>;
 }

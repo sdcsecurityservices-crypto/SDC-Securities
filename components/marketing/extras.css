@@ -1,0 +1,202 @@
+/* Website additions: careers, WhatsApp enquiry, mobile quick actions. */
+.hero {
+  background-image: image-set(url("/images/security-campus.webp") type("image/webp"), url("/images/security-campus.jpg") type("image/jpeg"));
+}
+
+/* Careers */
+.careers {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 56px;
+  align-items: start;
+  background: #fff;
+}
+.careers-intro > p {
+  margin-top: 18px !important;
+  max-width: 46ch;
+  color: #52647a;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.careers-perks {
+  list-style: none;
+  padding: 0;
+  margin: 26px 0 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+}
+.careers-perks li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14.5px;
+  color: #1c3553;
+}
+.careers-perks svg {
+  flex-shrink: 0;
+  color: #0f7a4a;
+}
+.careers-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.careers-actions .button {
+  gap: 10px;
+}
+.careers-call {
+  background: #fff;
+  color: #052b5b;
+  border: 1px solid #c3cfdd !important;
+}
+.careers-call:hover {
+  background: #f3f6fa;
+}
+.careers-roles {
+  display: grid;
+  gap: 12px;
+}
+.careers-role {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 22px;
+  border: 1px solid #dfe3e8;
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.careers-role:hover {
+  border-color: #052b5b;
+  box-shadow: 0 10px 26px rgb(5 43 91 / 8%);
+  transform: translateY(-2px);
+}
+.careers-role > div {
+  flex: 1;
+}
+.careers-role h3 {
+  font-size: 18px;
+  font-weight: 650;
+  color: #052b5b;
+  margin-bottom: 6px !important;
+}
+.careers-role p {
+  font-size: 14.5px;
+  color: #56677d;
+  line-height: 1.6;
+}
+.careers-role-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: #fff4c2;
+  color: #052b5b;
+}
+.careers-role-go {
+  color: #9aa8ba;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+/* Enquiry dialog */
+.enquiry-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.enquiry-actions .button {
+  gap: 10px;
+}
+.enquiry-whatsapp {
+  background: #1f8f4e;
+  color: #fff;
+}
+.enquiry-whatsapp:hover {
+  background: #197a42;
+}
+.contact-details {
+  flex-wrap: wrap;
+}
+
+/* Client tile without a logo */
+.client-monogram {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #eef3fa;
+  color: #052b5b;
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+
+/* Mobile quick actions */
+.mobile-actions {
+  display: none;
+}
+@media (max-width: 900px) {
+  .careers {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+}
+@media (max-width: 760px) {
+  .careers-perks {
+    grid-template-columns: 1fr;
+  }
+  .careers-actions .button {
+    flex: 1 1 100%;
+  }
+  .enquiry-actions {
+    grid-template-columns: 1fr;
+  }
+  .marketing {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom));
+  }
+  .mobile-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.3fr;
+    gap: 8px;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+    background: rgb(255 255 255 / 96%);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid #dfe3e8;
+    box-shadow: 0 -6px 20px rgb(5 43 91 / 8%);
+  }
+  .mobile-actions a,
+  .mobile-actions button {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border-radius: 8px;
+    border: 1px solid #c3cfdd;
+    background: #fff;
+    color: #052b5b;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 650;
+  }
+  .mobile-actions a:nth-child(2) {
+    border-color: #1f8f4e;
+    color: #1f8f4e;
+  }
+  .mobile-actions button {
+    background: #ffdc2e;
+    border-color: #ffdc2e;
+  }
+}
