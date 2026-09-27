@@ -3,8 +3,10 @@ import {
   json,
   databaseError,
   sameOrigin,
+  clientIp,
 } from "@/lib/foundation/http";
 import { z } from "zod";
+import { cappedJson } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   try {
@@ -105,7 +107,7 @@ export async function POST(req: Request) {
       status: z.enum(["acknowledged", "risk_accepted"]).optional(),
       comment: z.string().min(3).max(4000).optional(),
       signoff: z.string().min(3).max(150).optional(),
-    }).parse(await req.json());
+    }).parse(await cappedJson(req, 10000));
     const tenant = b.tenant_id;
     const action = b.action;
     if (action === "notification_read") {
@@ -124,7 +126,7 @@ export async function POST(req: Request) {
       p_status: status,
       p_comment: b.comment!,
       p_signoff: b.signoff!,
-      p_ip: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unavailable",
+      p_ip: clientIp(req),
     });
     return error ? databaseError(error) : json({ record: data });
   } catch (e) {

@@ -3,9 +3,31 @@ import {
   json,
   sameOrigin,
   databaseError,
+  failure,
 } from "@/lib/foundation/http";
 import { z } from "zod";
+import { cappedForm } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
+const startsWith = (b: Uint8Array, sig: number[], at = 0) => sig.every((x, i) => b[at + i] === x);
+/** Check the file's first bytes, not just the browser-declared type. */
+function signatureMatches(type: string, b: Uint8Array) {
+  switch (type) {
+    case "image/jpeg":
+      return startsWith(b, [0xff, 0xd8, 0xff]);
+    case "image/png":
+      return startsWith(b, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    case "application/pdf":
+      return startsWith(b, [0x25, 0x50, 0x44, 0x46, 0x2d]);
+    case "video/mp4":
+      return startsWith(b, [0x66, 0x74, 0x79, 0x70], 4); // "ftyp"
+    case "audio/webm":
+      return startsWith(b, [0x1a, 0x45, 0xdf, 0xa3]);
+    case "audio/mpeg":
+      return startsWith(b, [0x49, 0x44, 0x33]) || (b[0] === 0xff && (b[1] & 0xe0) === 0xe0);
+    default:
+      return false;
+  }
+}
 export async function GET(req: Request) {
   const a = await identity();
   if (a.error) return a.error;
@@ -31,8 +53,8 @@ export async function GET(req: Request) {
       .from("sdc-field")
       .createSignedUrl(f.object_path, 60, { download: f.file_name });
     return err ? databaseError(err) : json({ url: data.signedUrl });
-  } catch {
-    return json({ error: "Evidence unavailable" }, 400);
+  } catch (e) {
+    return failure(e, "Evidence unavailable");
   }
 }
 export async function POST(req: Request) {
@@ -40,10 +62,9 @@ export async function POST(req: Request) {
     if (!sameOrigin(req)) return json({ error: "Invalid origin" }, 403);
     const a = await identity();
     if (a.error) return a.error;
-    if (Number(req.headers.get("content-length")) > 21000000)
-      return json({ error: "Maximum file size is 20 MB" }, 413);
-    const b = await req.formData(),
-      tenant = z.string().uuid().parse(b.get("tenant")),
+    const b = await cappedForm(req, 21000000);
+    if (!b) return json({ error: "Maximum file size is 20 MB" }, 413);
+    const tenant = z.string().uuid().parse(b.get("tenant")),
       site = z.string().uuid().parse(b.get("site")),
       entity = z.string().uuid().parse(b.get("entity")),
       kind = z
@@ -89,6 +110,8 @@ export async function POST(req: Request) {
     const id = crypto.randomUUID(),
       path = `${tenant}/${site}/${id}/${file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-100)}`,
       bytes = new Uint8Array(await file.arrayBuffer());
+    if (!signatureMatches(file.type, bytes))
+      return json({ error: "File signature does not match its type." }, 400);
     const { error: up } = await a.db.storage
       .from("sdc-field")
       .upload(path, bytes, { contentType: file.type, upsert: false });
@@ -105,7 +128,7 @@ export async function POST(req: Request) {
       object_path: path,
     });
     return error ? databaseError(error) : json({ id }, 201);
-  } catch {
-    return json({ error: "Evidence upload failed" }, 400);
+  } catch (e) {
+    return failure(e, "Evidence upload failed");
   }
 }

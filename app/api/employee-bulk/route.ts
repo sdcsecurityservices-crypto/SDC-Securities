@@ -10,6 +10,7 @@ import { unseal } from "@/lib/employees/crypto";
 import { hrRoles } from "@/lib/employees/validation";
 import { PDFDocument } from "pdf-lib";
 import ExcelJS from "exceljs";
+import { cappedJson } from "@/lib/foundation/body";
 export async function POST(req: Request) {
   try {
     if (!sameOrigin(req))
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
           .optional(),
       })
       .strict()
-      .safeParse(await req.json());
+      .safeParse(await cappedJson(req, 20000));
     if (!p.success)
       return json(
         { error: "Select up to 100 employees and an export format." },

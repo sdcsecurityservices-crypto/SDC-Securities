@@ -14,7 +14,8 @@
     "db:generate": "drizzle-kit generate",
     "test:foundation": "node tests/foundation/database.mjs",
     "seed:foundation": "node scripts/seed-foundation.mjs",
-    "test:employees": "node tests/employees/database.mjs"
+    "test:employees": "node tests/employees/database.mjs",
+    "test:security": "node tests/security/database.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

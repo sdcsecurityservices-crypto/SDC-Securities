@@ -1,5 +1,6 @@
 import {identity,json,sameOrigin,databaseError} from '@/lib/foundation/http';
 import {tenantId,operatorRoles} from '@/lib/foundation/validation';
+import {cappedForm} from '@/lib/foundation/body';
 export const dynamic='force-dynamic';
 export async function GET(req:Request){try{
  const auth=await identity();if(auth.error)return auth.error;const {db}=auth;const u=new URL(req.url);const tenant=tenantId.safeParse(u.searchParams.get('tenant'));if(!tenant.success)return json({error:'Invalid workspace.'},400);
@@ -17,8 +18,8 @@ export async function GET(req:Request){try{
  }catch{return json({error:'Documents are temporarily unavailable.'},503)}}
 export async function POST(req:Request){try{
  if(!sameOrigin(req))return json({error:'Invalid request origin.'},403);const auth=await identity();if(auth.error)return auth.error;const {db,user}=auth;
- if(Number(req.headers.get('content-length'))>11000000)return json({error:'Maximum file size is 10 MB.'},413);
- const f=await req.formData();const tenant=tenantId.safeParse(f.get('tenant')),client=tenantId.safeParse(f.get('client'));if(!tenant.success||!client.success)return json({error:'Invalid workspace or client.'},400);
+ const f=await cappedForm(req,11000000);if(!f)return json({error:'Maximum file size is 10 MB.'},413);
+ const tenant=tenantId.safeParse(f.get('tenant')),client=tenantId.safeParse(f.get('client'));if(!tenant.success||!client.success)return json({error:'Invalid workspace or client.'},400);
  const site=f.get('site')?tenantId.safeParse(f.get('site')):null;if(site&&!site.success)return json({error:'Invalid site.'},400);
  const category=String(f.get('category'));if(!(site?['sop','floor_plan']:['contract']).includes(category))return json({error:'Invalid document category.'},400);
  const {data:member}=await db.from('memberships').select('role').eq('tenant_id',tenant.data).eq('user_id',user.id).eq('active',true).maybeSingle();if(!member||!operatorRoles.includes(member.role))return json({error:'Document upload is not available for your role.'},403);

@@ -3,12 +3,20 @@ import {
   json,
   sameOrigin,
   databaseError,
+  failure,
+  clientIp,
 } from "@/lib/foundation/http";
 import { fieldSchemas, type FieldResource } from "@/lib/field/resources";
 import { z } from "zod";
+import { cappedText } from "@/lib/foundation/body";
 export const dynamic = "force-dynamic";
 type C = { params: Promise<{ resource: string }> };
 const uuid = z.string().uuid();
+// Checkpoint tokens are not selectable by clients (see the security hardening
+// migration); list every other column explicitly.
+const checkpointColumns =
+  "id,tenant_id,site_id,created_at,updated_at,created_by,updated_by,row_version,deleted_at,title,location,latitude,longitude,radius_metres";
+const columns = (resource: string) => (resource === "checkpoints" ? checkpointColumns : "*");
 export async function GET(req: Request, { params }: C) {
   try {
     const a = await identity();
@@ -51,7 +59,7 @@ export async function GET(req: Request, { params }: C) {
     );
     let q = a.db
       .from(resource === "scans" ? "patrol_scans" : "field_" + resource)
-      .select("*", { count: "exact" })
+      .select(columns(resource), { count: "exact" })
       .eq("tenant_id", t)
       .order(resource === "scans" ? "scanned_at" : "created_at", {
         ascending: false,
@@ -86,8 +94,8 @@ export async function GET(req: Request, { params }: C) {
           total: count,
           nextOffset: offset + 50 < (count || 0) ? offset + 50 : null,
         });
-  } catch {
-    return json({ error: "Invalid field-operation request" }, 400);
+  } catch (e) {
+    return failure(e, "Invalid field-operation request");
   }
 }
 export async function POST(req: Request, { params }: C) {
@@ -95,8 +103,8 @@ export async function POST(req: Request, { params }: C) {
     if (!sameOrigin(req)) return json({ error: "Invalid origin" }, 403);
     const a = await identity();
     if (a.error) return a.error;
-    const raw = await req.text();
-    if (raw.length > 30000) return json({ error: "Request too large" }, 413);
+    const raw = await cappedText(req, 30000);
+    if (raw === null) return json({ error: "Request too large" }, 413);
     const b = JSON.parse(raw),
       { resource } = await params,
       t = uuid.parse(b.tenant_id);
@@ -122,8 +130,7 @@ export async function POST(req: Request, { params }: C) {
           .max(150)
           .parse(b.signoff || ""),
         p_ip:
-          req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-          "unavailable",
+          clientIp(req),
       });
       return error ? databaseError(error) : json({ record: data });
     }
@@ -150,7 +157,7 @@ export async function POST(req: Request, { params }: C) {
         .eq("tenant_id", t)
         .eq("id", id)
         .eq("row_version", v)
-        .select()
+        .select(columns(resource))
         .maybeSingle();
       return error
         ? databaseError(error)
@@ -161,18 +168,16 @@ export async function POST(req: Request, { params }: C) {
     const { data, error } = await a.db
       .from("field_" + resource)
       .insert({ ...values, tenant_id: t })
-      .select()
+      .select(columns(resource))
       .single();
     return error ? databaseError(error) : json({ record: data }, 201);
   } catch (e) {
+    if (!(e instanceof z.ZodError)) return failure(e, "Record could not be saved");
     return json(
       {
-        error:
-          e instanceof z.ZodError
-            ? e.issues
-                .map((i) => `${i.path.join(".")}: ${i.message}`)
-                .join(" · ")
-            : "Record could not be saved",
+        error: e.issues
+          .map((i) => `${i.path.join(".")}: ${i.message}`)
+          .join(" · "),
       },
       400,
     );

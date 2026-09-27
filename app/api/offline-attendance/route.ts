@@ -3,15 +3,17 @@ import {
   json,
   sameOrigin,
   databaseError,
+  failure,
 } from "@/lib/foundation/http";
 import { z } from "zod";
+import { cappedText } from "@/lib/foundation/body";
 export async function POST(req: Request) {
   try {
     if (!sameOrigin(req)) return json({ error: "Invalid origin" }, 403);
     const a = await identity();
     if (a.error) return a.error;
-    const raw = await req.text();
-    if (raw.length > 5000) return json({ error: "Request too large" }, 413);
+    const raw = await cappedText(req, 5000);
+    if (raw === null) return json({ error: "Request too large" }, 413);
     const uuid = z.string().uuid();
     const b = z
       .object({
@@ -40,7 +42,7 @@ export async function POST(req: Request) {
       p_document: b.document_id,
     });
     return error ? databaseError(error) : json(data);
-  } catch {
-    return json({ error: "Invalid attendance submission" }, 400);
+  } catch (e) {
+    return failure(e, "Invalid attendance submission");
   }
 }

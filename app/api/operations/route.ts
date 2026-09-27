@@ -3,6 +3,7 @@ import { database } from '@/lib/db';
 import {seed,sites,shifts,type State,type Role} from '@/lib/demo';
 import {z} from 'zod';
 import {savePlan,publishPlan,weekStart} from '@/lib/deployment';
+import {cappedText} from '@/lib/foundation/body';
 export const dynamic='force-dynamic';
 const text=z.string().trim().min(2).max(100);
 const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>!isNaN(Date.parse(v))&&new Date(v).toISOString().startsWith(v),'Invalid date');
@@ -25,7 +26,7 @@ export async function GET(){try{const user=await getChatGPTUser();if(!user)retur
 export async function POST(req:Request){try{
  const user=await getChatGPTUser();if(!user)return response({error:'Please sign in again.'},401);
  const origin=req.headers.get('origin');if(origin&&origin!==new URL(req.url).origin)return response({error:'Invalid request origin.'},403);
- const raw=await req.text();if(raw.length>40000)return response({error:'Request is too large.'},413);
+ const raw=await cappedText(req,40000);if(raw===null)return response({error:'Request is too large.'},413);
  let body;try{body=requestSchema.parse(JSON.parse(raw))}catch{return response({error:'Please check all fields and try again.'},400)}
  const {role,action,version}=body;
  // Role selection is an explicit owner-only demo capability, not production staff authentication.

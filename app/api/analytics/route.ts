@@ -1,4 +1,4 @@
-import { identity, json, databaseError } from "@/lib/foundation/http";
+import { identity, json, databaseError, failure } from "@/lib/foundation/http";
 import { brandedPdf } from "@/lib/employees/pdf";
 import { z } from "zod";
 export const dynamic = "force-dynamic";
@@ -54,7 +54,7 @@ export async function GET(req: Request) {
       });
     }
     return json(data);
-  } catch {
-    return json({ error: "Service report could not be loaded" }, 400);
+  } catch (e) {
+    return failure(e, "Service report could not be loaded");
   }
 }
