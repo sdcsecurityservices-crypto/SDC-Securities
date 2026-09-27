@@ -101,6 +101,13 @@ function FieldBoard() {
     }
   }, [site, view, tenant, offset, q, staff, client]);
   useEffect(() => {
+    // Checkpoint QR codes printed before the guard app open here; send
+    // guards straight to the scan flow.
+    const cp = new URLSearchParams(location.search).get("checkpoint");
+    if (cp && m.role === "employee") {
+      location.replace("/attendance?checkpoint=" + encodeURIComponent(cp));
+      return;
+    }
     const v = new URLSearchParams(location.search).get("view");
     // Synchronize the external API/browser state when this scope changes.
     // eslint-disable-next-line react-hooks/set-state-in-effect

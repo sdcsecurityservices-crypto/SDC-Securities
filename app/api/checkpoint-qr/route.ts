@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     const c = { ...meta, token: token as string };
     const link =
       (process.env.APP_URL || u.origin) +
-      "/operations?view=patrols&checkpoint=" +
+      "/attendance?checkpoint=" +
       c.token;
     const pdf = await brandedPdf(
       "Patrol checkpoint",
@@ -36,7 +36,7 @@ export async function GET(req: Request) {
           heading: c.title,
           lines: [
             c.location,
-            "Scan this QR at the checkpoint. An authenticated assigned guard must record the visit with GPS.",
+            "Guards: scan this QR with the SDC Guard app or your phone camera. The visit is recorded with GPS.",
             "Token: " + c.token,
           ],
         },

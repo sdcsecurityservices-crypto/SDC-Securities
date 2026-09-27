@@ -1,1 +1,17 @@
-{"name":"SDC Guard Attendance","short_name":"SDC Attendance","start_url":"/attendance","scope":"/attendance","display":"standalone","background_color":"#0a2648","theme_color":"#0a2648","icons":[{"src":"/brand/sdc-logo.png","sizes":"any","type":"image/png","purpose":"any"}]}
+{
+  "name": "SDC Guard",
+  "short_name": "SDC Guard",
+  "description": "Duty, attendance, patrols and SOS for SDC security personnel.",
+  "id": "/attendance",
+  "start_url": "/attendance",
+  "scope": "/attendance",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06214a",
+  "theme_color": "#06214a",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
