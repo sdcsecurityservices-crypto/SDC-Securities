@@ -1,20 +1,56 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
-  MapPin,
-  ArrowUpRight,
-  FileDown,
-  RefreshCw,
   AlertTriangle,
+  ArrowUpRight,
+  CalendarRange,
+  Camera,
+  CheckCircle2,
+  FileDown,
+  MapPin,
+  RefreshCw,
+  Search,
+  ShieldAlert,
+  Siren,
+  UserCheck,
+  Users,
 } from "lucide-react";
 import {
   OperationsShell,
   useWorkspace,
   request,
 } from "@/components/operations/shell";
-// Schema-driven forms consume records validated by the resource-specific Zod API.
+import "./control.css";
+// Rows come from the command_summary and guard_performance RPCs.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = Record<string, any>;
+const REFRESH_MS = 30000;
+const istDate = (d = new Date()) =>
+  d.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+const istTime = (d: Date) =>
+  d.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Kolkata",
+  });
+const n = (v: unknown) => Number(v || 0);
+/** Higher is more urgent: SOS, then incidents, risks and offline cameras. */
+const severity = (s: Row) =>
+  n(s.sos) * 1000 + n(s.open_incidents) * 100 + n(s.risks) * 10 + n(s.offline_cameras);
+const tone = (s: Row) =>
+  n(s.sos) ? "bad" : n(s.open_incidents) || n(s.risks) || n(s.offline_cameras) ? "warn" : "good";
+const statusLabel = (s: Row) =>
+  n(s.sos)
+    ? "SOS active"
+    : n(s.open_incidents)
+      ? "Incident open"
+      : n(s.risks)
+        ? "Open risks"
+        : n(s.offline_cameras)
+          ? "Camera offline"
+          : "All clear";
+
 export default function Control() {
   return (
     <OperationsShell
@@ -25,328 +61,574 @@ export default function Control() {
     </OperationsShell>
   );
 }
+
 function Dashboard() {
   const m = useWorkspace(),
     tenant = m.tenant_id;
   const [data, setData] = useState<Row>({ sites: [] }),
+    [loaded, setLoaded] = useState(false),
+    [updated, setUpdated] = useState<Date | null>(null),
     [error, setError] = useState(""),
-    [selected, setSelected] = useState<Row | null>(null),
-    [people, setPeople] = useState<Row[]>([]),
-    [notice, setNotice] = useState("");
-  const operator = ["admin", "operations_manager", "senior_manager"].includes(
-    m.role,
-  );
+    [notice, setNotice] = useState(""),
+    [checking, setChecking] = useState(false),
+    [selected, setSelected] = useState<string | null>(null),
+    [people, setPeople] = useState<Row[]>([]);
+  const operator = ["admin", "operations_manager", "senior_manager"].includes(m.role);
   const load = useCallback(async () => {
     try {
       const d = await request(`/api/control/summary?tenant=${tenant}`);
       setData(d);
+      setUpdated(new Date());
       setError("");
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setLoaded(true);
     }
   }, [tenant]);
   useEffect(() => {
-    // Synchronize the external API/browser state when this scope changes.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void load();
-    const timer = setInterval(() => void load(), 30000);
-    return () => clearInterval(timer);
+    // Poll only while the tab is visible; refresh as soon as it returns.
+    let timer: ReturnType<typeof setInterval> | undefined;
+    const start = () => {
+      clearInterval(timer);
+      void load();
+      timer = setInterval(() => void load(), REFRESH_MS);
+    };
+    const onVisibility = () =>
+      document.visibilityState === "visible" ? start() : clearInterval(timer);
+    start();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, [load]);
   useEffect(() => {
     if (m.role === "client_user") return;
-    const end = new Date().toISOString().slice(0, 10),
-      start = end.slice(0, 7) + "-01";
+    const end = istDate(),
+      start = end.slice(0, 8) + "01";
     request(`/api/control/performance?tenant=${tenant}&from=${start}&to=${end}`)
-      .then((d) => setPeople(d.rows))
-      .catch((e) => setError(e.message));
+      .then((d) => setPeople(d.rows || []))
+      .catch(() => setPeople([]));
   }, [tenant, m.role]);
-  const sum = (key: string) =>
-      data.sites.reduce((n: number, s: Row) => n + Number(s[key] || 0), 0),
-    located = data.sites.filter(
-      (s: Row) => s.latitude !== null && s.longitude !== null,
-    );
-  const lat = located.map((s: Row) => Number(s.latitude)),
-    lon = located.map((s: Row) => Number(s.longitude)),
-    minLat = Math.min(...lat) - 0.03,
-    maxLat = Math.max(...lat) + 0.03,
-    minLon = Math.min(...lon) - 0.03,
-    maxLon = Math.max(...lon) + 0.03;
+
+  const sites: Row[] = data.sites;
+  const totals = useMemo(() => {
+    const sum = (k: string) => sites.reduce((t, s) => t + n(s[k]), 0);
+    return {
+      onDuty: sum("on_duty"),
+      present: sum("present_today"),
+      incidents: sum("open_incidents"),
+      sos: sum("sos"),
+      risks: sum("risks"),
+      cameras: sum("offline_cameras"),
+    };
+  }, [sites]);
+  const attention = useMemo(
+    () => sites.filter((s) => severity(s) > 0).sort((a, b) => severity(b) - severity(a)),
+    [sites],
+  );
+  const sosSites = attention.filter((s) => n(s.sos));
+
+  const runChecks = async () => {
+    setChecking(true);
+    try {
+      const d = await request("/api/control/checks", { tenant_id: tenant });
+      setNotice(
+        d.notifications_created
+          ? `${d.notifications_created} new alert${d.notifications_created === 1 ? "" : "s"} raised. Existing alerts are not duplicated.`
+          : "Checks complete. No new alerts.",
+      );
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setChecking(false);
+    }
+  };
+
   return (
-    <>
-      {error && (
-        <p className="ops-error" role="alert">
-          {error}
-        </p>
-      )}
-      {notice && (
-        <p className="ops-success" role="status">
-          {notice}
-        </p>
-      )}
-      <div className="ops-toolbar">
-        <span className="ops-badge good">Refreshes every 30 seconds</span>
-        <div style={{ display: "flex", gap: 8 }}>
-          <a
+    <div className="cc">
+      <div className="cc-bar">
+        <span className="cc-live" aria-live="polite">
+          <i aria-hidden />
+          {updated ? `Live · updated ${istTime(updated)} IST` : "Connecting…"}
+        </span>
+        <div className="cc-bar-actions">
+          <button
             className="ops-button secondary"
-            href={`/api/control/report?tenant=${tenant}`}
+            onClick={() => void load()}
+            aria-label="Refresh now"
+            title="Refresh now"
           >
-            <FileDown size={16} />
-            Client report
+            <RefreshCw size={16} />
+          </button>
+          <a className="ops-button secondary" href={`/api/control/report?tenant=${tenant}`}>
+            <FileDown size={16} /> Client report
           </a>
           {operator && (
-            <button
-              className="ops-button"
-              onClick={async () => {
-                try {
-                  const d = await request("/api/control/checks", {
-                    tenant_id: tenant,
-                  });
-                  setNotice(
-                    `${d.notifications_created} new alerts created. Existing alerts are not duplicated.`,
-                  );
-                  await load();
-                } catch (e) {
-                  setError((e as Error).message);
-                }
-              }}
-            >
-              <RefreshCw size={16} />
-              Run checks
+            <button className="ops-button" onClick={runChecks} disabled={checking}>
+              <ShieldAlert size={16} /> {checking ? "Checking…" : "Run checks"}
             </button>
           )}
         </div>
       </div>
-      <div className="ops-stats">
-        <div className="ops-stat">
-          <strong>{data.sites.length}</strong>
-          <span>Sites in your scope</span>
-        </div>
-        <div className="ops-stat">
-          <strong>{sum("on_duty")}</strong>
-          <span>Personnel rostered now</span>
-        </div>
-        <div className="ops-stat">
-          <strong>{sum("open_incidents")}</strong>
-          <span>Open incidents</span>
-        </div>
-        <div className="ops-stat">
-          <strong style={{ color: sum("sos") ? "#a32525" : undefined }}>
-            {sum("sos")}
-          </strong>
-          <span>Active SOS alerts</span>
-        </div>
-      </div>
-      <div
-        className="ops-card"
-        style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}
-      >
-        <div
-          style={{
-            padding: 22,
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>Site coverage map</h2>
-          <small>Select a location to inspect its status</small>
-        </div>
-        {located.length ? (
-          <svg
-            viewBox="0 0 1000 350"
-            style={{ width: "100%", background: "#102c4b", display: "block" }}
-            role="img"
-            aria-label="Geographical site positions based on saved latitude and longitude"
+
+      {error && (
+        <p className="ops-error" role="alert">
+          <AlertTriangle size={18} aria-hidden /> {error}
+        </p>
+      )}
+      {notice && (
+        <p className="ops-success" role="status">
+          <CheckCircle2 size={18} aria-hidden /> {notice}
+        </p>
+      )}
+
+      {sosSites.length > 0 && (
+        <div className="cc-sos" role="alert">
+          <span className="cc-sos-icon">
+            <Siren size={22} />
+          </span>
+          <div>
+            <strong>
+              {totals.sos} active SOS {totals.sos === 1 ? "alert" : "alerts"}
+            </strong>
+            <span>{sosSites.map((s) => s.name).join(" · ")}</span>
+          </div>
+          <Link
+            className="ops-button danger"
+            href={`/operations?view=sos&site=${sosSites[0].id}`}
           >
-            <defs>
-              <pattern
-                id="site-grid"
-                width="50"
-                height="50"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 50 0 L 0 0 0 50"
-                  fill="none"
-                  stroke="#294666"
-                  strokeWidth="1"
-                />
-              </pattern>
-            </defs>
-            <rect width="1000" height="350" fill="url(#site-grid)" />
-            <text x="22" y="30" fill="#b8cce0" fontSize="12">
-              GEOGRAPHIC OVERVIEW · NORTH ↑
-            </text>
-            {located.map((s: Row, i: number) => {
-              const x =
-                  80 +
-                  ((Number(s.longitude) - minLon) / (maxLon - minLon)) * 820,
-                y =
-                  70 +
-                  ((maxLat - Number(s.latitude)) / (maxLat - minLat)) * 210;
-              return (
-                <g
-                  key={s.id}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={s.name}
-                  onClick={() => setSelected(s)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") setSelected(s);
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={16}
-                    fill={
-                      s.sos
-                        ? "#ef6464"
-                        : s.open_incidents
-                          ? "#f2c45b"
-                          : "#58bd9c"
-                    }
-                    opacity=".25"
-                  />
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={7}
-                    fill={
-                      s.sos
-                        ? "#ef6464"
-                        : s.open_incidents
-                          ? "#f2c45b"
-                          : "#58bd9c"
-                    }
-                  />
-                  <text
-                    x={x + 12}
-                    y={y + (i % 2 ? 18 : -13)}
-                    fill="white"
-                    fontSize="11"
-                  >
-                    {s.name}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-        ) : (
-          <div className="ops-empty">
-            Add GPS coordinates to your sites to populate the map.
-          </div>
-        )}
-        {selected && (
-          <div
-            style={{
-              padding: 22,
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 15,
-              flexWrap: "wrap",
-            }}
-          >
-            <div>
-              <strong>{selected.name}</strong>
-              <p>
-                {selected.on_duty} on duty · {selected.open_incidents} incidents
-                · {selected.risks} risks
-              </p>
-            </div>
-            <a
-              href={`https://www.openstreetmap.org/?mlat=${selected.latitude}&mlon=${selected.longitude}#map=16/${selected.latitude}/${selected.longitude}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ops-button secondary"
-            >
-              <MapPin size={16} />
-              Open street map
-            </a>
-          </div>
-        )}
-      </div>
-      <div className="ops-grid">
-        {data.sites.map((s: Row) => (
-          <article className="ops-card" key={s.id}>
-            <span
-              className={`ops-badge ${s.sos ? "bad" : s.open_incidents ? "warn" : "good"}`}
-            >
-              {s.sos
-                ? "SOS active"
-                : s.open_incidents
-                  ? "Attention required"
-                  : "No open incidents"}
-            </span>
-            <h3>{s.name}</h3>
-            <small>{s.site_type}</small>
-            <p>
-              {s.on_duty} rostered now · {s.present_today} present today
-              <br />
-              {s.risks} open risks · {s.offline_cameras} offline cameras
-            </p>
-            <footer>
-              <a
-                className="ops-button secondary"
-                href={`/operations?view=incidents&site=${s.id}`}
-              >
-                Site operations <ArrowUpRight size={15} />
-              </a>
-              <a className="ops-button secondary" href="/deployment">
-                Roster
-              </a>
-            </footer>
-          </article>
-        ))}
-      </div>
-      {m.role !== "client_user" && (
-        <div style={{ marginTop: 30 }}>
-          <h2 style={{ fontSize: 24, marginBottom: 18 }}>
-            Workforce performance · this month
-          </h2>
-          <p style={{ marginBottom: 18, color: "#52677f" }}>
-            Measured attendance, site audits, training and client feedback.
-            Missing evidence is shown as unavailable.
-          </p>
-          <div className="ops-table-wrap">
-            <table className="ops-table">
-              <thead>
-                <tr>
-                  <th>Employee</th>
-                  <th>Attendance</th>
-                  <th>Audit score</th>
-                  <th>Valid certificates</th>
-                  <th>Client rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                {people.map((p) => (
-                  <tr key={p.id}>
-                    <td>
-                      <strong>{p.full_name}</strong>
-                      <br />
-                      {p.employee_code}
-                    </td>
-                    <td>
-                      {p.attendance_percent === null
-                        ? "—"
-                        : p.attendance_percent + "%"}
-                    </td>
-                    <td>{p.audit_score ?? "—"}</td>
-                    <td>{p.valid_certificates}</td>
-                    <td>
-                      {p.client_rating === null
-                        ? "—"
-                        : p.client_rating + " / 5"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <small>Showing up to 100 personnel within your access.</small>
+            Respond now <ArrowUpRight size={16} />
+          </Link>
         </div>
       )}
-    </>
+
+      <div className="cc-kpis">
+        <Kpi icon={Users} label="On duty now" value={totals.onDuty} loading={!loaded} />
+        <Kpi icon={UserCheck} label="Present today" value={totals.present} loading={!loaded} />
+        <Kpi
+          icon={AlertTriangle}
+          label="Open incidents"
+          value={totals.incidents}
+          tone={totals.incidents ? "warn" : undefined}
+          loading={!loaded}
+        />
+        <Kpi
+          icon={Siren}
+          label="Active SOS"
+          value={totals.sos}
+          tone={totals.sos ? "bad" : undefined}
+          loading={!loaded}
+        />
+        <Kpi
+          icon={ShieldAlert}
+          label="Open risks"
+          value={totals.risks}
+          tone={totals.risks ? "warn" : undefined}
+          loading={!loaded}
+        />
+        <Kpi
+          icon={Camera}
+          label="Cameras offline"
+          value={totals.cameras}
+          tone={totals.cameras ? "warn" : undefined}
+          loading={!loaded}
+        />
+      </div>
+
+      <div className="cc-split">
+        <section className="ops-card cc-panel">
+          <header className="cc-panel-head">
+            <div>
+              <h2>Needs attention</h2>
+              <p>Sites ranked by urgency across your scope.</p>
+            </div>
+            <span className={`ops-badge ${attention.length ? "warn" : "good"}`}>
+              {attention.length ? `${attention.length} of ${sites.length} sites` : "All clear"}
+            </span>
+          </header>
+          {!loaded ? (
+            <div className="cc-attn-list">
+              {[0, 1, 2].map((i) => (
+                <span key={i} className="ops-skeleton" style={{ height: 62 }} />
+              ))}
+            </div>
+          ) : attention.length ? (
+            <ul className="cc-attn-list">
+              {attention.slice(0, 6).map((s) => (
+                <li key={s.id} className={`cc-attn cc-${tone(s)}`}>
+                  <button className="cc-attn-main" onClick={() => setSelected(s.id)}>
+                    <strong>{s.name}</strong>
+                    <span className="cc-chips">
+                      {n(s.sos) > 0 && <em className="bad">{s.sos} SOS</em>}
+                      {n(s.open_incidents) > 0 && (
+                        <em className="warn">
+                          {s.open_incidents} incident{n(s.open_incidents) > 1 ? "s" : ""}
+                        </em>
+                      )}
+                      {n(s.risks) > 0 && (
+                        <em className="warn">
+                          {s.risks} risk{n(s.risks) > 1 ? "s" : ""}
+                        </em>
+                      )}
+                      {n(s.offline_cameras) > 0 && (
+                        <em>
+                          {s.offline_cameras} camera{n(s.offline_cameras) > 1 ? "s" : ""} offline
+                        </em>
+                      )}
+                    </span>
+                  </button>
+                  <Link
+                    className="cc-attn-go"
+                    href={`/operations?view=${n(s.sos) ? "sos" : n(s.open_incidents) ? "incidents" : "findings"}&site=${s.id}`}
+                    aria-label={`Open ${s.name} in site operations`}
+                  >
+                    <ArrowUpRight size={17} />
+                  </Link>
+                </li>
+              ))}
+              {attention.length > 6 && (
+                <li className="cc-attn-more">+{attention.length - 6} more in the site list below</li>
+              )}
+            </ul>
+          ) : (
+            <div className="cc-clear">
+              <CheckCircle2 size={34} aria-hidden />
+              <strong>Every site is clear</strong>
+              <span>No SOS, open incidents, risks or offline cameras right now.</span>
+            </div>
+          )}
+        </section>
+        <SiteMap sites={sites} selected={selected} onSelect={setSelected} />
+      </div>
+
+      <SiteTable sites={sites} loaded={loaded} selected={selected} />
+
+      {m.role !== "client_user" && <Performance people={people} />}
+    </div>
+  );
+}
+
+function Kpi({
+  icon: Icon,
+  label,
+  value,
+  tone,
+  loading,
+}: {
+  icon: typeof Users;
+  label: string;
+  value: number;
+  tone?: "warn" | "bad";
+  loading?: boolean;
+}) {
+  return (
+    <div className={`cc-kpi ${tone ? "cc-" + tone : ""}`}>
+      <span className="cc-kpi-icon">
+        <Icon size={18} aria-hidden />
+      </span>
+      {loading ? <span className="ops-skeleton" style={{ height: 34, width: 60 }} /> : <strong>{value}</strong>}
+      <small>{label}</small>
+    </div>
+  );
+}
+
+function SiteMap({
+  sites,
+  selected,
+  onSelect,
+}: {
+  sites: Row[];
+  selected: string | null;
+  onSelect: (id: string) => void;
+}) {
+  const located = sites.filter((s) => s.latitude !== null && s.longitude !== null);
+  const active = sites.find((s) => s.id === selected);
+  const lat = located.map((s) => Number(s.latitude)),
+    lon = located.map((s) => Number(s.longitude));
+  const pad = 0.02,
+    minLat = Math.min(...lat) - pad,
+    maxLat = Math.max(...lat) + pad,
+    minLon = Math.min(...lon) - pad,
+    maxLon = Math.max(...lon) + pad;
+  const color = { bad: "#ff6b6b", warn: "#ffc93c", good: "#3ddc97" } as const;
+  return (
+    <section className="ops-card cc-panel cc-map">
+      <header className="cc-panel-head">
+        <div>
+          <h2>Site map</h2>
+          <p>Positions from each site&apos;s saved coordinates.</p>
+        </div>
+        <span className="cc-legend">
+          <i style={{ background: color.good }} /> Clear
+          <i style={{ background: color.warn }} /> Attention
+          <i style={{ background: color.bad }} /> SOS
+        </span>
+      </header>
+      {located.length ? (
+        <svg
+          viewBox="0 0 1000 440"
+          role="img"
+          aria-label={`Map of ${located.length} sites`}
+          className="cc-map-svg"
+        >
+          <defs>
+            <pattern id="cc-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgb(255 255 255 / 6%)" />
+            </pattern>
+            <radialGradient id="cc-glow">
+              <stop offset="0" stopColor="#1d4f8a" />
+              <stop offset="1" stopColor="#06214a" />
+            </radialGradient>
+          </defs>
+          <rect width="1000" height="440" fill="url(#cc-glow)" />
+          <rect width="1000" height="440" fill="url(#cc-grid)" />
+          {located.map((s) => {
+            const x = 70 + ((Number(s.longitude) - minLon) / (maxLon - minLon || 1)) * 860,
+              y = 50 + ((maxLat - Number(s.latitude)) / (maxLat - minLat || 1)) * 340,
+              c = color[tone(s) as keyof typeof color],
+              on = s.id === selected;
+            return (
+              <g
+                key={s.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`${s.name}: ${statusLabel(s)}`}
+                onClick={() => onSelect(s.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") onSelect(s.id);
+                }}
+                className="cc-pin"
+              >
+                {tone(s) !== "good" && (
+                  <circle cx={x} cy={y} r={9} fill={c} className="cc-pulse" />
+                )}
+                <circle cx={x} cy={y} r={on ? 20 : 15} fill={c} opacity={0.18} />
+                <circle cx={x} cy={y} r={on ? 9 : 7} fill={c} stroke="#06214a" strokeWidth={2} />
+                <text x={x + 14} y={y + 4} className={on ? "cc-pin-label on" : "cc-pin-label"}>
+                  {s.name}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      ) : (
+        <div className="ops-empty">Add latitude and longitude to your sites to see them on the map.</div>
+      )}
+      {active && (
+        <footer className="cc-map-foot">
+          <div>
+            <strong>{active.name}</strong>
+            <span>
+              {n(active.on_duty)} on duty · {n(active.present_today)} present · {statusLabel(active)}
+            </span>
+          </div>
+          {active.latitude !== null && (
+            <a
+              className="ops-button secondary"
+              href={`https://www.google.com/maps/search/?api=1&query=${active.latitude},${active.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MapPin size={16} /> Directions
+            </a>
+          )}
+        </footer>
+      )}
+    </section>
+  );
+}
+
+function SiteTable({ sites, loaded, selected }: { sites: Row[]; loaded: boolean; selected: string | null }) {
+  const [q, setQ] = useState(""),
+    [filter, setFilter] = useState<"all" | "attention" | "clear">("all");
+  const rows = sites
+    .filter((s) => s.name.toLowerCase().includes(q.trim().toLowerCase()))
+    .filter((s) => (filter === "all" ? true : filter === "attention" ? severity(s) > 0 : severity(s) === 0))
+    .sort((a, b) => severity(b) - severity(a) || a.name.localeCompare(b.name));
+  return (
+    <section className="cc-section">
+      <header className="cc-section-head">
+        <div>
+          <h2>All sites</h2>
+          <p>{sites.length} sites in your scope</p>
+        </div>
+        <div className="cc-filters">
+          <label className="cc-search">
+            <Search size={16} aria-hidden />
+            <input
+              aria-label="Search sites"
+              placeholder="Search sites…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </label>
+          <div className="cc-seg" role="radiogroup" aria-label="Filter sites">
+            {(["all", "attention", "clear"] as const).map((f) => (
+              <button
+                key={f}
+                role="radio"
+                aria-checked={filter === f}
+                onClick={() => setFilter(f)}
+              >
+                {f === "all" ? "All" : f === "attention" ? "Needs attention" : "Clear"}
+              </button>
+            ))}
+          </div>
+        </div>
+      </header>
+      <div className="ops-table-wrap">
+        <table className="ops-table cc-table">
+          <thead>
+            <tr>
+              <th>Site</th>
+              <th>Status</th>
+              <th className="num">On duty</th>
+              <th className="num">Present today</th>
+              <th className="num">Incidents</th>
+              <th className="num">Risks</th>
+              <th className="num">Cameras offline</th>
+              <th aria-label="Actions" />
+            </tr>
+          </thead>
+          <tbody>
+            {!loaded &&
+              [0, 1, 2, 3].map((i) => (
+                <tr key={i}>
+                  <td colSpan={8}>
+                    <span className="ops-skeleton" style={{ height: 22 }} />
+                  </td>
+                </tr>
+              ))}
+            {rows.map((s) => (
+              <tr key={s.id} className={s.id === selected ? "cc-row-on" : undefined}>
+                <td>
+                  <strong className="cc-site">{s.name}</strong>
+                  <small className="cc-sub">{s.site_type}</small>
+                </td>
+                <td>
+                  <span className={`ops-badge ${tone(s)}`}>{statusLabel(s)}</span>
+                </td>
+                <td className="num">{n(s.on_duty)}</td>
+                <td className="num">{n(s.present_today)}</td>
+                <td className={"num " + (n(s.open_incidents) ? "cc-warn-text" : "cc-zero")}>{n(s.open_incidents)}</td>
+                <td className={"num " + (n(s.risks) ? "cc-warn-text" : "cc-zero")}>{n(s.risks)}</td>
+                <td className={"num " + (n(s.offline_cameras) ? "cc-warn-text" : "cc-zero")}>{n(s.offline_cameras)}</td>
+                <td className="cc-actions">
+                  <Link href={`/operations?view=incidents&site=${s.id}`} className="cc-link">
+                    Operations
+                  </Link>
+                  <Link href="/deployment" className="cc-link" aria-label={`Roster for ${s.name}`}>
+                    <CalendarRange size={15} aria-hidden /> Roster
+                  </Link>
+                </td>
+              </tr>
+            ))}
+            {loaded && !rows.length && (
+              <tr>
+                <td colSpan={8} className="cc-none">
+                  {sites.length ? "No sites match this filter." : "No sites are assigned to your account yet."}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function Performance({ people }: { people: Row[] }) {
+  const [q, setQ] = useState(""),
+    [all, setAll] = useState(false);
+  const rows = people
+    .filter((p) =>
+      (p.full_name + " " + p.employee_code).toLowerCase().includes(q.trim().toLowerCase()),
+    )
+    .sort((a, b) => (a.attendance_percent ?? 101) - (b.attendance_percent ?? 101));
+  const shown = all || q ? rows : rows.slice(0, 8);
+  return (
+    <section className="cc-section">
+      <header className="cc-section-head">
+        <div>
+          <h2>Workforce this month</h2>
+          <p>Lowest attendance first. Attendance counts approved records only.</p>
+        </div>
+        <div className="cc-filters">
+          <label className="cc-search">
+            <Search size={16} aria-hidden />
+            <input
+              aria-label="Search personnel"
+              placeholder="Search name or ID…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </label>
+          <Link className="ops-button secondary" href="/analytics">
+            Service analytics <ArrowUpRight size={15} />
+          </Link>
+        </div>
+      </header>
+      <div className="ops-table-wrap">
+        <table className="ops-table cc-table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Attendance</th>
+              <th className="num">Audit score</th>
+              <th className="num">Valid certificates</th>
+              <th className="num">Client rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {shown.map((p) => {
+              const pct = p.attendance_percent;
+              return (
+                <tr key={p.id}>
+                  <td>
+                    <strong className="cc-site">{p.full_name}</strong>
+                    <small className="cc-sub">{p.employee_code}</small>
+                  </td>
+                  <td>
+                    {pct === null ? (
+                      <span className="cc-zero">No approved records</span>
+                    ) : (
+                      <span className="cc-meter">
+                        <span className="cc-track">
+                          <span
+                            className={pct < 85 ? "bad" : pct < 95 ? "warn" : "good"}
+                            style={{ width: `${Math.min(100, pct)}%` }}
+                          />
+                        </span>
+                        <b>{pct}%</b>
+                      </span>
+                    )}
+                  </td>
+                  <td className="num">{p.audit_score ?? <span className="cc-zero">—</span>}</td>
+                  <td className="num">{p.valid_certificates}</td>
+                  <td className="num">
+                    {p.client_rating === null ? <span className="cc-zero">—</span> : `${p.client_rating} / 5`}
+                  </td>
+                </tr>
+              );
+            })}
+            {!shown.length && (
+              <tr>
+                <td colSpan={5} className="cc-none">
+                  {people.length ? "No personnel match your search." : "No personnel records in your scope yet."}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      {!q && rows.length > 8 && (
+        <button className="cc-more" onClick={() => setAll(!all)}>
+          {all ? "Show fewer" : `Show all ${rows.length} personnel`}
+        </button>
+      )}
+    </section>
   );
 }
