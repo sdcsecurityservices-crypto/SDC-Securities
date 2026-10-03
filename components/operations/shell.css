@@ -889,3 +889,7 @@
 .people-crumbs b {
   color: var(--sdc-ink);
 }
+
+/* Readability floor for sidebar labels. */
+.ops-brand small{font-size:10.5px}
+.ops-workspace>span,.ops-nav-group>p{font-size:11px}

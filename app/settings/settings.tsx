@@ -7,6 +7,7 @@ import {
   dateLabel,
 } from "@/components/operations/shell";
 import { Plus, Save } from "lucide-react";
+import { roleNames } from "@/lib/foundation/validation";
 import {
   Dialog,
   DialogContent,
@@ -201,7 +202,7 @@ function SettingsBody() {
                       <br />
                       {r.email}
                     </td>
-                    <td>{r.role.replaceAll("_", " ")}</td>
+                    <td>{roleNames[r.role] ?? r.role.replaceAll("_", " ")}</td>
                     <td>{r.active ? "Active" : "Disabled"}</td>
                     <td>
                       {r.scopes.length

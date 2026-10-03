@@ -205,3 +205,24 @@
 .advisor-context svg{flex-shrink:0;margin-top:3px;color:#ffdb56}
 @media(max-width:1050px){.site-header nav{gap:18px;font-size:13px}.advisor-person{align-items:flex-start;gap:15px}.advisor-person h3{font-size:22px}.advisor-card{padding:25px}.advisor-monogram{width:62px;height:72px;font-size:25px}}
 @media(max-width:760px){.advisor-section{padding:48px 6% 30px}.advisor-intro{flex-direction:column;align-items:flex-start;gap:22px}.advisor-intro>p{font-size:15px}.advisor-grid{grid-template-columns:1fr;gap:20px}.advisor-card{padding:23px}.advisor-person h3{font-size:23px}.advisor-remit h4{font-size:21px}.advisor-intro h2{letter-spacing:-.8px}.advisor-person{flex-wrap:wrap}}
+
+/* Readability floor: no public text below 11px; labels and fine print at 11.5–12px. */
+@media(min-width:761px){.site-header .brand strong span{font-size:9px}}
+@media(max-width:760px){.site-header .brand strong span{font-size:7.5px}}
+.footer-top .brand strong span{font-size:8.5px}
+.trust-strip>p,.trust-strip strong{font-size:11.5px}
+.service-card .eyebrow,.sector-panel>.eyebrow,.contact-section>.eyebrow{font-size:11.5px}
+.monitor-title>span{font-size:10px;white-space:nowrap}
+.monitor-numbers span,.demo-caption{font-size:12px}
+.sector-list button>span{font-size:12px}
+.advisor-remit>span{font-size:12px}
+.footer-top>p,.footer-top>div>p{font-size:12.5px}
+.footer-bottom{font-size:12px}
+.window-header{font-size:11px}
+.mini-head span,.mini-table-title span,.mini-site>span:last-child{font-size:9.5px}
+.mini-stats>div>span,.mini-site small,.mini-alert small{font-size:10px}
+.mini-stats small,.mini-site strong,.mini-alert strong{font-size:11px}
+.mini-table-title{font-size:12px}
+/* Keep header links on one line; switch to the menu button before they would wrap. */
+.site-header nav a,.site-header .portal-link{white-space:nowrap}
+@media(max-width:920px){.site-header nav{display:none}.mobile-menu{display:block}}
