@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { KeepNavigation } from "@/components/runtime/keep-navigation";
 
 const base = process.env.APP_URL || "https://sdc-command-production-ec49.up.railway.app";
 const description =
@@ -48,7 +49,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en-IN">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <KeepNavigation />
+        {children}
+      </body>
     </html>
   );
 }
