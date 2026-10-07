@@ -5,12 +5,24 @@ import { AuthLayout } from "@/components/auth/auth-layout";
 import { homeFor } from "@/lib/navigation";
 
 export default function Activate() {
-  const [token, setToken] = useState(""),
+  // Supabase's default invite email signs the person in and returns session
+  // tokens; a customised template sends a token_hash instead. Accept either.
+  const [token, setToken] = useState<Record<string, string>>({}),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   useEffect(() => {
     const hash = new URLSearchParams(window.location.hash.slice(1));
-    setToken(hash.get("token_hash") || "");
+    if (hash.get("token_hash"))
+      setToken({ token_hash: hash.get("token_hash")! });
+    else if (hash.get("access_token") && hash.get("refresh_token"))
+      setToken({
+        access_token: hash.get("access_token")!,
+        refresh_token: hash.get("refresh_token")!,
+      });
+    else if (hash.get("error"))
+      setError(
+        "This activation link has expired or has already been used. Ask your administrator to send a new invitation.",
+      );
     window.history.replaceState(null, "", "/activate");
   }, []);
   return (
@@ -35,7 +47,7 @@ export default function Activate() {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                token_hash: token,
+                ...token,
                 password: f.get("password"),
               }),
             });
