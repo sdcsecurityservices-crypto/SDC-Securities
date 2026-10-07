@@ -110,8 +110,12 @@ function SettingsBody() {
           tab === "members"
             ? form
             : Object.fromEntries(keys.map((k) => [k, form[k]]));
-      await request("/api/settings/" + tab, { tenant_id: t, data });
-      setNotice("Settings saved.");
+      const r = await request("/api/settings/" + tab, { tenant_id: t, data });
+      setNotice(
+        r?.invited
+          ? `Invitation sent to ${form.email}. Their access is ready when they set a password.`
+          : "Settings saved.",
+      );
       setEdit(false);
       if (tab === "members") {
         const d = await request(`/api/settings/members?tenant=${t}`);
@@ -163,7 +167,8 @@ function SettingsBody() {
         <>
           <div className="ops-toolbar">
             <p>
-              Users register and verify their email before access is assigned.
+              Invite people by email. They choose their own password from the
+              link, and the access you set here is ready when they sign in.
             </p>
             <button
               className="ops-button"
@@ -175,12 +180,13 @@ function SettingsBody() {
                   active: true,
                   sites: [],
                   clients: [],
+                  invite: true,
                 });
                 setEdit(true);
               }}
             >
               <Plus size={16} />
-              Grant access
+              Invite person
             </button>
           </div>
           <div className="ops-table-wrap">
@@ -203,7 +209,13 @@ function SettingsBody() {
                       {r.email}
                     </td>
                     <td>{roleNames[r.role] ?? r.role.replaceAll("_", " ")}</td>
-                    <td>{r.active ? "Active" : "Disabled"}</td>
+                    <td>
+                      {!r.active
+                        ? "Disabled"
+                        : r.pending
+                          ? "Invite pending"
+                          : "Active"}
+                    </td>
                     <td>
                       {r.scopes.length
                         ? `${r.scopes.length} grants`
@@ -224,6 +236,7 @@ function SettingsBody() {
                             clients: r.scopes
                               .filter((s: Row) => s.client_id)
                               .map((s: Row) => s.client_id),
+                            invite: false,
                           });
                           setEdit(true);
                         }}
@@ -374,7 +387,7 @@ function SettingsBody() {
             }}
           >
             <label>
-              Verified account email
+              Email address
               <input
                 type="email"
                 required
@@ -406,7 +419,9 @@ function SettingsBody() {
                   "trainer",
                   "client_user",
                 ].map((r) => (
-                  <option key={r}>{r}</option>
+                  <option key={r} value={r}>
+                    {roleNames[r]}
+                  </option>
                 ))}
               </select>
             </label>
@@ -416,6 +431,14 @@ function SettingsBody() {
                 type="checkbox"
                 checked={!!form.active}
                 onChange={(e) => setForm({ ...form, active: e.target.checked })}
+              />
+            </label>
+            <label>
+              Send invitation email
+              <input
+                type="checkbox"
+                checked={!!form.invite}
+                onChange={(e) => setForm({ ...form, invite: e.target.checked })}
               />
             </label>
             {["site_lead", "client_user"].includes(form.role) && (
@@ -479,7 +502,7 @@ function SettingsBody() {
             {error && <p className="ops-error wide">{error}</p>}
             <div className="ops-form-actions">
               <button className="ops-button" disabled={busy}>
-                Save access
+                {form.invite ? "Send invitation" : "Save access"}
               </button>
             </div>
           </form>

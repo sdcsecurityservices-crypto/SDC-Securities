@@ -2153,8 +2153,17 @@ function ImportDialog({
         body: f,
       });
       setReport(d);
-      if (d.imported) {
-        toast.success(`${d.imported} employees imported.`);
+      if (d.error) setError(d.error);
+      if (d.imported || d.private_imported) {
+        toast.success(
+          [
+            d.imported && `${d.imported} employees imported`,
+            d.private_imported &&
+              `protected details saved for ${d.private_imported}`,
+          ]
+            .filter(Boolean)
+            .join(" · ") + ".",
+        );
         onDone();
       }
     } catch (e) {
@@ -2175,7 +2184,8 @@ function ImportDialog({
           <DialogTitle>Import your workforce</DialogTitle>
           <DialogDescription>
             Validate an Excel workbook before importing. Existing employees are
-            never overwritten.
+            never overwritten. An optional “Private details” sheet adds phone,
+            UAN, ESIC and bank details, encrypted as they are saved.
           </DialogDescription>
         </DialogHeader>
         <button
@@ -2207,8 +2217,18 @@ function ImportDialog({
         {report && (
           <div className="people-import-report">
             <strong>
-              {report.valid} valid rows · {report.errors.length} issues
+              {report.valid} valid rows
+              {report.private_valid
+                ? ` · ${report.private_valid} with protected details`
+                : ""}{" "}
+              · {report.errors.length} issues
             </strong>
+            {report.private_skipped?.length > 0 && (
+              <p>
+                Already saved, left unchanged:{" "}
+                {report.private_skipped.join(", ")}
+              </p>
+            )}
             {report.errors.map((e: Row, i: number) => (
               <p key={i}>
                 {e.row ? "Row " + e.row + ": " : ""}
@@ -2227,7 +2247,11 @@ function ImportDialog({
           </button>
           <button
             className="button brand-navy"
-            disabled={busy || !report?.valid || report?.errors.length > 0}
+            disabled={
+              busy ||
+              !(report?.valid || report?.private_valid) ||
+              report?.errors.length > 0
+            }
             onClick={() => void run(true)}
           >
             {busy ? "Processing…" : "Import validated employees"}

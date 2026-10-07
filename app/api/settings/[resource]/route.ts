@@ -7,6 +7,7 @@ import {
 } from "@/lib/foundation/http";
 import { z } from "zod";
 import { cappedText } from "@/lib/foundation/body";
+import { adminAuth, invitesConfigured } from "@/lib/supabase/admin";
 export const dynamic = "force-dynamic";
 type C = { params: Promise<{ resource: string }> };
 const uuid = z.string().uuid();
@@ -70,8 +71,55 @@ export async function POST(req: Request, { params }: C) {
           active: z.boolean(),
           sites: z.array(uuid).max(300),
           clients: z.array(uuid).max(100),
+          invite: z.boolean().default(false),
         })
+        .refine(
+          (x) =>
+            !(x.role === "site_lead" && !x.sites.length) &&
+            !(x.role === "client_user" && !x.sites.length && !x.clients.length),
+          "Scoped roles require at least one site or client",
+        )
         .parse(b.data);
+      let invited = false;
+      if (p.invite) {
+        const { data: me } = await a.db
+          .from("memberships")
+          .select("role")
+          .eq("tenant_id", t)
+          .eq("user_id", a.user.id)
+          .eq("active", true)
+          .maybeSingle();
+        if (me?.role !== "admin")
+          return json({ error: "Only a Super Admin can send invitations." }, 403);
+        if (!invitesConfigured())
+          return json(
+            {
+              error:
+                "Invitations are not switched on yet. Add SUPABASE_SECRET_KEY to the server settings.",
+            },
+            503,
+          );
+        const { error } = await adminAuth().inviteUserByEmail(p.email, {
+          redirectTo: `${process.env.APP_URL || new URL(req.url).origin}/activate`,
+          data: { display_name: p.name },
+        });
+        if (error?.code === "over_email_send_rate_limit")
+          return json(
+            {
+              error:
+                "The email service's hourly sending limit was reached. Try again later, or connect a mail provider in Supabase.",
+            },
+            429,
+          );
+        if (error && error.code !== "email_exists") {
+          console.error("Invitation failed", { code: error.code });
+          return json(
+            { error: "The invitation email could not be sent. Try again shortly." },
+            502,
+          );
+        }
+        invited = !error;
+      }
       const { data, error } = await a.db.rpc("workspace_grant", {
         p_tenant: t,
         p_email: p.email,
@@ -81,7 +129,7 @@ export async function POST(req: Request, { params }: C) {
         p_sites: p.sites,
         p_clients: p.clients,
       });
-      return error ? databaseError(error) : json({ id: data });
+      return error ? databaseError(error) : json({ id: data, invited });
     }
     let values: Record<string, unknown>, table: string;
     if (resource === "business") {
