@@ -8,9 +8,10 @@ export async function POST(req:Request,{params}:{params:Promise<{action:string}>
  const {action}=await params;const db=await supabase();
  if(action==='logout'){const {error}=await db.auth.signOut();return error?json({error:'Could not sign out.'},503):json({ok:true})}
  if(action==='activate'){
-  const raw=await cappedText(req,2000);if(raw===null)return json({error:'Invalid activation request.'},400);
-  let input;try{input=z.object({token_hash:z.string().min(20).max(256),password:z.string().min(12).max(256)}).strict().parse(JSON.parse(raw))}catch{return json({error:'Use a valid activation link and a password of at least 12 characters.'},400)}
-  const {error:verification}=await db.auth.verifyOtp({token_hash:input.token_hash,type:'invite'});
+  const raw=await cappedText(req,6000);if(raw===null)return json({error:'Invalid activation request.'},400);
+  const password=z.string().min(12).max(256);
+  let input;try{input=z.union([z.object({token_hash:z.string().min(20).max(256),password}).strict(),z.object({access_token:z.string().min(20).max(4096),refresh_token:z.string().min(8).max(512),password}).strict()]).parse(JSON.parse(raw))}catch{return json({error:'Use a valid activation link and a password of at least 12 characters.'},400)}
+  const {error:verification}='token_hash' in input?await db.auth.verifyOtp({token_hash:input.token_hash,type:'invite'}):await db.auth.setSession({access_token:input.access_token,refresh_token:input.refresh_token});
   if(verification)return json({error:'This activation link has expired or has already been used. Request a new link from your administrator.'},401);
   const {error}=await db.auth.updateUser({password:input.password});
   if(error){await db.auth.signOut();return json({error:'Password could not be set. Request a fresh activation link and try again.'},400)}
