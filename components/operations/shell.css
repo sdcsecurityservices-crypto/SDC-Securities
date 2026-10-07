@@ -1,6 +1,7 @@
 /* SDC Command design system: deep navy, signal yellow, calm neutral surfaces.
    Every app screen shares these tokens and ops-* components. */
-.ops-app {
+:root {
+  /* Tokens live on :root so dialogs, which render outside .ops-app, share them. */
   --sdc-navy-950: #041630;
   --sdc-navy-900: #06214a;
   --sdc-navy-800: #0a2e5c;
@@ -27,6 +28,8 @@
   --sdc-radius-sm: 7px;
   --sdc-shadow: 0 1px 2px rgb(13 33 61 / 5%), 0 4px 14px rgb(13 33 61 / 4%);
   --sdc-sidebar: 268px;
+}
+.ops-app {
   min-height: 100dvh;
   background: var(--sdc-canvas);
   color: var(--sdc-ink);
