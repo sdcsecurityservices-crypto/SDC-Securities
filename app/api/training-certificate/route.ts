@@ -55,6 +55,7 @@ export async function GET(req: Request) {
       ],
       undefined,
       url,
+      { layout: "certificate" },
     );
     return new Response(new Uint8Array(pdf), {
       headers: {
