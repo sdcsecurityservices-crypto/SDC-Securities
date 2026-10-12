@@ -39,10 +39,7 @@ export async function GET(req: Request, { params }: C) {
         {
           heading: "Report snapshot",
           lines: [
-            "Generated " +
-              new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) +
-              " IST",
-            "Visible sites are restricted to your assigned access.",
+            "Live position for every site you can access. Highlighted figures need attention.",
           ],
         },
         ...data.sites.map((s: Record<string, unknown>) => ({
@@ -56,7 +53,7 @@ export async function GET(req: Request, { params }: C) {
             `Offline cameras: ${s.offline_cameras}`,
           ],
         })),
-      ]);
+      ], undefined, undefined, { rowLabel: "Site" });
       return new Response(new Uint8Array(pdf), {
         headers: {
           "Content-Type": "application/pdf",

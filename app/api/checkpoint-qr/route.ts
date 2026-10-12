@@ -36,7 +36,7 @@ export async function GET(req: Request) {
           heading: c.title,
           lines: [
             c.location,
-            "Guards: scan this QR with the SDC Guard app or your phone camera. The visit is recorded with GPS.",
+            "Guards scan this QR with the SDC Guard app or a phone camera. Each visit is recorded with GPS.",
             "Token: " + c.token,
           ],
         },

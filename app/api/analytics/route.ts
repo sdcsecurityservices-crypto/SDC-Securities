@@ -31,19 +31,23 @@ export async function GET(req: Request) {
           heading: `${data.from} to ${data.to}`,
           lines: [
             "Published duty coverage and approved attendance only. Unapproved records do not count as confirmed service.",
+            "Present is approved present days out of approved attendance days. Response is the average minutes to acknowledge an incident.",
           ],
         },
         ...data.sites.map((s: Record<string, number | string>) => ({
           heading: String(s.name),
           lines: [
-            `Required shifts: ${s.required} | Published duties: ${s.rostered}`,
-            `Fill rate: ${Number(s.required) ? Math.round((Number(s.rostered) / Number(s.required)) * 100) + "%" : "No requirement"}`,
-            `Approved attendance: ${s.present} present / ${s.approved_days} days`,
-            `Incidents: ${s.incidents} | Average acknowledgement: ${s.response_minutes ?? "Not available"} minutes`,
-            `Current security score: ${s.security_score}/100 | Audit average: ${s.audit_score ?? "Not assessed"}`,
+            `Required: ${s.required}`,
+            `Rostered: ${s.rostered}`,
+            `Fill rate: ${Number(s.required) ? Math.round((Number(s.rostered) / Number(s.required)) * 100) + "%" : "—"}`,
+            `Present: ${s.present}/${s.approved_days}`,
+            `Incidents: ${s.incidents}`,
+            `Response: ${s.response_minutes != null ? s.response_minutes + " min" : "—"}`,
+            `Score: ${s.security_score}/100`,
+            `Audit: ${s.audit_score ?? "—"}`,
           ],
         })),
-      ]);
+      ], undefined, undefined, { rowLabel: "Site" });
       return new Response(new Uint8Array(pdf), {
         headers: {
           "Content-Type": "application/pdf",

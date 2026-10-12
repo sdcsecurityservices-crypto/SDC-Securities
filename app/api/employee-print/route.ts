@@ -85,13 +85,13 @@ export async function GET(req: Request) {
           {
             heading: "Earnings",
             lines: ["basic", "da", "hra", "allowances", "overtime"].map(
-              (k) => `${k.toUpperCase()}: ${inr(b[k] || 0)}`,
+              (k) => `${k.length <= 3 ? k.toUpperCase() : k[0].toUpperCase() + k.slice(1).replaceAll("_", " ")}: ${inr(b[k] || 0)}`,
             ),
           },
           {
             heading: "Deductions",
             lines: ["pf", "esi", "fixed_deductions", "advance_deductions"].map(
-              (k) => `${k.toUpperCase()}: ${inr(b[k] || 0)}`,
+              (k) => `${k.length <= 3 ? k.toUpperCase() : k[0].toUpperCase() + k.slice(1).replaceAll("_", " ")}: ${inr(b[k] || 0)}`,
             ),
           },
           {

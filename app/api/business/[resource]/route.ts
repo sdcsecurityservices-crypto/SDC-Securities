@@ -43,8 +43,8 @@ export async function GET(req: Request, { params }: C) {
           {
             heading: i.snapshot.issuer?.legal_name || "SDC Security Services",
             lines: [
-              "GSTIN: " + (i.snapshot.issuer?.gstin || "Not configured"),
               i.snapshot.issuer?.billing_address || "",
+              "GSTIN: " + (i.snapshot.issuer?.gstin || "Not configured"),
               "SAC: " + (i.snapshot.issuer?.sac_code || "Not configured"),
             ],
           },
@@ -61,7 +61,7 @@ export async function GET(req: Request, { params }: C) {
             heading: "Service detail",
             lines: i.snapshot.lines.map(
               (l: Record<string, unknown>) =>
-                `${l.work_date} · ${l.full_name} · ${l.site_name} · ${inr(Number(l.amount_paise))}`,
+                `Date: ${l.work_date} | Guard: ${l.full_name} | Site: ${l.site_name} | Amount: ${inr(Number(l.amount_paise))}`,
             ),
           },
           {
