@@ -260,12 +260,12 @@
 /* Brand lockup: the front-page wordmark (Michroma) with the red tagline and
    the SDC Command label, large on the sign-in panel. */
 .auth-brand--grand {
-  gap: 22px;
+  gap: 24px;
   align-items: center;
 }
 .auth-brand--grand img {
-  width: 96px;
-  height: 96px;
+  width: 132px;
+  height: 132px;
   box-shadow: 0 0 0 6px rgb(255 220 46 / 12%), 0 18px 40px -12px rgb(0 0 0 / 55%);
 }
 .auth-word {
@@ -275,8 +275,9 @@
 .auth-word-main {
   font-family: "Michroma", sans-serif;
   font-weight: 400;
-  font-size: 25px;
+  font-size: 24px;
   line-height: 1.18;
+  white-space: nowrap;
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: #fff;
@@ -312,6 +313,7 @@
 }
 .auth-brand-mobile .auth-word-main {
   font-size: 14px;
+  white-space: normal;
   color: #052b5b;
 }
 .auth-brand-mobile .auth-word-tag {
@@ -333,3 +335,36 @@
   height: 52px;
 }
 
+@media (max-width: 1320px) {
+  .auth-brand--grand {
+    gap: 18px;
+  }
+  .auth-brand--grand img {
+    width: 104px;
+    height: 104px;
+  }
+  .auth-brand--grand .auth-word-main {
+    font-size: 19px;
+  }
+  .auth-brand--grand .auth-word-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+  }
+}
+@media (max-width: 1120px) {
+  .auth-brand--grand img {
+    width: 88px;
+    height: 88px;
+  }
+  .auth-brand--grand .auth-word-main {
+    font-size: 15.5px;
+  }
+  .auth-brand--grand .auth-word-tag {
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+  }
+  .auth-brand--grand .auth-word-app {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+  }
+}
