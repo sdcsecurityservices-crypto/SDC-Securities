@@ -1,3 +1,4 @@
+import { founderCredo } from "@/components/v2/extras-data";
 import type { Metadata } from "next";
 import { BASE, iso, mission, values, vision } from "@/components/v2/data";
 import { Accent, Btn, Chain, Chapter, CtaBand, Eyebrow, HeroCompact, Intro, Pic, Rings, Rule, Seals } from "@/components/v2/ui";
@@ -235,6 +236,17 @@ export default function AboutPage() {
           quote="My strength is customer relationships: understanding what clients need, and delivering it."
         />
       </Chapter>
+
+      {founderCredo && (
+        <section className="v2-credo v2-dark" aria-label="Founder's credo">
+          <div className="v2-wrap">
+            <blockquote>
+              <p>“{founderCredo}”</p>
+              <footer className="v2-mono-cap">Lokesh PN · Founder &amp; Managing Director</footer>
+            </blockquote>
+          </div>
+        </section>
+      )}
 
       <Chapter tone="deep" labelledBy="ab-adv" rings>
         <Intro
