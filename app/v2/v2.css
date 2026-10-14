@@ -1872,6 +1872,27 @@ a:hover > .v2-btn-arrow {
 .v2-wall--condensed .v2-plaque--span {
   grid-column: auto;
 }
+/* SVG logos have no intrinsic size, so give them an explicit box */
+.v2-plaque-mark img[src$=".svg"] {
+  width: 70%;
+  height: 58%;
+}
+.v2-plaque--wide .v2-plaque-mark img[src$=".svg"] {
+  width: 86%;
+  height: 46%;
+}
+.v2-plaque--square .v2-plaque-mark img[src$=".svg"] {
+  width: 56%;
+  height: 74%;
+}
+.v2-plaque--major.v2-plaque--wide .v2-plaque-mark img[src$=".svg"] {
+  width: 90%;
+  height: 46%;
+}
+.v2-plaque--major.v2-plaque--square .v2-plaque-mark img[src$=".svg"] {
+  width: 48%;
+  height: 72%;
+}
 .v2-plaque--major.v2-plaque--square .v2-plaque-mark img {
   max-width: 48%;
   max-height: 72%;
