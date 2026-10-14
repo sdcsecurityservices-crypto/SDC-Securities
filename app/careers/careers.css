@@ -1020,10 +1020,13 @@
 }
 
 /* Mobile polish: every control in the careers flow reaches a 44px touch target. */
-@media (max-width: 640px) {
+@media (max-width: 640px), (pointer: coarse) {
   .careers-lang button,
   .careers-back-link {
     min-height: 44px;
+  }
+  .careers-lang button {
+    min-width: 44px;
   }
   .careers-review dd .careers-link {
     display: inline-flex;

@@ -5117,7 +5117,8 @@ a:hover > .v2-btn-arrow {
     font-size: 13.5px;
   }
 }
-@media (max-width: 640px) {
+/* touch targets: phones, and touch tablets up to the mobile-header breakpoint */
+@media (max-width: 640px), (max-width: 1180px) and (pointer: coarse) {
   /* utility bar: keep the 36px strip, widen each link's touch area */
   .v2-utility a,
   .v2-crumbs a {
@@ -5130,13 +5131,10 @@ a:hover > .v2-btn-arrow {
     inset: -12px -6px;
   }
   .v2-crumbs ol {
-    font-size: 14.5px;
+    column-gap: 10px;
   }
   .v2-crumbs li {
     gap: 10px;
-  }
-  .v2-crumbs ol {
-    column-gap: 10px;
   }
 
   /* inline text links and small buttons reach 44px */
@@ -5160,9 +5158,6 @@ a:hover > .v2-btn-arrow {
   }
   .v2-video-toggle {
     height: 44px;
-    /* sit above the hero copy instead of on top of the lead paragraph */
-    top: 16px;
-    bottom: auto;
   }
   .v2-info-big,
   .v2-info-card a {
@@ -5170,15 +5165,11 @@ a:hover > .v2-btn-arrow {
     align-items: center;
     min-height: 44px;
   }
-
-  /* hero slideshow controls */
   .v2-slide-buttons button {
     width: 44px;
+    min-width: 44px;
     height: 44px;
-  }
-  .v2-slide-label span,
-  .v2-slide-label {
-    font-size: 12.5px;
+    flex: none;
   }
 
   /* footer: each link is a full-height row */
@@ -5200,6 +5191,21 @@ a:hover > .v2-btn-arrow {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+  }
+}
+/* phones */
+@media (max-width: 640px) {
+  .v2-crumbs ol {
+    font-size: 14.5px;
+  }
+  .v2-video-toggle {
+    /* sit above the hero copy instead of on top of the lead paragraph */
+    top: 16px;
+    bottom: auto;
+  }
+  .v2-slide-label span,
+  .v2-slide-label {
+    font-size: 12.5px;
   }
   .v2-fcred-note,
   .v2-seal-note {
