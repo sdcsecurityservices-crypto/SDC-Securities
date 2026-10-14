@@ -467,8 +467,9 @@ a:hover > .v2-btn-arrow {
 .v2-chip {
   display: inline-flex;
   align-items: center;
-  height: 26px;
-  padding: 0 10px;
+  min-height: 26px;
+  padding: 4px 10px;
+  line-height: 1.25;
   border-radius: 999px;
   font-size: 11.5px;
   font-weight: 600;
@@ -1413,9 +1414,11 @@ a:hover > .v2-btn-arrow {
 }
 .v2-route-step {
   position: relative;
-  display: grid;
-  align-content: start;
+  /* equal-height columns: the tag sits on one line across the row */
+  display: flex;
+  flex-direction: column;
   gap: 10px;
+  min-width: 0;
 }
 .v2-route-mark {
   width: 46px;
@@ -1456,9 +1459,14 @@ a:hover > .v2-btn-arrow {
   color: var(--fg-2);
   font-size: 15.5px;
 }
+.v2-route-mark {
+  align-self: flex-start;
+  flex: none;
+}
 .v2-route-step .v2-chip {
+  align-self: flex-start;
   justify-self: start;
-  margin-top: 4px;
+  margin-top: auto;
 }
 
 /* ---------- chain of command ---------- */
@@ -2893,6 +2901,8 @@ a:hover > .v2-btn-arrow {
     background: repeating-linear-gradient(180deg, var(--rule) 0 10px, transparent 10px 18px);
   }
   .v2-route-step {
+    display: grid;
+    align-content: start;
     grid-template-columns: 46px minmax(0, 1fr);
     column-gap: 18px;
     padding-bottom: 28px;
@@ -2900,6 +2910,9 @@ a:hover > .v2-btn-arrow {
   .v2-route-mark {
     grid-row: span 3;
     margin: 0;
+  }
+  .v2-route-step .v2-chip {
+    margin-top: 2px;
   }
   .v2-chain::before {
     left: 27px;
@@ -3223,14 +3236,21 @@ a:hover > .v2-btn-arrow {
   background: var(--red-300);
   box-shadow: 0 0 0 4px rgba(255, 90, 95, 0.2);
 }
+.v2-day-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 .v2-day-card {
-  height: calc(100% - 72px);
+  flex: 1 1 auto;
   padding: 20px;
   border: 1px solid var(--line-on-dark);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.03);
-  display: grid;
-  align-content: start;
+  /* a column, so every tag sits on the same line across the row */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
   position: relative;
 }
@@ -3254,8 +3274,7 @@ a:hover > .v2-btn-arrow {
   line-height: 1.55;
 }
 .v2-day-card .v2-chip {
-  justify-self: start;
-  margin-top: 4px;
+  margin-top: auto;
 }
 
 /* ---------- wall of honour section ---------- */
