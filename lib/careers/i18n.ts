@@ -9,6 +9,10 @@ export const languages: { code: Lang; label: string; html: string }[] = [
 export const LANG_KEY = "sdc.careers.lang";
 
 const en = {
+  shift_day: "Day shift",
+  shift_night: "Night shift",
+  shift_rotating: "Rotating shifts",
+  shift_general: "General shift (9 to 6)",
   langLabel: "Language",
   navCareers: "Careers",
   navHome: "Home",
@@ -191,6 +195,10 @@ const en = {
 type Dict = typeof en;
 
 const kn: Dict = {
+  shift_day: "ಹಗಲು ಪಾಳಿ",
+  shift_night: "ರಾತ್ರಿ ಪಾಳಿ",
+  shift_rotating: "ಬದಲಾಗುವ ಪಾಳಿಗಳು",
+  shift_general: "ಸಾಮಾನ್ಯ ಪಾಳಿ (9 ರಿಂದ 6)",
   langLabel: "ಭಾಷೆ",
   navCareers: "ಉದ್ಯೋಗಗಳು",
   navHome: "ಮುಖಪುಟ",
@@ -372,6 +380,10 @@ const kn: Dict = {
 };
 
 const hi: Dict = {
+  shift_day: "दिन की शिफ़्ट",
+  shift_night: "रात की शिफ़्ट",
+  shift_rotating: "बदलती शिफ़्ट",
+  shift_general: "जनरल शिफ़्ट (9 से 6)",
   langLabel: "भाषा",
   navCareers: "नौकरियाँ",
   navHome: "होम",

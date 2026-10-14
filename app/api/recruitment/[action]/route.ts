@@ -28,6 +28,34 @@ const openingSchema = z.object({
   notes: z.string().trim().max(1000).default(""),
 });
 
+/** Inbox filters shared by the list and previous/next navigation. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function applyFilters<Q extends { eq: any; not: any; gte: any; lte: any; or: any; ilike: any }>(q: Q, sp: URLSearchParams): Q {
+  const p = (k: string) => sp.get(k) || "";
+  if (p("status")) q = q.eq("status", z.enum(statuses).parse(p("status")));
+  if (p("role")) q = q.eq("role", z.enum(roles).parse(p("role")));
+  if (p("gender")) q = q.eq("gender", z.enum(genders).parse(p("gender")));
+  if (p("ex") === "yes") q = q.eq("ex_serviceman", true);
+  if (p("ex") === "no") q = q.eq("ex_serviceman", false);
+  if (p("lang")) q = q.eq("applicant_language", z.enum(["en", "kn", "hi"]).parse(p("lang")));
+  if (p("duplicates") === "yes") q = q.not("duplicate_of", "is", null);
+  if (p("days")) {
+    const days = z.coerce.number().int().min(1).max(366).parse(p("days"));
+    q = q.gte("created_at", new Date(Date.now() - days * 864e5).toISOString());
+  }
+  if (p("from")) q = q.gte("created_at", z.string().date().parse(p("from")) + "T00:00:00+05:30");
+  if (p("to")) q = q.lte("created_at", z.string().date().parse(p("to")) + "T23:59:59.999+05:30");
+  // Free text is reduced to safe characters before it reaches the filter.
+  const area = p("area").replace(/[^\p{L}\p{N} .-]/gu, "").trim().slice(0, 60);
+  if (area) q = q.or(`home_area.ilike.*${area}*,home_district.ilike.*${area}*,preferred_work_area.ilike.*${area}*`);
+  const search = p("q").replace(/[^\p{L}\p{N} +.-]/gu, "").trim().slice(0, 60);
+  if (search) {
+    const digits = search.replace(/\D/g, "");
+    q = digits.length >= 4 ? q.ilike("phone", `%${digits.slice(-10)}%`) : q.or(`full_name.ilike.*${search}*,reference_code.ilike.*${search}*`);
+  }
+  return q;
+}
+
 export async function GET(req: Request, { params }: C) {
   try {
     const a = await identity();
@@ -39,39 +67,89 @@ export async function GET(req: Request, { params }: C) {
 
     if (action === "applications") {
       const offset = Math.min(100000, Math.max(0, Number(p("offset")) || 0));
-      let q = a.db
-        .from("job_applications")
-        .select(listColumns, { count: "exact" })
-        .eq("tenant_id", t)
+      const q = applyFilters(
+        a.db.from("job_applications").select(listColumns, { count: "exact" }).eq("tenant_id", t),
+        u.searchParams,
+      )
         .order("created_at", { ascending: false })
         .order("id")
         .range(offset, offset + 49);
-      if (p("status")) q = q.eq("status", z.enum(statuses).parse(p("status")));
-      if (p("role")) q = q.eq("role", z.enum(roles).parse(p("role")));
-      if (p("gender")) q = q.eq("gender", z.enum(genders).parse(p("gender")));
-      if (p("ex") === "yes") q = q.eq("ex_serviceman", true);
-      if (p("ex") === "no") q = q.eq("ex_serviceman", false);
-      if (p("lang")) q = q.eq("applicant_language", z.enum(["en", "kn", "hi"]).parse(p("lang")));
-      if (p("duplicates") === "yes") q = q.not("duplicate_of", "is", null);
-      if (p("from")) q = q.gte("created_at", z.string().date().parse(p("from")) + "T00:00:00+05:30");
-      if (p("to")) q = q.lte("created_at", z.string().date().parse(p("to")) + "T23:59:59.999+05:30");
-      // Free text is reduced to safe characters before it reaches the filter.
-      const area = p("area").replace(/[^\p{L}\p{N} .-]/gu, "").trim().slice(0, 60);
-      if (area) q = q.or(`home_area.ilike.*${area}*,home_district.ilike.*${area}*,preferred_work_area.ilike.*${area}*`);
-      const search = p("q").replace(/[^\p{L}\p{N} +.-]/gu, "").trim().slice(0, 60);
-      if (search) {
-        const digits = search.replace(/\D/g, "");
-        q =
-          digits.length >= 4
-            ? q.ilike("phone", `%${digits.slice(-10)}%`)
-            : q.or(`full_name.ilike.*${search}*,reference_code.ilike.*${search}*`);
-      }
       const [{ data, error, count }, fresh] = await Promise.all([
         q,
         a.db.from("job_applications").select("id", { count: "exact", head: true }).eq("tenant_id", t).eq("status", "new"),
       ]);
       if (error) return databaseError(error);
       return json({ rows: data, total: count, new_count: fresh.count ?? 0 });
+    }
+
+    if (action === "neighbours") {
+      // Previous (newer) and next (older) application in the same filtered list.
+      const id = uuid.parse(p("id"));
+      const { data: cur, error } = await a.db.from("job_applications").select("id,created_at").eq("tenant_id", t).eq("id", id).single();
+      if (error) return databaseError(error);
+      const ts = `"${cur.created_at}"`;
+      const base = () => applyFilters(a.db.from("job_applications").select("id,full_name").eq("tenant_id", t), u.searchParams);
+      const [newer, older, position] = await Promise.all([
+        base().or(`created_at.gt.${ts},and(created_at.eq.${ts},id.lt.${id})`).order("created_at", { ascending: true }).order("id", { ascending: false }).limit(1),
+        base().or(`created_at.lt.${ts},and(created_at.eq.${ts},id.gt.${id})`).order("created_at", { ascending: false }).order("id").limit(1),
+        applyFilters(a.db.from("job_applications").select("id", { count: "exact", head: true }).eq("tenant_id", t), u.searchParams).or(`created_at.gt.${ts},and(created_at.eq.${ts},id.lt.${id})`),
+      ]);
+      const failed = newer.error || older.error || position.error;
+      if (failed) return databaseError(failed);
+      const total = await applyFilters(a.db.from("job_applications").select("id", { count: "exact", head: true }).eq("tenant_id", t), u.searchParams);
+      return json({ previous: newer.data?.[0] ?? null, next: older.data?.[0] ?? null, index: (position.count ?? 0) + 1, total: total.count ?? 0 });
+    }
+
+    if (action === "areas") {
+      // Known areas for choosers: workspace sites, opening areas and the
+      // places applicants entered. Site visibility follows its own policy.
+      const [sites, apps, openings] = await Promise.all([
+        a.db.from("sites").select("id,name,address,clients(name)").eq("tenant_id", t).is("deleted_at", null).order("name").limit(300),
+        a.db.from("job_applications").select("home_area,home_district,preferred_work_area").eq("tenant_id", t).order("created_at", { ascending: false }).limit(1000),
+        a.db.from("job_openings").select("area").eq("tenant_id", t).is("deleted_at", null).limit(300),
+      ]);
+      const failed = apps.error || openings.error;
+      if (failed) return databaseError(failed);
+      const counts = new Map<string, { label: string; applicants: number; opening: boolean }>();
+      const add = (raw: string | null | undefined, kind: "applicant" | "opening") => {
+        const label = (raw || "").trim().replace(/\s+/g, " ");
+        if (label.length < 2) return;
+        const key = label.toLowerCase();
+        const row = counts.get(key) || { label, applicants: 0, opening: false };
+        if (kind === "applicant") row.applicants += 1;
+        else row.opening = true;
+        counts.set(key, row);
+      };
+      for (const r of apps.data || []) {
+        add(r.home_area, "applicant");
+        add(r.preferred_work_area, "applicant");
+      }
+      for (const r of openings.data || []) add(r.area, "opening");
+      // A site's area is the locality in its address (the part before the
+      // city), so applicants' and openings' areas can be matched against it.
+      // Client and site names are only shown to staff as context.
+      const generic = /^(bengaluru|bangalore|bengaluru urban|bengaluru rural|mysuru|mysore|karnataka|india|ka)$/i;
+      const bySiteArea = new Map<string, { area: string; sites: string[] }>();
+      for (const row of (sites.data || []) as Record<string, unknown>[]) {
+        const parts = String(row.address || "")
+          .split(",")
+          .map((x) => x.split("·")[0].trim().replace(/\s+/g, " "))
+          .filter((x) => x.length >= 3);
+        const isCity = (x: string) => generic.test(x.replace(/[^\p{L} ]/gu, "").trim());
+        const city = parts.findIndex(isCity);
+        const usable = parts.filter((x) => !/\d{3}/.test(x) && !isCity(x));
+        const area = city > 0 && !/\d{3}/.test(parts[city - 1]) ? parts[city - 1] : usable[usable.length - 1];
+        if (!area) continue;
+        const client = (row.clients as { name?: string } | null)?.name;
+        const entry = bySiteArea.get(area.toLowerCase()) || { area, sites: [] };
+        entry.sites.push(String(row.name) + (client ? ` (${client})` : ""));
+        bySiteArea.set(area.toLowerCase(), entry);
+      }
+      const siteRows = [...bySiteArea.values()].sort((x, y) => x.area.localeCompare(y.area));
+      return json({
+        sites: siteRows,
+        areas: [...counts.values()].sort((x, y) => y.applicants - x.applicants || x.label.localeCompare(y.label)).slice(0, 300),
+      });
     }
 
     if (action === "application") {
@@ -97,6 +175,11 @@ export async function GET(req: Request, { params }: C) {
       const { data, error: signError } = await a.db.storage.from(BUCKET).createSignedUrl(path as string, SIGNED_SECONDS);
       if (signError || !data) return json({ error: "The document is unavailable." }, 404);
       return json({ url: data.signedUrl, expires_in: SIGNED_SECONDS });
+    }
+
+    if (action === "opening") {
+      const { data, error } = await a.db.from("job_openings").select("*").eq("tenant_id", t).eq("id", uuid.parse(p("id"))).is("deleted_at", null).single();
+      return error ? databaseError(error) : json({ record: data });
     }
 
     if (action === "openings") {

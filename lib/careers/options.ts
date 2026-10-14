@@ -9,6 +9,7 @@ export const branches = ["army", "navy", "air_force", "paramilitary", "police", 
 export const sources = ["friend", "employee", "whatsapp", "facebook", "instagram", "youtube", "newspaper", "poster", "website", "job_portal", "other"] as const;
 export const fileKinds = ["cv", "certificate", "photo", "other"] as const;
 export const statuses = ["new", "screening", "interview", "verification", "offered", "joined", "on_hold", "not_selected"] as const;
+export const shifts = ["day", "night", "rotating", "general"] as const;
 export const openingStatuses = ["open", "paused", "closed"] as const;
 
 export type Role = (typeof roles)[number];
