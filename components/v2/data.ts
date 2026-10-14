@@ -6,6 +6,9 @@ import { company, whatsappLink } from "@/lib/company";
 export { company, whatsappLink };
 
 export const BASE = "/v2";
+export const PORTAL_URL = "/command";
+export const CAREERS_APPLY_URL = "/careers/apply";
+export const CAREERS_KN_URL = "/careers?lang=kn";
 export const DEMO_URL = "/command";
 export const SURVEY_URL = `${BASE}/contact#survey`;
 
@@ -22,10 +25,10 @@ export const addressLines = [
 ];
 
 export const facts = [
-  { value: "1000+", label: "People deployed", note: "In uniform and on facility teams" },
+  { value: "1000+", label: "People deployed", note: "Guards, lady guards and facility teams" },
   { value: "50+", label: "Organisations served", note: "Across Karnataka" },
-  { value: "15", label: "Security specialisations", note: "From gates to campuses" },
-  { value: "2019", label: "PSARA licence granted", note: company.psara },
+  { value: "2019", label: "PSARA licensed", note: company.psara },
+  { value: "2024", label: "ISO 9001:2015 registered", note: "Cert. QMS24221266" },
 ];
 
 export const iso = {
@@ -33,6 +36,7 @@ export const iso = {
   number: "QMS24221266",
   body: "UKGC Assessment",
   validTo: "23 Dec 2027",
+  registered: "Dec 2024",
   scope: "Security, housekeeping and manpower supply",
 };
 
@@ -56,9 +60,11 @@ export type Service = {
   highlights: string[];
   delivery: { title: string; text: string }[];
   sectors: IndustrySlug[];
-  photo: { src: string; alt: string; caption: string; width: number; height: number };
+  photo: PhotoKey;
   related: ServiceSlug[];
   icon: "shield" | "building" | "sparkles" | "users" | "clipboard";
+  forWho: string;
+  faq: { q: string; a: string }[];
 };
 
 export const services: Service[] = [
@@ -97,14 +103,35 @@ export const services: Service[] = [
       { title: "Review every month", text: "Coverage, incidents and improvements, reviewed with you." },
     ],
     sectors: ["healthcare", "education", "corporate", "industrial", "residential"],
-    photo: {
-      src: "/images/team/guards-and-lady-guards.jpg",
-      alt: "SDC guards in caps and lady guards in navy vests standing in line with ID cards",
-      caption: "SDC guards and lady guards",
-      width: 1600,
-      height: 1174,
-    },
+    photo: "fireDemoLine",
     related: ["manpower", "facility-management", "payroll-compliance"],
+    forWho: "Hospitals, colleges, offices, plants, warehouses, construction sites and apartment communities that need trained guards on post, day and night.",
+    faq: [
+          {
+                "q": "How do we get started?",
+                "a": "Book a free site survey. We walk your site, assess the gates, blocks, parking and night routes, and give you a written post plan with posts, shifts and headcount."
+          },
+          {
+                "q": "Are your guards trained before they start?",
+                "a": "Yes. Every guard completes PSARA basic training and a site induction on your layout, codes and contacts before the first shift, with refreshers every 6 to 12 months."
+          },
+          {
+                "q": "Can we have lady guards on women’s posts?",
+                "a": "Yes. Women’s posts such as wards, maternity, OPD, ladies’ hostels and libraries are staffed by trained lady guards, and our deployment planner will not roster anyone else on them."
+          },
+          {
+                "q": "How do we know the guard is actually on post?",
+                "a": "Guards check in with a selfie and GPS on the SDC guard app at the start of every shift, and patrol and incident reports are filed from the post. You can see coverage in the client portal."
+          },
+          {
+                "q": "Is SDC licensed?",
+                "a": "Yes. SDC holds PSARA licence ISD/PSA-64/2019 and is ISO 9001:2015 certified (certificate QMS24221266) for security, housekeeping and manpower supply."
+          },
+          {
+                "q": "Who pays PF and ESI for the guards?",
+                "a": "SDC does. EPF and ESI are paid for every employee we deploy, so the statutory risk is not passed on to you."
+          }
+    ],
   },
   {
     slug: "facility-management",
@@ -138,14 +165,31 @@ export const services: Service[] = [
       { title: "Review together", text: "A regular review of what was done and what needs attention." },
     ],
     sectors: ["healthcare", "education", "corporate", "industrial", "residential"],
-    photo: {
-      src: "/images/v2/extinguisher-briefing.jpg",
-      alt: "An SDC trainer demonstrating a fire extinguisher to a group of guards and lady guards",
-      caption: "Fire-safety practice with SDC teams",
-      width: 1600,
-      height: 1067,
-    },
+    photo: "extinguisherBriefing",
     related: ["housekeeping", "security", "manpower"],
+    forWho: "Buildings that need upkeep done on time without managing several vendors: offices, campuses, hospitals, plants and residential communities.",
+    faq: [
+          {
+                "q": "How do we get started?",
+                "a": "Book a free site survey. We walk your site, assess the gates, blocks, parking and night routes, and give you a written post plan with posts, shifts and headcount."
+          },
+          {
+                "q": "What does facility management cover?",
+                "a": "Building maintenance and repairs, electrical and plumbing services, fire safety and risk management, pest control and waste management, and landscaping and garden maintenance."
+          },
+          {
+                "q": "Can facility management be combined with security and housekeeping?",
+                "a": "Yes. Many clients combine services under one contract, with one supervisor and one set of records for the site."
+          },
+          {
+                "q": "How is the work checked?",
+                "a": "A supervisor runs scheduled inspections against the agreed scope, and issues are reported and followed up."
+          },
+          {
+                "q": "Who employs the facility staff?",
+                "a": "SDC does, with EPF and ESI paid for every employee we deploy."
+          }
+    ],
   },
   {
     slug: "housekeeping",
@@ -182,14 +226,31 @@ export const services: Service[] = [
       { title: "Review and improve", text: "A regular review of standards and feedback from your team." },
     ],
     sectors: ["healthcare", "education", "corporate", "residential", "industrial"],
-    photo: {
-      src: "/images/team/assembly-leadership.jpg",
-      alt: "SDC guards, lady guards and supervisors lined up at morning assembly with the company's leadership in front",
-      caption: "SDC teams at morning assembly",
-      width: 1600,
-      height: 1066,
-    },
+    photo: "academyBatch",
     related: ["facility-management", "manpower", "security"],
+    forWho: "Offices, hospitals, campuses, warehouses and apartment communities that want clean, hygienic spaces with supervision on every shift.",
+    faq: [
+          {
+                "q": "How do we get started?",
+                "a": "Book a free site survey. We walk your site, assess the gates, blocks, parking and night routes, and give you a written post plan with posts, shifts and headcount."
+          },
+          {
+                "q": "Which areas do you clean?",
+                "a": "Offices, industrial and warehouse floors, hospital and healthcare areas, residential and apartment common areas, carpets and upholstery, restrooms, and deep cleaning and sanitisation."
+          },
+          {
+                "q": "What products do you use?",
+                "a": "Our teams work to systematic methods using eco-friendly products."
+          },
+          {
+                "q": "How is quality checked?",
+                "a": "A supervisor checks the work against the agreed schedule, and issues are fixed in the same shift where possible."
+          },
+          {
+                "q": "Can housekeeping be combined with security?",
+                "a": "Yes. One partner, one supervisor and one set of records for the site."
+          }
+    ],
   },
   {
     slug: "manpower",
@@ -225,14 +286,31 @@ export const services: Service[] = [
       { title: "Look after people", text: "EPF, ESI, payslips and welfare, handled by SDC." },
     ],
     sectors: ["industrial", "corporate", "healthcare", "residential", "education"],
-    photo: {
-      src: "/images/team/guard-line.jpg",
-      alt: "A long line of SDC guards in uniform standing at attention",
-      caption: "SDC people on parade",
-      width: 1600,
-      height: 1066,
-    },
+    photo: "lineup",
     related: ["security", "housekeeping", "payroll-compliance"],
+    forWho: "Organisations that need skilled, semi-skilled or unskilled staff for long-term or short-term needs, without taking on the hiring and payroll themselves.",
+    faq: [
+          {
+                "q": "How do we get started?",
+                "a": "Book a free site survey. We walk your site, assess the gates, blocks, parking and night routes, and give you a written post plan with posts, shifts and headcount."
+          },
+          {
+                "q": "What roles can you supply?",
+                "a": "Security and facility staff, housekeeping and janitorial staff, industrial and factory workforce, front office and reception staff, loading and unloading workers, drivers and logistics support, and hospitality and catering staff."
+          },
+          {
+                "q": "How are people selected?",
+                "a": "Every candidate goes through background verification, a physical fitness assessment, an aptitude test and a personal interview."
+          },
+          {
+                "q": "Who handles PF, ESI and payslips?",
+                "a": "SDC does. EPF and ESI are paid for every employee, and wages run on approved attendance with a payslip for every person."
+          },
+          {
+                "q": "Is there one point of contact?",
+                "a": "Yes. SDC is one accountable partner from recruitment to relieving."
+          }
+    ],
   },
   {
     slug: "payroll-compliance",
@@ -269,14 +347,35 @@ export const services: Service[] = [
       { title: "Invoice and report", text: "Invoices and service reports from the same approved records." },
     ],
     sectors: ["corporate", "industrial", "healthcare", "education", "residential"],
-    photo: {
-      src: "/images/team/leadership-briefing.jpg",
-      alt: "SDC leadership briefing a formation of uniformed guards",
-      caption: "Leadership briefing before a shift",
-      width: 1600,
-      height: 1066,
-    },
+    photo: "fireBriefing",
     related: ["manpower", "security", "facility-management"],
+    forWho: "Facility heads, procurement teams and finance teams who want statutory compliance and billing they can check, not take on trust.",
+    faq: [
+          {
+                "q": "How do we get started?",
+                "a": "Book a free site survey. We walk your site, assess the gates, blocks, parking and night routes, and give you a written post plan with posts, shifts and headcount."
+          },
+          {
+                "q": "Do you pay EPF and ESI for every employee?",
+                "a": "Yes. Statutory contributions are paid for every employee SDC deploys on your site."
+          },
+          {
+                "q": "How is attendance recorded?",
+                "a": "Guards check in with a selfie and GPS on the SDC guard app. Attendance is approved before anything is paid or billed."
+          },
+          {
+                "q": "How are invoices calculated?",
+                "a": "Invoices are built from the same approved attendance, so you pay for the posts that were actually covered."
+          },
+          {
+                "q": "Can we see the records?",
+                "a": "Yes. Coverage, attendance, reports and invoices are available in the client portal, which shows your sites and nothing else."
+          },
+          {
+                "q": "How is personal data protected?",
+                "a": "ID and bank details are encrypted, and every change is logged with who made it and when."
+          }
+    ],
   },
 ];
 
@@ -434,79 +533,6 @@ export const trainingCycle = [
   { title: "Leadership", text: "Shift supervisors, control room operators and in-house trainers." },
 ];
 
-export type ClientLogo = { name: string; file: string | null };
-export const clientGroups: { sector: string; clients: ClientLogo[] }[] = [
-  {
-    sector: "Infrastructure & utilities",
-    clients: [
-      { name: "Namma Metro", file: "namma-metro.svg" },
-      { name: "KPTCL", file: "kptcl.png" },
-    ],
-  },
-  {
-    sector: "Healthcare & education",
-    clients: [
-      { name: "R. L. Jalappa Hospital", file: "rl-jalappa.svg" },
-      { name: "Sri Devaraj Urs Medical College", file: "sdumc.webp" },
-    ],
-  },
-  {
-    sector: "Homes, real estate & senior living",
-    clients: [
-      { name: "VBHC", file: "vbhc.svg" },
-      { name: "Vedaanta Senior Living", file: "vedaanta.svg" },
-      { name: "Indya Estates", file: "indya-estates.png" },
-      { name: "RK Gardenia", file: "rk-gardenia.png" },
-      { name: "Subha Builders & Developers", file: "subha.png" },
-    ],
-  },
-  {
-    sector: "Construction & electrical",
-    clients: [
-      { name: "Power Hills Construction", file: "power-hills.png" },
-      { name: "Ramalingam Construction", file: "ramalingam.png" },
-      { name: "Shrishaila Electricals", file: "shrishaila.png" },
-    ],
-  },
-  {
-    sector: "Industry & manufacturing",
-    clients: [
-      { name: "Milky Mist", file: "milky-mist.png" },
-      { name: "Asal Foods", file: "asal.png" },
-      { name: "Geltec", file: "geltec.png" },
-      { name: "Saify Ind", file: "saify.png" },
-      { name: "Universal Textile Mills", file: "utm.webp" },
-      { name: "Jindal Naturecare Limited", file: "jindal-naturecare.png" },
-    ],
-  },
-  {
-    sector: "Clubs & hospitality",
-    clients: [{ name: "Satellite Club", file: null }],
-  },
-];
-
-export const featuredClients: ClientLogo[] = [
-  { name: "Namma Metro", file: "namma-metro.svg" },
-  { name: "R. L. Jalappa Hospital", file: "rl-jalappa.svg" },
-  { name: "Sri Devaraj Urs Medical College", file: "sdumc.webp" },
-  { name: "KPTCL", file: "kptcl.png" },
-  { name: "Milky Mist", file: "milky-mist.png" },
-  { name: "Vedaanta Senior Living", file: "vedaanta.svg" },
-  { name: "VBHC", file: "vbhc.svg" },
-  { name: "Universal Textile Mills", file: "utm.webp" },
-];
-
-export const moreClients = [
-  "VBHC",
-  "Asal Foods",
-  "Indya Estates",
-  "Jindal Naturecare",
-  "RK Gardenia",
-  "Power Hills Construction",
-  "Shrishaila Electricals",
-  "Satellite Club",
-];
-
 export const perks = [
   "EPF and ESI coverage",
   "Training and skill development at our Bengaluru academy",
@@ -517,34 +543,113 @@ export const perks = [
   "Veteran-led leadership",
 ];
 
+
+/* ---------- photography ---------- */
+// Hi-res SDC photos, converted from the original Canon RAW files and graded
+// consistently. Each has 960, 1600 and 2400 px wide derivatives.
+export type Photo = { src: string; w: number; h: number; alt: string; sizes?: number[]; ext?: string; illustrative?: boolean };
+const hi = (name: string, alt: string): Photo => ({ src: `/images/v2/photos/${name}`, w: 2400, h: 1600, alt, sizes: [960, 1600, 2400] });
+export const photos = {
+  lineup: hi("lineup", "SDC lady guards in navy vests and guards in caps lined up on the steps outside an academy building"),
+  academyBatch: hi("academy-batch", "A full SDC training batch of guards and lady guards in a lecture hall, with SDC’s leadership seated in front"),
+  classroom: hi("classroom", "SDC lady guards in uniform listening during a classroom training session"),
+  classroomWide: hi("classroom-wide", "Rows of SDC lady guards and guards taking notes in a lecture hall"),
+  trainer: hi("trainer", "A trainer at the lectern addressing a hall of SDC guards and lady guards"),
+  extinguisherBriefing: hi("extinguisher-briefing", "An instructor holding up a fire extinguisher in front of SDC guards and lady guards"),
+  fireDrill: hi("fire-drill", "An SDC guard putting out a training fire with an extinguisher while the batch watches"),
+  fireDrillTeam: hi("fire-drill-team", "SDC guards with extinguishers at a live fire drill, an instructor in a high-visibility vest beside them"),
+  fireDemoLine: hi("fire-demo-line", "SDC lady guards and guards standing in formation as a guard tackles a training fire"),
+  hoseDrill: hi("hose-drill", "SDC guards in helmets and high-visibility vests running out a fire hose"),
+  hoseRaise: hi("hose-raise", "SDC guards in yellow helmets raising a fire hose during a drill as colleagues watch"),
+  fireBriefing: hi("fire-briefing", "An instructor briefing a formation of SDC guards with a fire extinguisher before a drill"),
+  campus: { src: "/images/security-campus", ext: "jpg", w: 1672, h: 941, alt: "A uniformed security guard on duty outside a glass office building at night (illustrative image)", illustrative: true },
+} satisfies Record<string, Photo>;
+export type PhotoKey = keyof typeof photos;
+
+/* ---------- clients ---------- */
+export type ClientFilter = "healthcare" | "infrastructure" | "industry" | "homes" | "retail";
+export const clientFilters: { id: ClientFilter | "all"; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "infrastructure", label: "Infrastructure" },
+  { id: "healthcare", label: "Healthcare" },
+  { id: "industry", label: "Industry & FMCG" },
+  { id: "homes", label: "Homes & real estate" },
+  { id: "retail", label: "Automotive & retail" },
+];
+export type Client = {
+  name: string;
+  logo: string | null;
+  sector: string;
+  filter: ClientFilter;
+  shape: "wide" | "mid" | "square";
+  marquee?: boolean;
+  place?: string;
+  span?: boolean;
+};
+export const clients: Client[] = [
+  { name: "Namma Metro", place: "Bengaluru", logo: "/clients/namma-metro.svg", sector: "Metro rail", filter: "infrastructure", shape: "wide", marquee: true },
+  { name: "Vedaanta Senior Living", logo: "/clients/vedaanta.svg", sector: "Senior living", filter: "homes", shape: "mid" },
+  { name: "VBHC", logo: "/clients/vbhc.svg", sector: "Housing", filter: "homes", shape: "square" },
+  { name: "Lamborghini Bangalore", place: "Bengaluru", logo: "/images/v2/lamborghini.svg", sector: "Automotive", filter: "retail", shape: "wide", marquee: true },
+  { name: "Universal Textile Mills", span: true, logo: "/clients/utm.webp", sector: "Textiles", filter: "industry", shape: "wide" },
+  { name: "R. L. Jalappa Hospital", place: "Kolar", logo: "/clients/rl-jalappa.svg", sector: "Healthcare", filter: "healthcare", shape: "square", marquee: true },
+  { name: "Jindal Naturecare Limited", span: true, logo: "/clients/jindal-naturecare.png", sector: "Wellness", filter: "healthcare", shape: "mid" },
+  { name: "Geltec", logo: "/clients/geltec.png", sector: "Manufacturing", filter: "industry", shape: "mid" },
+  { name: "KPTCL", place: "Karnataka", logo: "/images/v2/kptcl-cropped.png", sector: "Power transmission", filter: "infrastructure", shape: "square", marquee: true },
+  { name: "Asal Foods", logo: "/clients/asal.png", sector: "Food", filter: "industry", shape: "mid" },
+  { name: "Saify Ind", logo: "/clients/saify.png", sector: "Manufacturing", filter: "industry", shape: "mid" },
+  { name: "Sri Devaraj Urs Medical College", place: "Kolar", logo: "/clients/sdumc.webp", sector: "Medical education", filter: "healthcare", shape: "square", marquee: true },
+  { name: "Milky Mist", logo: "/clients/milky-mist.png", sector: "Dairy & FMCG", filter: "industry", shape: "wide", marquee: true },
+  { name: "Indya Estates", logo: "/clients/indya-estates.png", sector: "Real estate", filter: "homes", shape: "mid" },
+  { name: "RK Gardenia", logo: "/clients/rk-gardenia.png", sector: "Residential", filter: "homes", shape: "mid" },
+  { name: "Subha Builders & Developers", span: true, logo: "/clients/subha.png", sector: "Real estate", filter: "homes", shape: "mid" },
+  { name: "Power Hills Construction", logo: "/clients/power-hills.png", sector: "Construction", filter: "infrastructure", shape: "mid" },
+  { name: "Ramalingam Construction", logo: "/clients/ramalingam.png", sector: "Construction", filter: "infrastructure", shape: "square" },
+  { name: "Shrishaila Electricals", logo: "/images/v2/shrishaila.png", sector: "Electrical contracting", filter: "infrastructure", shape: "square" },
+  { name: "Satellite Club", span: true, logo: null, sector: "Club", filter: "retail", shape: "mid" },
+];
+
+/* ---------- a day in the system (illustrative) ---------- */
+export const dayInSystem = [
+  { time: "18:00", title: "Shift starts", text: "The night guard checks in on the SDC guard app with a selfie. GPS confirms they are inside the site boundary.", tag: "Guard app" },
+  { time: "18:01", title: "Post shows covered", text: "The command centre marks the post covered. Your client portal shows the same, live.", tag: "Command centre" },
+  { time: "21:00", title: "Patrol rounds", text: "Rounds at the times in your post orders, each logged from the guard app as it happens.", tag: "Patrol log" },
+  { time: "02:14", title: "Incident reported", text: "A broken gate latch: photo, time and place filed from the post, and the supervisor follows it up.", tag: "Incident" },
+  { time: "06:00", title: "Handover", text: "The day guard checks in. The planner had already blocked anyone without enough rest.", tag: "Planner" },
+  { time: "07:00", title: "Morning report", text: "Attendance is approved. The same record feeds payroll and your invoice.", tag: "Client portal" },
+];
+
+/* ---------- navigation ---------- */
 export type NavItem = { label: string; href: string; note?: string };
-export const nav: { label: string; href?: string; children?: NavItem[] }[] = [
+export const nav: { label: string; href?: string; kind?: "mega" | "list"; children?: NavItem[] }[] = [
   {
     label: "Services",
-    href: `${BASE}/services`,
+    kind: "mega",
     children: [
-      { label: "All services", href: `${BASE}/services`, note: "One partner, every layer" },
       ...services.map((s) => ({ label: s.name, href: `${BASE}/services/${s.slug}`, note: s.headline.join(" ") })),
+      { label: "All services", href: `${BASE}/services`, note: "Combine services under one contract" },
     ],
   },
   {
     label: "Industries",
-    href: `${BASE}/industries`,
+    kind: "list",
     children: [
-      { label: "All industries", href: `${BASE}/industries`, note: "Different sites, one standard" },
       ...industries.map((i) => ({ label: i.name, href: `${BASE}/industries#${i.slug}`, note: i.line })),
+      { label: "Women’s safety", href: `${BASE}/industries#womens-safety`, note: "Women’s posts, guarded by women" },
+      { label: "All industries", href: `${BASE}/industries`, note: "Different sites, one standard" },
     ],
   },
-  { label: "Training", href: `${BASE}/training` },
   { label: "Technology", href: `${BASE}/technology` },
   {
-    label: "Company",
+    label: "About",
+    kind: "list",
     children: [
       { label: "About SDC", href: `${BASE}/about`, note: "Story, leadership and values" },
+      { label: "Training", href: `${BASE}/training`, note: "Selection and the training cycle" },
       { label: "Clients", href: `${BASE}/clients`, note: "Organisations we have served" },
       { label: "Compliance", href: `${BASE}/compliance`, note: "Licences and registrations" },
-      { label: "Careers", href: `${BASE}/careers`, note: "Serve with pride" },
+      { label: "Contact", href: `${BASE}/contact`, note: "Phone, WhatsApp and office" },
     ],
   },
-  { label: "Contact", href: `${BASE}/contact` },
+  { label: "Careers", href: `${BASE}/careers` },
 ];

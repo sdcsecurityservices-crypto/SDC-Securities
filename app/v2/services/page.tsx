@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { BASE, SURVEY_URL, onboarding, services } from "@/components/v2/data";
-import {
-  Accent,
-  ButtonLink,
-  CheckList,
-  CtaBand,
-  Eyebrow,
-  PageHero,
-  Section,
-  SectionHead,
-  StepFlow,
-} from "@/components/v2/ui";
+import { BASE, industryBySlug, onboarding, services } from "@/components/v2/data";
+import { Accent, Btn, Chapter, CtaBand, HeroPhoto, Intro, Pic, Route, Rule, Eyebrow, Ticks, serviceIcons } from "@/components/v2/ui";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -20,18 +9,10 @@ export const metadata: Metadata = {
     "Security guards, facility management, housekeeping, manpower supply and payroll & compliance from one accountable, ex-servicemen-led partner in Bengaluru.",
 };
 
-const nodes = [
-  { x: 50, y: 10 },
-  { x: 88, y: 37.6 },
-  { x: 73.5, y: 82.4 },
-  { x: 26.5, y: 82.4 },
-  { x: 12, y: 37.6 },
-];
-
 export default function ServicesPage() {
   return (
     <>
-      <PageHero
+      <HeroPhoto
         crumbs={[{ label: "Services" }]}
         eyebrow="What we deliver"
         title={
@@ -39,99 +20,107 @@ export default function ServicesPage() {
             One partner. <Accent>Every layer of protection.</Accent>
           </>
         }
-        lead="From the people at your gate to the systems behind them. Five services that work together, so you deal with one accountable partner instead of several vendors."
-        actions={<ButtonLink href={SURVEY_URL}>Book a free site survey</ButtonLink>}
-        aside={
-          <div className="v2-orbit" role="img" aria-label="SDC at the centre of five connected services: security, facility management, housekeeping, manpower supply, and payroll and compliance">
-            <svg viewBox="0 0 400 400" aria-hidden="true">
-              <g fill="none" stroke="#FFDC2E">
-                <circle cx="200" cy="200" r="160" strokeOpacity=".5" strokeWidth="1.5" />
-                <circle cx="200" cy="200" r="110" strokeOpacity=".25" />
-                <circle cx="200" cy="200" r="64" strokeOpacity=".7" strokeWidth="2" />
-                <path d="M200 40 A160 160 0 0 1 352 150" strokeWidth="4" strokeLinecap="round" />
-              </g>
-            </svg>
-            <div className="v2-orbit-center">
-              <img src="/brand/sdc-logo.png" alt="" width={64} height={64} />
-              <strong>One accountable partner</strong>
-            </div>
-            {services.map((s, i) => (
-              <span key={s.slug} className="v2-orbit-node" style={{ left: `${nodes[i].x}%`, top: `${nodes[i].y}%` }}>
-                {s.short}
-              </span>
-            ))}
-          </div>
+        lead="Five services that work together, so you deal with one accountable partner instead of several vendors: one supervisor, one roster, one set of records."
+        photo="fireDemoLine"
+        actions={
+          <>
+            <Btn href={`${BASE}/contact#survey`}>Request a site survey</Btn>
+            <Btn href="#all-services" variant="ghost">
+              See all five
+            </Btn>
+          </>
         }
       />
 
-      <Section tone="white" labelledBy="svc-all">
-        <SectionHead
-          id="svc-all"
-          eyebrow="Our services"
-          title={
-            <>
-              Five services. <Accent>One standard.</Accent>
-            </>
-          }
-          lead="Most clients start with guarding. Many then hand us facility upkeep, staffing and the payroll paperwork too."
-        />
-        <ol className="v2-service-rows">
-          {services.map((s, i) => (
-            <li key={s.slug} className="v2-service-row">
-              <span className="v2-outline-num" aria-hidden="true">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <p className="v2-tag">{s.name}</p>
-                <h3>
-                  <Link className="v2-stretched" href={`${BASE}/services/${s.slug}`}>
-                    {s.headline[0]} {s.headline[1]}
-                  </Link>
-                </h3>
-                <p>{s.summary}</p>
+      <div id="all-services">
+        {services.map((s, i) => {
+          const Icon = serviceIcons[s.icon];
+          return (
+            <section
+              key={s.slug}
+              className={`v2-svc-row${i % 2 ? " v2-svc-row--flip" : ""}`}
+              aria-labelledby={`svc-${s.slug}`}
+            >
+              <div className="v2-svc-row-media v2-scan-host">
+                {s.slug === "payroll-compliance" ? (
+                  <img
+                    src="/images/v2/deployment-planner.jpg"
+                    alt="SDC Command deployment planner with named guards on each post for the week (demo data)"
+                    width={1600}
+                    height={705}
+                    loading="lazy"
+                    data-scan=""
+                    className="v2-svc-row-screen"
+                  />
+                ) : (
+                  <Pic photo={s.photo} sizes="(min-width: 900px) 55vw, 100vw" />
+                )}
+                <span className="v2-svc-row-num v2-mono" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
               </div>
-              <ul className="v2-mini-list" aria-label={`Included in ${s.name.toLowerCase()}`}>
-                {s.includes.slice(0, 6).map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-              <span className="v2-card-more" aria-hidden="true">
-                Full details <ArrowRight size={16} />
-              </span>
-            </li>
-          ))}
-        </ol>
-      </Section>
+              <div className="v2-svc-row-copy">
+                <Rule />
+                <p className="v2-eyebrow">
+                  <Icon size={16} aria-hidden="true" style={{ verticalAlign: "-3px", marginRight: 8 }} />
+                  {s.name}
+                </p>
+                <h2 className="v2-h2" id={`svc-${s.slug}`}>
+                  {s.headline[0]} <Accent>{s.headline[1]}</Accent>
+                </h2>
+                <p className="v2-lead">{s.summary}</p>
+                <div className="v2-svc-row-cols">
+                  <div>
+                    <p className="v2-mono-cap">What’s included</p>
+                    <Ticks items={s.includes.slice(0, 5)} />
+                  </div>
+                  <div>
+                    <p className="v2-mono-cap">Who it’s for</p>
+                    <p className="v2-svc-who">{s.forWho}</p>
+                    <p className="v2-svc-sectors">{s.sectors.slice(0, 3).map((x) => industryBySlug(x).name).join(" · ")}</p>
+                  </div>
+                </div>
+                <a className="v2-link" href={`${BASE}/services/${s.slug}`}>
+                  {s.name}: full details <ArrowRight size={15} aria-hidden="true" />
+                </a>
+              </div>
+            </section>
+          );
+        })}
+      </div>
 
-      <Section tone="navy" labelledBy="svc-why" rings="left">
+      <Chapter tone="deep" labelledBy="svc-combine" rings>
         <div className="v2-split">
           <div>
-            <Eyebrow>Why one partner</Eyebrow>
-            <h2 className="v2-h2" id="svc-why">
-              Fewer vendors. <Accent>Clearer accountability.</Accent>
+            <Rule />
+            <Eyebrow>One contract</Eyebrow>
+            <h2 className="v2-h2 v2-h2--xl" id="svc-combine">
+              Combine services <Accent>under one contract.</Accent>
             </h2>
-            <p className="v2-lead">
+            <p className="v2-lead" style={{ marginTop: 24 }}>
               When guarding, housekeeping and staffing sit with different contractors, gaps fall between them. With SDC,
               one supervisor answers for the site and one set of records covers every person on it.
             </p>
           </div>
-          <CheckList
-            tone="dark"
-            items={[
-              "One point of contact for every service on your site",
-              "One roster, checked for clashes before it goes out",
-              "Attendance, incidents and reports in one client portal",
-              "EPF and ESI paid for every employee we deploy",
-              "Invoices built from approved attendance",
-              "A monthly review of coverage, incidents and improvements",
-            ]}
-          />
+          <ul className="v2-combine">
+            {[
+              ["One", "point of contact for every service"],
+              ["One", "roster, checked for clashes before it goes out"],
+              ["One", "client portal for attendance, incidents and reports"],
+              ["One", "invoice, built from approved attendance"],
+            ].map(([a, b]) => (
+              <li key={b}>
+                <span className="v2-mono">{a}</span>
+                {b}
+              </li>
+            ))}
+          </ul>
         </div>
-      </Section>
+      </Chapter>
 
-      <Section tone="light" labelledBy="svc-onboard">
-        <SectionHead
-          id="svc-onboard"
+      <Chapter tone="canvas" labelledBy="svc-process">
+        <Intro
+          id="svc-process"
           eyebrow="How we take over a site"
           title={
             <>
@@ -140,8 +129,8 @@ export default function ServicesPage() {
           }
           lead="Timelines depend on site size, and we commit to them in writing after the survey."
         />
-        <StepFlow steps={onboarding} label="How SDC takes over a site" />
-      </Section>
+        <Route steps={onboarding} label="How SDC takes over a site" />
+      </Chapter>
 
       <CtaBand />
     </>
