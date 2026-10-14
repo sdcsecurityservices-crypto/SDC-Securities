@@ -850,7 +850,7 @@ a:hover > .v2-btn-arrow {
   padding: 18px 0;
 }
 .v2-sheet-extra a {
-  padding: 8px 0;
+  padding: 11px 0;
   color: var(--navy-700);
   font-weight: 500;
 }
@@ -888,7 +888,7 @@ a:hover > .v2-btn-arrow {
     height: 64px;
   }
   .v2-sheet {
-    top: 68px;
+    top: var(--sheet-top, 68px);
   }
   .v2-utility .v2-mono-cap {
     display: none;
@@ -959,7 +959,7 @@ a:hover > .v2-btn-arrow {
     height: 64px;
   }
   .v2-sheet {
-    top: 64px;
+    top: var(--sheet-top, 64px);
   }
 }
 
@@ -5094,4 +5094,141 @@ a:hover > .v2-btn-arrow {
 }
 .v2-ind-media {
   background: var(--navy-950);
+}
+
+/* ==========================================================================
+   Mobile polish: tap targets, sticky action bar clearance, readable small
+   print. Scoped to phone and tablet widths; the desktop layout is untouched.
+   ========================================================================== */
+@media (max-width: 1180px) {
+  /* the fixed Call / WhatsApp / Survey bar: clear it with the footer's own
+     navy (no cream strip under the footer) and respect the home indicator */
+  .v2 {
+    padding-bottom: 0;
+  }
+  .v2-footer {
+    padding-bottom: calc(28px + 60px + env(safe-area-inset-bottom));
+  }
+  html:has(.v2-bottom-bar) {
+    /* focused form fields and anchor targets never land under the bar */
+    scroll-padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+  .v2-bottom-bar a {
+    font-size: 13.5px;
+  }
+}
+@media (max-width: 640px) {
+  /* utility bar: keep the 36px strip, widen each link's touch area */
+  .v2-utility a,
+  .v2-crumbs a {
+    position: relative;
+  }
+  .v2-utility a::after,
+  .v2-crumbs a::after {
+    content: "";
+    position: absolute;
+    inset: -12px -6px;
+  }
+  .v2-crumbs ol {
+    font-size: 14.5px;
+  }
+  .v2-crumbs li {
+    gap: 10px;
+  }
+  .v2-crumbs ol {
+    column-gap: 10px;
+  }
+
+  /* inline text links and small buttons reach 44px */
+  .v2-link,
+  .v2-duo-link {
+    min-height: 44px;
+  }
+  .v2-duo-link {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+  }
+  .v2-btn--sm {
+    min-height: 44px;
+  }
+  .v2-chips button {
+    height: 44px;
+  }
+  .v2-subnav a {
+    height: 44px;
+  }
+  .v2-video-toggle {
+    height: 44px;
+    /* sit above the hero copy instead of on top of the lead paragraph */
+    top: 16px;
+    bottom: auto;
+  }
+  .v2-info-big,
+  .v2-info-card a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* hero slideshow controls */
+  .v2-slide-buttons button {
+    width: 44px;
+    height: 44px;
+  }
+  .v2-slide-label span,
+  .v2-slide-label {
+    font-size: 12.5px;
+  }
+
+  /* footer: each link is a full-height row */
+  .v2-footer-col ul {
+    gap: 0;
+  }
+  .v2-footer-col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .v2-footer-contact {
+    gap: 0;
+  }
+  .v2-footer-contact a {
+    padding: 10px 0;
+  }
+  .v2-footer-bottom a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .v2-fcred-note,
+  .v2-seal-note {
+    font-size: 14px;
+  }
+
+  /* leader stats: the record row fits three short words */
+  .v2-record dd {
+    font-size: 20px;
+  }
+  .v2-duo-line {
+    font-size: 14px;
+  }
+
+  /* wall of honour: full client names, two lines rather than an ellipsis */
+  .v2-wall-grid {
+    grid-auto-rows: 136px;
+  }
+  .v2-plaque-foot strong {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-size: 13px;
+  }
+}
+@media (max-width: 420px) {
+  .v2-record dd {
+    font-size: 17px;
+  }
 }

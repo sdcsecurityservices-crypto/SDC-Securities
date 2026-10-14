@@ -162,9 +162,17 @@ export function SiteHeader() {
   const pathname = usePathname() || BASE;
   const [mobile, setMobile] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!mobile) return;
+    // The sheet opens directly under the header, wherever the header sits: below the
+    // utility bar at the top of the page, or pinned to the top once scrolled.
+    const place = () => {
+      const bottom = headerRef.current?.getBoundingClientRect().bottom;
+      if (bottom) headerRef.current!.style.setProperty("--sheet-top", `${Math.round(bottom)}px`);
+    };
+    place();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setMobile(false);
@@ -173,6 +181,7 @@ export function SiteHeader() {
     };
     const onResize = () => {
       if (window.innerWidth > 1180) setMobile(false);
+      else place();
     };
     document.addEventListener("keydown", onKey);
     window.addEventListener("resize", onResize);
@@ -187,7 +196,7 @@ export function SiteHeader() {
   return (
     <>
       <UtilityBar />
-      <header className="v2-header">
+      <header className="v2-header" ref={headerRef}>
         <div className="v2-header-inner">
           <Wordmark />
           <nav className="v2-nav" aria-label="Main">
