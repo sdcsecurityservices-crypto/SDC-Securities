@@ -19,7 +19,7 @@ export function AuthLayout({
     <main className="auth-page">
       <aside className="auth-brand-panel">
         <Link href="/" className="auth-brand auth-brand--grand" aria-label="SDC Security & Facility Services, SDC Command">
-          <img src="/brand/sdc-logo.png" alt="" width={96} height={96} />
+          <img src="/brand/sdc-logo.png" alt="" width={132} height={132} />
           <span className="auth-word" aria-hidden="true">
             <span className="auth-word-main">
               SDC Security &amp;
