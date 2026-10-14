@@ -3,6 +3,7 @@ import { ArrowRight, BadgeCheck, GraduationCap, HeartPulse, Medal, MessageCircle
 import { company, whatsappLink } from "@/lib/company";
 import type { Opening } from "@/lib/careers/server";
 import { optionKey } from "@/lib/careers/i18n";
+import { shifts } from "@/lib/careers/options";
 import { CareersFooter, CareersHeader, useCareersLang } from "./shared";
 
 const perks = [
@@ -67,7 +68,7 @@ export default function CareersHome({ openings }: { openings: Opening[] }) {
                       )}
                       {o.shift && (
                         <span>
-                          <Clock size={14} aria-hidden /> {o.shift}
+                          <Clock size={14} aria-hidden /> {(shifts as readonly string[]).includes(o.shift) ? t(optionKey("shift_", o.shift)) : o.shift}
                         </span>
                       )}
                       <span>
