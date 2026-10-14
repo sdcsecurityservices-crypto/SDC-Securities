@@ -77,13 +77,31 @@ export default function HomePage() {
             <p className="v2-lead" style={{ marginTop: 24 }}>
               Three reasons, in order: who leads, how you see the work, and how the paperwork is done.
             </p>
-            <figure className="v2-portrait-strip">
-              <img src="/images/founder-lokesh.png" alt="Lokesh PN, Founder and Managing Director" width={449} height={731} loading="lazy" />
-              <figcaption>
-                <strong>Lokesh PN</strong>
-                <span className="v2-mono-cap">Founder &amp; MD · 17 yrs Indian Army</span>
-              </figcaption>
-            </figure>
+            <div className="v2-duo" aria-label="SDC leadership">
+              <figure className="v2-duo-card">
+                <div className="v2-duo-photo">
+                  <img src="/images/founder-lokesh.png" alt="Lokesh PN, Founder and Managing Director" width={449} height={731} loading="lazy" />
+                </div>
+                <figcaption>
+                  <span className="v2-mono-cap">Founder &amp; MD</span>
+                  <strong>Lokesh PN</strong>
+                  <span className="v2-duo-line">17 years, Indian Army Air Defence. Kargil and Operation Parakram.</span>
+                </figcaption>
+              </figure>
+              <figure className="v2-duo-card">
+                <div className="v2-duo-photo">
+                  <img src="/images/director-vijay.png" alt="Vijay Kumar G, Director" width={560} height={995} loading="lazy" />
+                </div>
+                <figcaption>
+                  <span className="v2-mono-cap">Director</span>
+                  <strong>Vijay Kumar G</strong>
+                  <span className="v2-duo-line">21 years in marketing and client relationships. 5,000+ customers guided.</span>
+                </figcaption>
+              </figure>
+              <a className="v2-duo-link" href={`${BASE}/about#leadership`}>
+                Meet the leadership <span aria-hidden="true">→</span>
+              </a>
+            </div>
           </div>
           <Chain
             label="Why clients choose SDC"
