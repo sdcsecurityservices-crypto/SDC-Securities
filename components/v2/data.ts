@@ -651,5 +651,13 @@ export const nav: { label: string; href?: string; kind?: "mega" | "list"; childr
       { label: "Contact", href: `${BASE}/contact`, note: "Phone, WhatsApp and office" },
     ],
   },
-  { label: "Careers", href: `${BASE}/careers` },
+  {
+    label: "Careers",
+    kind: "list",
+    children: [
+      { label: "Careers at SDC", href: `${BASE}/careers`, note: "Roles, training and why join" },
+      { label: "Open positions", href: "/careers", note: "Current openings in English, ಕನ್ನಡ, हिन्दी" },
+      { label: "Apply online", href: CAREERS_APPLY_URL, note: "Two minutes on your phone, CV optional" },
+    ],
+  },
 ];

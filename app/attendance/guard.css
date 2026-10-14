@@ -18,7 +18,7 @@
   min-height: 100dvh;
   background: var(--canvas);
   color: var(--ink);
-  font-family: "DM Sans", system-ui, -apple-system, "Noto Sans Kannada", "Noto Sans Devanagari", sans-serif;
+  font-family: "IBM Plex Sans", system-ui, -apple-system, "Noto Sans Kannada", "Noto Sans Devanagari", sans-serif;
   font-size: 16px;
   line-height: 1.45;
   padding-bottom: calc(84px + env(safe-area-inset-bottom));
@@ -26,7 +26,7 @@
 }
 .g-app h1,
 .g-app h2 {
-  font-family: "Manrope", "DM Sans", system-ui, sans-serif;
+  font-family: "Archivo", "IBM Plex Sans", system-ui, sans-serif;
   letter-spacing: -0.02em;
   margin: 0;
 }
@@ -223,7 +223,7 @@
   margin-top: 4px;
 }
 .g-time {
-  font-family: "Manrope", sans-serif;
+  font-family: "Archivo", sans-serif;
   font-size: 20px;
   font-weight: 750;
   color: var(--navy-2);
