@@ -22,6 +22,7 @@ const clients = [
   {name:'Ramalingam Construction',file:'ramalingam.png'},
   {name:'Shrishaila Electricals',file:'shrishaila.png'},
   {name:'Satellite Club',file:null},
+  {name:'Jindal Naturecare Limited',file:'jindal-naturecare.png'},
 ];
 
 function ClientMark({client}:{client:typeof clients[number]}) {

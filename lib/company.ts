@@ -9,7 +9,7 @@ export const company = {
   whatsapp: "919980343925",
   email: "sdcpvtltd01@gmail.com",
   address: {
-    street: "No. 102, Kempamma Layout, Mariyappana Palya",
+    street: "No. 102, Ground Floor, Kempamma Layout, near St. Philomena's School, Mariyappana Palya",
     locality: "Bengaluru",
     region: "Karnataka",
     postalCode: "560056",
