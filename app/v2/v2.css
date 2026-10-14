@@ -3047,6 +3047,106 @@ a:hover > .v2-btn-arrow {
   font-weight: 600;
 }
 
+.v2-duo {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  max-width: 600px;
+}
+.v2-duo-card {
+  flex: 1 1 160px;
+}
+.v2-duo-card {
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-bottom: 2px solid var(--navy-900);
+  border-radius: 10px 10px 4px 4px;
+  overflow: hidden;
+}
+.v2-duo-photo {
+  position: relative;
+  height: 230px;
+  background: radial-gradient(circle at 50% 70%, #fff 0%, var(--stone) 75%);
+  overflow: hidden;
+}
+.v2-duo-photo::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -60px;
+  width: 220px;
+  height: 220px;
+  margin-left: -110px;
+  border: 1px solid rgba(140, 106, 10, 0.35);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.v2-duo-photo img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+.v2-duo-card:first-child .v2-duo-photo img {
+  object-fit: contain;
+  object-position: 50% 4px;
+  transform: scale(1.72);
+  transform-origin: 50% 0%;
+}
+.v2-duo-card:last-child .v2-duo-photo img {
+  object-fit: contain;
+  object-position: 50% 16px;
+  transform: scale(0.88);
+  transform-origin: 50% 0%;
+}
+.v2-duo-card figcaption {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 16px 16px 18px;
+}
+.v2-duo-card .v2-mono-cap {
+  color: var(--gold-700);
+}
+.v2-duo-card strong {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 650;
+  font-stretch: 108%;
+  color: var(--text-1);
+}
+.v2-duo-line {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.v2-duo-link {
+  flex-basis: 100%;
+  justify-self: start;
+  font-weight: 600;
+  color: var(--navy-900);
+  border-bottom: 1px solid var(--gold-500);
+  padding-bottom: 2px;
+}
+@media (max-width: 420px) {
+  .v2-duo {
+    gap: 12px;
+  }
+  .v2-duo-photo {
+    height: 190px;
+  }
+  .v2-duo-line {
+    font-size: 13px;
+  }
+}
+
 /* ---------- day in the system ---------- */
 .v2-day {
   display: grid;
