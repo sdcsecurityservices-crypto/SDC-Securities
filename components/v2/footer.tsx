@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowUpRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import { BASE, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, addressLines, company, industries, iso, mapsUrl, services, whatsappLink } from "./data";
+import { AlertTriangle, ArrowUpRight, BadgeCheck, FileCheck2, Landmark, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
+import { BASE, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, addressLines, company, industries, iso, mapsUrl, services, whatsappLink, CAREERS_APPLY_URL } from "./data";
 import { Wordmark } from "./header";
 import { Rings } from "./ui";
 
@@ -23,6 +23,8 @@ export function SiteFooter() {
         { label: "Clients", href: `${BASE}/clients` },
         { label: "Compliance", href: `${BASE}/compliance` },
         { label: "Careers", href: `${BASE}/careers` },
+        { label: "Open positions", href: "/careers" },
+        { label: "Apply online", href: CAREERS_APPLY_URL },
         { label: "Client portal", href: PORTAL_URL },
         { label: "Interactive demo", href: DEMO_URL },
       ],
@@ -87,14 +89,34 @@ export function SiteFooter() {
             </address>
           </div>
         </div>
-        <p className="v2-footer-creds v2-mono-cap">
-          <span>PSARA licence no. {company.psara}</span>
-          <span>
-            ISO 9001:2015 cert. no. {iso.number} · {iso.body} · valid to {iso.validTo}
-          </span>
-          <span>CIN {company.cin}</span>
-          <span>EPF · ESI · GST registered</span>
-        </p>
+        <ul className="v2-footer-creds" aria-label="Licences and registrations">
+          <li>
+            <ShieldCheck size={20} aria-hidden="true" />
+            <span className="v2-fcred-label">PSARA licence</span>
+            <span className="v2-fcred-value">{company.psara}</span>
+            <span className="v2-fcred-note">Private security agency, Karnataka</span>
+          </li>
+          <li>
+            <BadgeCheck size={20} aria-hidden="true" />
+            <span className="v2-fcred-label">ISO 9001:2015</span>
+            <span className="v2-fcred-value">{iso.number}</span>
+            <span className="v2-fcred-note">
+              {iso.body} · valid to {iso.validTo}
+            </span>
+          </li>
+          <li>
+            <Landmark size={20} aria-hidden="true" />
+            <span className="v2-fcred-label">Company (CIN)</span>
+            <span className="v2-fcred-value">{company.cin}</span>
+            <span className="v2-fcred-note">Private limited, incorporated 2017</span>
+          </li>
+          <li>
+            <FileCheck2 size={20} aria-hidden="true" />
+            <span className="v2-fcred-label">Statutory</span>
+            <span className="v2-fcred-value">EPF · ESI · GST</span>
+            <span className="v2-fcred-note">Registered, paid for every employee</span>
+          </li>
+        </ul>
         <p className="v2-scam">
           <AlertTriangle size={17} aria-hidden="true" />
           <span>

@@ -16,7 +16,7 @@ export default function Entry() {
       .then((to) => window.location.replace(to));
   }, []);
   return (
-    <main style={{ minHeight: "100dvh", display: "grid", placeItems: "center", background: "#f3f6fa", color: "#3d526d", fontFamily: "DM Sans, system-ui, sans-serif" }}>
+    <main style={{ minHeight: "100dvh", display: "grid", placeItems: "center", background: "#f3f6fa", color: "#3d526d", fontFamily: "IBM Plex Sans, system-ui, sans-serif" }}>
       <p style={{ display: "flex", gap: 10, alignItems: "center" }}>
         <LoaderCircle size={18} style={{ animation: "spin 0.8s linear infinite" }} /> Opening your workspace…
       </p>

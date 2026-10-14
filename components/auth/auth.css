@@ -4,7 +4,7 @@
   grid-template-columns: minmax(360px, 5fr) 7fr;
   background: #fff;
   color: #0d213d;
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
 }
 .auth-brand-panel {
   position: relative;
@@ -34,7 +34,7 @@
   align-items: center;
   gap: 12px;
   color: #fff;
-  font-family: "Manrope", sans-serif;
+  font-family: "Archivo", sans-serif;
   font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -44,7 +44,7 @@
   border-radius: 50%;
 }
 .auth-brand b {
-  font-family: "DM Sans", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -52,7 +52,7 @@
   color: #ffdd55;
 }
 .auth-pitch h2 {
-  font-family: "Manrope", sans-serif;
+  font-family: "Archivo", sans-serif;
   font-size: clamp(30px, 3vw, 42px);
   font-weight: 750;
   line-height: 1.15;
@@ -106,7 +106,7 @@
   color: #62748b;
 }
 .auth-card h1 {
-  font-family: "Manrope", sans-serif;
+  font-family: "Archivo", sans-serif;
   font-size: 34px;
   font-weight: 750;
   letter-spacing: -0.03em;

@@ -1962,6 +1962,94 @@ a:hover > .v2-btn-arrow {
   margin-left: -20px;
   background: var(--gold-500);
 }
+/* Hover reveal: on devices that can hover, the plaque shows only the logo.
+   Hovering (or focusing) lifts the logo and slides up a navy name band led by
+   a gold scan line. Touch devices keep the name visible all the time. */
+@media (hover: hover) and (pointer: fine) {
+  .v2-plaque {
+    cursor: default;
+    transition: outline-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+  .v2-plaque-mark {
+    padding: 14px 18px;
+    transition: transform 0.4s var(--ease);
+  }
+  .v2-plaque-foot,
+  .v2-plaque--major .v2-plaque-foot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 14px 12px;
+    background: linear-gradient(180deg, rgba(3, 20, 46, 0.94), #03142e);
+    transform: translateY(101%);
+    transition: transform 0.4s var(--ease);
+  }
+  .v2-plaque--major .v2-plaque-foot {
+    padding: 18px 20px 18px;
+  }
+  .v2-plaque-foot::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background: var(--gold-400);
+    box-shadow: 0 0 14px 2px rgba(255, 220, 46, 0.55);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease) 0.08s;
+  }
+  .v2-plaque-foot strong {
+    color: var(--on-dark-1);
+  }
+  .v2-plaque-foot .v2-mono-cap {
+    color: var(--gold-400);
+    letter-spacing: 0.12em;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s var(--ease) 0.14s, transform 0.3s var(--ease) 0.14s;
+  }
+  .v2-plaque:hover,
+  .v2-plaque:focus-visible {
+    outline-color: var(--gold-500);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 22px 44px -18px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 220, 46, 0.35);
+    transform: translateY(-3px);
+  }
+  .v2-plaque:hover .v2-plaque-mark,
+  .v2-plaque:focus-visible .v2-plaque-mark {
+    transform: translateY(-16%) scale(0.9);
+  }
+  .v2-plaque:hover .v2-plaque-foot,
+  .v2-plaque:focus-visible .v2-plaque-foot,
+  .v2-plaque:hover .v2-plaque-foot::before,
+  .v2-plaque:focus-visible .v2-plaque-foot::before {
+    transform: none;
+  }
+  .v2-plaque:hover .v2-plaque-foot .v2-mono-cap,
+  .v2-plaque:focus-visible .v2-plaque-foot .v2-mono-cap {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+  .v2-plaque,
+  .v2-plaque-mark,
+  .v2-plaque-foot,
+  .v2-plaque-foot::before,
+  .v2-plaque-foot .v2-mono-cap {
+    transition: none;
+  }
+  .v2-plaque:hover,
+  .v2-plaque:focus-visible {
+    transform: none;
+  }
+}
+.v2-plaque:focus-visible {
+  outline: 2px solid var(--gold-500);
+  outline-offset: 2px;
+}
 .v2-chips {
   display: flex;
   flex-wrap: wrap;
@@ -2249,15 +2337,79 @@ a:hover > .v2-btn-arrow {
   font-family: "Noto Sans Kannada", var(--font-body);
 }
 .v2-footer-creds {
-  margin-top: 64px;
-  padding: 18px 0;
-  border-top: 1px solid var(--line-on-dark);
-  border-bottom: 1px solid var(--line-on-dark);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 28px;
-  color: var(--on-dark-2) !important;
-  font-size: 12px !important;
+  list-style: none;
+  margin: 64px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--line-on-dark);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
+  overflow: hidden;
+}
+.v2-footer-creds li {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 14px;
+  row-gap: 4px;
+  align-content: start;
+  padding: 22px 22px 20px;
+}
+.v2-footer-creds li + li {
+  border-left: 1px solid var(--line-on-dark);
+}
+.v2-footer-creds li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22px;
+  width: 28px;
+  height: 2px;
+  background: var(--gold-400);
+}
+.v2-footer-creds svg {
+  grid-row: span 3;
+  color: var(--gold-400);
+  margin-top: 1px;
+}
+.v2-fcred-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-dark-3);
+}
+.v2-fcred-value {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--on-dark-1);
+  overflow-wrap: anywhere;
+}
+.v2-fcred-note {
+  font-size: 13px;
+  color: var(--on-dark-2);
+}
+@media (max-width: 1024px) {
+  .v2-footer-creds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .v2-footer-creds li:nth-child(3) {
+    border-left: 0;
+  }
+  .v2-footer-creds li:nth-child(n + 3) {
+    border-top: 1px solid var(--line-on-dark);
+  }
+}
+@media (max-width: 600px) {
+  .v2-footer-creds {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v2-footer-creds li + li {
+    border-left: 0;
+    border-top: 1px solid var(--line-on-dark);
+  }
 }
 .v2-scam {
   display: flex;

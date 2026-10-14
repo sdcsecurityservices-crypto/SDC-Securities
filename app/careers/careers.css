@@ -20,13 +20,13 @@
   flex-direction: column;
   background: #fff;
   color: var(--cr-ink);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   overflow-x: clip;
 }
 .careers-page h1,
 .careers-page h2,
 .careers-page h3 {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Archivo', sans-serif;
   color: var(--cr-navy);
 }
 .careers-page[data-lang="kn"],
@@ -36,7 +36,7 @@
 .careers-page[data-lang="kn"] input,
 .careers-page[data-lang="kn"] select,
 .careers-page[data-lang="kn"] button {
-  font-family: 'Noto Sans Kannada', 'DM Sans', sans-serif;
+  font-family: 'Noto Sans Kannada', 'IBM Plex Sans', sans-serif;
 }
 .careers-page[data-lang="hi"],
 .careers-page[data-lang="hi"] h1,
@@ -45,7 +45,7 @@
 .careers-page[data-lang="hi"] input,
 .careers-page[data-lang="hi"] select,
 .careers-page[data-lang="hi"] button {
-  font-family: 'Noto Sans Devanagari', 'DM Sans', sans-serif;
+  font-family: 'Noto Sans Devanagari', 'IBM Plex Sans', sans-serif;
 }
 .careers-page [lang="en"],
 .careers-page .brand-word {
@@ -893,7 +893,7 @@
   font-weight: 600;
 }
 .careers-ref {
-  font-family: 'Manrope', monospace !important;
+  font-family: 'Archivo', monospace !important;
   font-size: clamp(26px, 7vw, 36px);
   font-weight: 800;
   letter-spacing: 1px;

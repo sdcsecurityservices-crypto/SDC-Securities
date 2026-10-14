@@ -13,6 +13,7 @@ function Plaque({ c, i }: { c: Client; i: number }) {
     <li
       className={`v2-plaque v2-plaque--${c.marquee ? "major" : "minor"} v2-plaque--${c.shape}${c.span ? " v2-plaque--span" : ""}`}
       data-seal=""
+      tabIndex={0}
       style={{ ["--i" as string]: i % 8, viewTransitionName: `v2-plaque-${i}` }}
     >
       <div className="v2-plaque-mark">

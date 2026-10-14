@@ -96,7 +96,7 @@
   box-shadow: var(--sdc-shadow);
 }
 .cc-kpi strong {
-  font-family: "Manrope", sans-serif;
+  font-family: "Archivo", sans-serif;
   font-size: 30px;
   font-weight: 750;
   letter-spacing: -0.02em;
@@ -301,7 +301,7 @@
 .cc-pin-label {
   fill: #dbe6f5;
   font-size: 13px;
-  font-family: "DM Sans", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   paint-order: stroke;
   stroke: #06214a;
   stroke-width: 4px;
