@@ -639,3 +639,34 @@ export function CtaBand({
     </section>
   );
 }
+
+export function GuardHelpline({ phone, phoneDisplay, hours }: { phone: string; phoneDisplay: string; hours: string }) {
+  const wa = `https://wa.me/${phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Hello SDC, I am an SDC employee and need help with:")}`;
+  return (
+    <section className="v2-helpline v2-dark" aria-labelledby="v2-helpline-title">
+      <div className="v2-wrap v2-helpline-grid">
+        <div>
+          <p className="v2-eyebrow">For SDC guards and staff</p>
+          <h2 className="v2-h3" id="v2-helpline-title">
+            Guard helpline
+          </h2>
+          <p className="v2-helpline-lead">
+            Pay, PF or ESI, uniform, leave, or a problem at your post: talk to us directly. Kannada, Hindi or English.
+            What you tell us stays confidential.
+          </p>
+          <p className="v2-mono-cap v2-helpline-hours">{hours}</p>
+        </div>
+        <div className="v2-helpline-actions">
+          <a className="v2-btn v2-btn--primary" href={`tel:${phone}`}>
+            <span>Call {phoneDisplay}</span>
+          </a>
+          <a className="v2-btn v2-btn--secondary" href={wa} target="_blank" rel="noopener noreferrer">
+            <span>WhatsApp the helpline</span>
+            <span className="v2-sr"> (opens in a new tab)</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+

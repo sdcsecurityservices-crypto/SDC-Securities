@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { ArrowRight, Briefcase, LayoutDashboard, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { CAREERS_APPLY_URL, PORTAL_URL, addressLines, company, mapsUrl, onboarding, whatsappLink } from "@/components/v2/data";
 import { EnquiryForm } from "@/components/v2/enquiry-form";
-import { Accent, Chapter, HeroCompact, Intro, Route } from "@/components/v2/ui";
+import { Accent, Chapter, GuardHelpline, HeroCompact, Intro, Route } from "@/components/v2/ui";
+import { guardHelpline } from "@/components/v2/extras-data";
 
 export const metadata: Metadata = {
   title: "Contact & site survey",
@@ -126,6 +127,8 @@ export default function ContactPage() {
         />
         <Route steps={onboarding} label="How SDC takes over a site" />
       </Chapter>
+
+      <GuardHelpline {...guardHelpline} />
     </>
   );
 }

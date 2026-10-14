@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { equipment } from "./extras-data";
 import { BASE, SURVEY_URL, company, industryBySlug, iso, serviceBySlug, services, type ServiceSlug } from "./data";
 import {
   Accent,
@@ -148,6 +149,33 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
                 </li>
               ))}
             </ol>
+          </div>
+        </Chapter>
+      )}
+
+      {slug === "security" && equipment.show && (
+        <Chapter tone="stone" labelledBy="svc-equip">
+          <Intro
+            id="svc-equip"
+            eyebrow="Equipment"
+            title={
+              <>
+                People first, <Accent>with the right kit.</Accent>
+              </>
+            }
+            lead="Equipment we supply, install or manage alongside our guards."
+          />
+          <div className="v2-equip">
+            {equipment.groups.map((g) => (
+              <div key={g.title} className="v2-equip-card">
+                <h3>{g.title}</h3>
+                <ul>
+                  {g.items.map((i) => (
+                    <li key={i}>{i}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </Chapter>
       )}

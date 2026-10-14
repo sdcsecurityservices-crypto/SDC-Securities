@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { AlertTriangle, ArrowRight, Medal, ShieldCheck, SprayCan, UserCog, UserRound } from "lucide-react";
 import { BASE, CAREERS_APPLY_URL, CAREERS_KN_URL, company, perks, whatsappLink } from "@/components/v2/data";
-import { Accent, Btn, Chain, Chapter, Eyebrow, HeroPhoto, Intro, Pic, Route, Rule } from "@/components/v2/ui";
+import { Accent, Btn, Chain, Chapter, Eyebrow, GuardHelpline, HeroPhoto, Intro, Pic, Route, Rule } from "@/components/v2/ui";
+import { guardHelpline } from "@/components/v2/extras-data";
 
 export const metadata: Metadata = {
   title: "Careers",
@@ -165,6 +166,8 @@ export default function CareersPage() {
           </Btn>
         </div>
       </Chapter>
+
+      <GuardHelpline {...guardHelpline} />
 
       <section className="v2-scam-band v2-dark" aria-labelledby="ca-scam">
         <div className="v2-wrap v2-scam-grid">
