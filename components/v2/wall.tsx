@@ -37,7 +37,7 @@ export function WallOfHonour({ mode = "full" }: { mode?: "full" | "condensed" })
   const [filter, setFilter] = useState<ClientFilter | "all">("all");
   const list =
     mode === "condensed"
-      ? clients.filter((c, i) => c.marquee || clients.slice(0, i).filter((x) => !x.marquee).length < 6)
+      ? clients.filter((c, i) => c.marquee || clients.slice(0, i).filter((x) => !x.marquee).length < 12)
       : clients;
   const choose = (f: ClientFilter | "all") => {
     type VT = { ready: Promise<void>; finished: Promise<void>; updateCallbackDone: Promise<void> };
