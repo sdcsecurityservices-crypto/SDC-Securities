@@ -2328,6 +2328,28 @@ a:hover > .v2-btn-arrow {
   gap: 20px;
   align-content: start;
 }
+/* Footer keeps a compact lockup; the header sizes don't apply here */
+.v2-footer-brand .v2-brand {
+  gap: 12px;
+  min-width: 0;
+}
+.v2-footer-brand .v2-brand-crest {
+  width: 60px;
+  height: 60px;
+}
+.v2-footer-brand .v2-brand-word {
+  gap: 6px;
+  min-width: 0;
+}
+.v2-footer-brand .v2-bw-main {
+  font-size: 14px;
+  white-space: normal;
+}
+.v2-footer-brand .v2-bw-tag {
+  font-size: 8.5px;
+  letter-spacing: 1.6px;
+  white-space: normal;
+}
 .v2-footer-brand > p {
   color: var(--on-dark-2);
   max-width: 34ch;
