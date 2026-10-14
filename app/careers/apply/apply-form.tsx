@@ -713,6 +713,11 @@ export default function ApplyForm({
               <section className="careers-consent" aria-labelledby="consent-title">
                 <h3 id="consent-title">{t("consentTitle")}</h3>
                 <p id="consent-text">{t("consentText")}</p>
+                <p>
+                  <a className="careers-privacy-link" href="/v2/privacy" target="_blank" rel="noopener">
+                    {t("privacyLink")}
+                  </a>
+                </p>
                 <label className={"careers-check big" + (errors.consent ? " has-error" : "")}>
                   <input type="checkbox" checked={form.consent} aria-describedby="consent-text" aria-invalid={!!errors.consent} onChange={(e) => set("consent", e.target.checked)} />
                   <span>{t("consentAgree")}</span>

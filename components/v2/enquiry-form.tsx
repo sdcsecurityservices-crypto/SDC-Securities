@@ -97,6 +97,9 @@ export function EnquiryForm() {
           <span>Send on WhatsApp instead</span>
         </button>
       </div>
+      <p className="v2-form-privacy">
+        We use your details only to respond to your enquiry. See our <a href="/v2/privacy">Privacy Policy</a>.
+      </p>
       {opened && (
         <p role="status" className="v2-form-note">
           Your message is ready to send. If nothing opened, call {company.phoneDisplay} or email {company.email}. This

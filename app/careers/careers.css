@@ -1035,3 +1035,10 @@
     margin: -11px -6px -11px 0;
   }
 }
+
+.careers-privacy-link {
+  color: var(--cr-navy);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

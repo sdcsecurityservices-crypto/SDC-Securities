@@ -67,7 +67,9 @@ export function CareersHeader({ lang, onLang, t, action }: { lang: Lang; onLang:
 export function CareersFooter({ t }: { t: (k: Key, v?: Record<string, string | number>) => string }) {
   return (
     <footer className="careers-footer">
-      <p>{t("privacyShort")}</p>
+      <p>
+        {t("privacyShort")} <a href="/v2/privacy">{t("privacyLink")}</a>
+      </p>
       <p>
         © {new Date().getFullYear()} SDC Security &amp; Facility Services Pvt. Ltd. ·{" "}
         <a href="mailto:sdcpvtltd01@gmail.com">sdcpvtltd01@gmail.com</a>

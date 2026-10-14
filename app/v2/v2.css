@@ -5187,10 +5187,16 @@ a:hover > .v2-btn-arrow {
   .v2-footer-contact a {
     padding: 10px 0;
   }
-  .v2-footer-bottom a {
+  .v2-footer-bottom a,
+  .v2-footer-legal a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+  }
+  /* legal pages: table of contents rows */
+  .v2-toc a {
+    min-height: 44px;
+    align-items: center;
   }
 }
 /* phones */
