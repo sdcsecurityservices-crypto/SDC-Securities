@@ -47,7 +47,7 @@ export default function CareersHome({ openings }: { openings: Opening[] }) {
             <p className="careers-hero-note">{t("noCvNote")}</p>
           </div>
           <figure className="careers-hero-photo">
-            <img src="/images/team/guards-and-lady-guards.jpg" alt="SDC guards and lady guards standing in line in uniform" width={1600} height={1174} />
+            <img src="/images/team/guards-and-lady-guards.jpg" srcSet="/images/team/guards-and-lady-guards-800.jpg 800w, /images/team/guards-and-lady-guards.jpg 1600w" sizes="(max-width: 900px) 100vw, 50vw" alt="SDC guards and lady guards standing in line in uniform" width={1600} height={1174} />
           </figure>
         </section>
 
