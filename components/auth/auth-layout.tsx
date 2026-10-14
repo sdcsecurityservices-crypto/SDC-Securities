@@ -18,10 +18,16 @@ export function AuthLayout({
   return (
     <main className="auth-page">
       <aside className="auth-brand-panel">
-        <Link href="/" className="auth-brand">
-          <img src="/brand/sdc-logo.png" alt="" width={48} height={48} />
-          <span>
-            SDC <b>Command</b>
+        <Link href="/" className="auth-brand auth-brand--grand" aria-label="SDC Security & Facility Services, SDC Command">
+          <img src="/brand/sdc-logo.png" alt="" width={96} height={96} />
+          <span className="auth-word" aria-hidden="true">
+            <span className="auth-word-main">
+              SDC Security &amp;
+              <br />
+              Facility Services
+            </span>
+            <span className="auth-word-tag">An ex-servicemen enterprise</span>
+            <span className="auth-word-app">SDC Command</span>
           </span>
         </Link>
         <div className="auth-pitch">
@@ -51,10 +57,16 @@ export function AuthLayout({
         </p>
       </aside>
       <section className="auth-form-panel">
-        <Link href="/" className="auth-brand auth-brand-mobile">
-          <img src="/brand/sdc-logo.png" alt="" width={40} height={40} />
-          <span>
-            SDC <b>Command</b>
+        <Link href="/" className="auth-brand auth-brand-mobile" aria-label="SDC Security & Facility Services, SDC Command">
+          <img src="/brand/sdc-logo.png" alt="" width={52} height={52} />
+          <span className="auth-word" aria-hidden="true">
+            <span className="auth-word-main">
+              SDC Security &amp;
+              <br />
+              Facility Services
+            </span>
+            <span className="auth-word-tag">An ex-servicemen enterprise</span>
+            <span className="auth-word-app">SDC Command</span>
           </span>
         </Link>
         <div className="auth-card">

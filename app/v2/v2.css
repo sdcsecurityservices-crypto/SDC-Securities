@@ -603,8 +603,8 @@ a:hover > .v2-btn-arrow {
   flex: none;
 }
 .v2-brand-crest {
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   object-fit: contain;
   flex: none;
@@ -940,8 +940,8 @@ a:hover > .v2-btn-arrow {
     gap: 8px;
   }
   .v2-brand-crest {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
   .v2-brand-word {
     gap: 4px;
