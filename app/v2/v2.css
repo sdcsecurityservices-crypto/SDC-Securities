@@ -786,6 +786,21 @@ a:hover > .v2-btn-arrow {
   gap: 10px;
   flex: none;
 }
+/* Menu scaled up slightly to sit with the 100px header (wide screens only) */
+@media (min-width: 1321px) {
+  .v2-nav-link {
+    font-size: 16px;
+    padding: 0 14px;
+  }
+  .v2-header-actions .v2-btn {
+    font-size: 16px;
+    min-height: 52px;
+  }
+  .v2-header-actions .v2-icon-btn {
+    width: 52px;
+    height: 52px;
+  }
+}
 .v2-menu-toggle {
   display: none;
   margin-left: auto;
