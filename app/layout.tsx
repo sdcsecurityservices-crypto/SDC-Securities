@@ -4,7 +4,7 @@ import { KeepNavigation } from "@/components/runtime/keep-navigation";
 
 const base = process.env.APP_URL || "https://sdc-command-production-ec49.up.railway.app";
 const description =
-  "Veteran-led security guarding, facility services, manpower and payroll support across Karnataka. PSARA licensed. Based in Bengaluru.";
+  "SDC Security & Facility Services is an ex-servicemen-led, PSARA-licensed and ISO 9001:2015-certified security agency in Bengaluru, providing security guards, facility management, housekeeping and manpower across Karnataka.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(base),
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     "manpower supply",
     "ex-servicemen security",
     "PSARA licensed",
+    "ISO 9001:2015 certified",
   ],
   icons: {
     icon: "/brand/sdc-logo.png",
