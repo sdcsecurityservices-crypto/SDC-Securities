@@ -27,7 +27,9 @@ export function Motion() {
     const jumpToHash = () => {
       const id = decodeURIComponent(window.location.hash.slice(1));
       const el = id ? document.getElementById(id) : null;
-      if (el) el.scrollIntoView({ block: "start", behavior: "auto" });
+      // "instant", not "auto": html has scroll-behavior: smooth, and arriving
+      // at a section should be a cut, not a visible scroll.
+      if (el) el.scrollIntoView({ block: "start", behavior: "instant" });
     };
     if (window.location.hash) {
       requestAnimationFrame(jumpToHash);

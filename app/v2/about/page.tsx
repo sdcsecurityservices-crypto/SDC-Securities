@@ -62,8 +62,8 @@ function Leader({
   flip?: boolean;
 }) {
   return (
-    <article className={`v2-leader${flip ? " v2-leader--flip" : ""}`} aria-labelledby={id}>
-      <div className="v2-leader-portrait">
+    <article id={id.replace("leader-", "")} className={`v2-leader${flip ? " v2-leader--flip" : ""}`} aria-labelledby={id}>
+      <div className="v2-leader-portrait" style={{ viewTransitionName: `vt-${id}` }}>
         <Rings />
         <img src={img} alt={alt} width={w} height={h} loading="lazy" />
         <p className="v2-leader-tag v2-mono-cap">{role}</p>

@@ -78,26 +78,26 @@ export default function HomePage() {
               Three reasons, in order: who leads, how you see the work, and how the paperwork is done.
             </p>
             <div className="v2-duo" aria-label="SDC leadership">
-              <figure className="v2-duo-card">
-                <div className="v2-duo-photo">
+              <a className="v2-duo-card" href={`${BASE}/about#lokesh`} aria-label="Lokesh PN, Founder and Managing Director: read the full profile">
+                <div className="v2-duo-photo" style={{ viewTransitionName: "vt-leader-lokesh" }}>
                   <img src="/images/founder-lokesh.png" alt="Lokesh PN, Founder and Managing Director" width={449} height={731} loading="lazy" />
                 </div>
-                <figcaption>
+                <span className="v2-duo-cap">
                   <span className="v2-mono-cap">Founder &amp; MD</span>
                   <strong>Lokesh PN</strong>
                   <span className="v2-duo-line">17 years, Indian Army Air Defence. Kargil and Operation Parakram.</span>
-                </figcaption>
-              </figure>
-              <figure className="v2-duo-card">
-                <div className="v2-duo-photo">
+                </span>
+              </a>
+              <a className="v2-duo-card" href={`${BASE}/about#vijay`} aria-label="Vijay Kumar G, Director: read the full profile">
+                <div className="v2-duo-photo" style={{ viewTransitionName: "vt-leader-vijay" }}>
                   <img src="/images/director-vijay.png" alt="Vijay Kumar G, Director" width={560} height={995} loading="lazy" />
                 </div>
-                <figcaption>
+                <span className="v2-duo-cap">
                   <span className="v2-mono-cap">Director</span>
                   <strong>Vijay Kumar G</strong>
                   <span className="v2-duo-line">21 years in marketing and client relationships. 5,000+ customers guided.</span>
-                </figcaption>
-              </figure>
+                </span>
+              </a>
               <a className="v2-duo-link" href={`${BASE}/about#leadership`}>
                 Meet the leadership <span aria-hidden="true">→</span>
               </a>

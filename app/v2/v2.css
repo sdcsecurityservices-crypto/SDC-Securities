@@ -3059,6 +3059,9 @@ a:hover > .v2-btn-arrow {
 }
 .v2-duo-card {
   margin: 0;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
   display: grid;
   grid-template-rows: auto 1fr;
   background: var(--paper);
@@ -3106,7 +3109,7 @@ a:hover > .v2-btn-arrow {
   transform: scale(0.88);
   transform-origin: 50% 0%;
 }
-.v2-duo-card figcaption {
+.v2-duo-card .v2-duo-cap {
   display: grid;
   align-content: start;
   gap: 6px;
@@ -3145,6 +3148,37 @@ a:hover > .v2-btn-arrow {
   .v2-duo-line {
     font-size: 13px;
   }
+}
+
+.v2-duo-card:hover,
+.v2-duo-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: var(--e3);
+}
+.v2-duo-card:focus-visible {
+  outline: 2px solid var(--navy-900);
+  outline-offset: 3px;
+}
+.v2-duo-card:hover strong {
+  color: var(--navy-900);
+}
+.v2-leader {
+  scroll-margin-top: 120px;
+}
+/* Leader card on Home expands into the portrait on About (cross-document view transition) */
+::view-transition-group(vt-leader-lokesh),
+::view-transition-group(vt-leader-vijay) {
+  animation-duration: 640ms;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.2, 1);
+  z-index: 50;
+}
+::view-transition-old(vt-leader-lokesh),
+::view-transition-old(vt-leader-vijay),
+::view-transition-new(vt-leader-lokesh),
+::view-transition-new(vt-leader-vijay) {
+  height: 100%;
+  object-fit: cover;
+  animation-duration: 640ms;
 }
 
 /* ---------- day in the system ---------- */
@@ -4051,12 +4085,15 @@ a:hover > .v2-btn-arrow {
   aspect-ratio: 4 / 5;
   border-radius: 16px;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 38%, #0e3f7e 0%, var(--navy-950) 75%);
+  background: radial-gradient(circle at 50% 42%, #ffffff 0%, #f6f3ec 55%, var(--stone) 100%);
+  border: 1px solid var(--line);
+  box-shadow: var(--e2);
   display: flex;
   align-items: flex-end;
   justify-content: center;
 }
 .v2-leader-portrait .v2-rings {
+  color: #c9a400;
   width: 130%;
   height: auto;
   aspect-ratio: 1;
@@ -4075,7 +4112,10 @@ a:hover > .v2-btn-arrow {
   left: 18px;
   top: 18px;
   z-index: 2;
-  color: var(--gold-400) !important;
+  color: var(--gold-700) !important;
+}
+.v2-leader-portrait img {
+  filter: drop-shadow(0 18px 28px rgba(3, 20, 46, 0.22));
 }
 .v2-leader-copy .v2-h2 {
   margin-top: 10px;
