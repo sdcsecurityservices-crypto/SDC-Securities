@@ -10,6 +10,7 @@ import {
   Landmark,
   Route,
   Settings,
+  UserPlus,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -48,6 +49,7 @@ export const navItems: NavItem[] = [
   { href: "/cctv", label: "Camera operations", icon: Cctv, group: "Operations", roles: [...managers, "site_lead", "client_user"] },
   { href: "/workspace", label: "Clients & sites", icon: Building2, group: "Operations", roles: [...managers, "site_lead", "hr_payroll", "client_user"] },
   { href: "/employees", label: "People & workforce", icon: Users, group: "People", roles: [...managers, "site_lead", "hr_payroll", "trainer", "employee"], labels: { employee: "My profile & leave" } },
+  { href: "/recruitment", label: "Recruitment", icon: UserPlus, group: "People", roles: [...managers, "hr_payroll"] },
   { href: "/training", label: "Training academy", icon: GraduationCap, group: "People" },
   { href: "/business", label: "Finance & compliance", icon: Activity, group: "Business", roles: ["admin", "hr_payroll", "client_user"] },
   { href: "/settings", label: "Settings & access", icon: Settings, group: "Business" },

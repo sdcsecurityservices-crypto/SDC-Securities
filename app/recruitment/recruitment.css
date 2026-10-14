@@ -1,0 +1,230 @@
+/* Recruitment inbox (SDC Command). Builds on the ops- shell styles. */
+.recruit-search {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 4px 0 12px;
+}
+.recruit-search-box {
+  flex: 1 1 280px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 12px;
+  background: var(--sdc-surface);
+  border: 1px solid var(--sdc-line-strong);
+  border-radius: var(--sdc-radius-sm);
+  color: var(--sdc-ink-3);
+}
+.recruit-search-box input {
+  border: 0;
+  outline: 0;
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 14px;
+  background: transparent;
+  color: var(--sdc-ink);
+}
+.recruit-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+.recruit-filters label {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sdc-ink-3);
+}
+.recruit-filters select,
+.recruit-filters input {
+  height: 40px;
+  background: var(--sdc-surface);
+  border: 1px solid var(--sdc-line-strong);
+  border-radius: var(--sdc-radius-sm);
+  padding: 0 10px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--sdc-ink);
+  min-width: 0;
+  width: 100%;
+}
+.recruit-table td small,
+.ops-table td small {
+  display: block;
+  color: var(--sdc-ink-3);
+  font-size: 12px;
+  margin-top: 3px;
+}
+.recruit-table td .ops-badge {
+  margin-top: 5px;
+  margin-right: 4px;
+}
+.recruit-table tr.is-new td:first-child {
+  box-shadow: inset 3px 0 0 var(--sdc-gold-500);
+}
+.recruit-name {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--sdc-navy-800);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.recruit-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 16px;
+  color: var(--sdc-ink-3);
+  font-size: 14px;
+}
+.recruit-sheet {
+  width: min(560px, 100vw) !important;
+  max-width: 100vw !important;
+  overflow-y: auto;
+}
+.recruit-sheet-body {
+  padding: 0 16px 28px;
+  display: grid;
+  gap: 14px;
+}
+.recruit-contact {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.recruit-contact .ops-button {
+  flex: 1;
+}
+.recruit-dup {
+  display: grid;
+  gap: 6px;
+}
+.recruit-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  color: var(--sdc-navy-800);
+  text-decoration: underline;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.recruit-facts {
+  margin: 0;
+  display: grid;
+  border-top: 1px solid var(--sdc-line);
+}
+.recruit-facts > div {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--sdc-line);
+  font-size: 14px;
+}
+.recruit-facts dt {
+  color: var(--sdc-ink-3);
+}
+.recruit-facts dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.recruit-h {
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 8px;
+  color: var(--sdc-ink);
+}
+.recruit-files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.recruit-files li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--sdc-line);
+  border-radius: var(--sdc-radius-sm);
+}
+.recruit-files li > span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+.recruit-files small {
+  display: block;
+  color: var(--sdc-ink-3);
+}
+.recruit-muted {
+  color: var(--sdc-ink-3);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.recruit-status textarea {
+  width: 100%;
+}
+.recruit-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-left: 2px solid var(--sdc-line);
+}
+.recruit-history li {
+  display: grid;
+  gap: 2px;
+  padding: 8px 0 8px 14px;
+  font-size: 14px;
+  position: relative;
+}
+.recruit-history li::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 13px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sdc-gold-500);
+}
+.recruit-history small {
+  color: var(--sdc-ink-3);
+}
+.recruit-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.recruit-dialog {
+  max-height: 90dvh;
+  overflow-y: auto;
+}
+@media (max-width: 640px) {
+  .recruit-facts > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .recruit-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+}
