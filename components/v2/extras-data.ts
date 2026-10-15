@@ -48,28 +48,6 @@ export const soundarya = {
     ["Tech", "Leading companies"],
     ["B.Sc.", "Graduate"],
   ] as [string, string][],
-  brings: [
-    {
-      title: "Decisions from data",
-      text: "Coverage, attendance and overtime on SDC Command read site by site, so problems show up as a trend before they become a complaint.",
-    },
-    {
-      title: "Reports clients can trust",
-      text: "Monthly service reports built from approved records: posts covered, response times and audit scores, in a form a facility head can act on.",
-    },
-    {
-      title: "Planning ahead",
-      text: "Forecasting shortfalls, leave and attrition, so the right trained person is ready for every post before the roster goes out.",
-    },
-    {
-      title: "Quality and compliance in numbers",
-      text: "Training expiries, audit findings and statutory payments tracked as measures, not paperwork.",
-    },
-    {
-      title: "A woman on the board",
-      text: "A leadership voice for SDC's lady guards and the women's posts they protect: wards, hostels and campuses.",
-    },
-  ],
 };
 
 /** Face position in each leader cut-out (image pixels): eye line, eye-to-mouth

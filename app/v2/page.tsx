@@ -140,54 +140,6 @@ export default function HomePage() {
         </div>
       </Chapter>
 
-      {/* Director spotlight: what Soundarya CV brings to SDC */}
-      <section className="v2-spot" aria-labelledby="home-soundarya">
-        <div className="v2-wrap v2-spot-grid">
-          <a className="v2-spot-photo" href={`${BASE}/about#soundarya`} aria-label="Read Soundarya's full profile">
-            <img src={soundarya.photos[soundarya.photo].src} alt="Soundarya, Director of SDC" width={soundarya.photos[soundarya.photo].w} height={soundarya.photos[soundarya.photo].h} loading="lazy" />
-          </a>
-          <div className="v2-spot-copy">
-            <p className="v2-eyebrow">On the board · Director</p>
-            <h2 className="v2-h2" id="home-soundarya">
-              Soundarya.
-              <br />
-              <Accent>
-                Data behind
-                <br />
-                every shift.
-              </Accent>
-            </h2>
-            <p className="v2-lead">
-              A specialist in data analytics with more than ten years at leading technology companies, Soundarya brings
-              the discipline of measurement to SDC: every post, shift and site judged on the numbers.
-            </p>
-            <dl className="v2-spot-record">
-              {soundarya.record.map(([v, l]) => (
-                <div key={l}>
-                  <dt className="v2-mono">{v}</dt>
-                  <dd>{l}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="v2-mono-cap v2-spot-sub">What she brings to the table</p>
-            <ol className="v2-spot-list">
-              {soundarya.brings.map((b, k) => (
-                <li key={b.title}>
-                  <span className="v2-mono">{String(k + 1).padStart(2, "0")}</span>
-                  <div>
-                    <strong>{b.title}</strong>
-                    <p>{b.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <a className="v2-link" href={`${BASE}/about#soundarya`}>
-              Read her full profile <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* 4. A day in the system */}
       <Chapter tone="deep" labelledBy="home-day" rings>
         <Intro
