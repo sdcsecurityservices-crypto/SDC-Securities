@@ -1,4 +1,4 @@
-import { founderCredo } from "@/components/v2/extras-data";
+import { founderCredo, soundarya } from "@/components/v2/extras-data";
 import type { Metadata } from "next";
 import { BASE, iso, mission, values, vision } from "@/components/v2/data";
 import { Accent, Btn, Chain, Chapter, CtaBand, Eyebrow, HeroCompact, Intro, Pic, Rings, Rule, Seals } from "@/components/v2/ui";
@@ -234,6 +234,28 @@ export default function AboutPage() {
           ]}
           chips={["B.Sc. Biotechnology", "Technical Analysis · Online Trading Academy, California"]}
           quote="My strength is customer relationships: understanding what clients need, and delivering it."
+        />
+        <Leader
+          id="leader-soundarya"
+          img={soundarya.photos[soundarya.photo].src}
+          w={soundarya.photos[soundarya.photo].w}
+          h={soundarya.photos[soundarya.photo].h}
+          alt="Soundarya CV, Director of SDC"
+          role="Director"
+          name="Soundarya CV"
+          line={
+            <>
+              10+ years in <Accent>data analytics.</Accent>
+            </>
+          }
+          record={soundarya.record}
+          body={[
+            "Soundarya is a specialist in data analytics with more than ten years at leading technology companies, where she turned large volumes of operational data into decisions that teams could act on.",
+            "At SDC she leads the measurement side of the business: coverage, attendance and overtime read site by site on SDC Command, monthly reports that clients can trust, workforce planning ahead of every roster, and training and compliance tracked as numbers, not paperwork.",
+            "As a woman on SDC's board, she is also a leadership voice for the lady guards on women's posts in hospitals, hostels and campuses.",
+          ]}
+          chips={["B.Sc.", "Data analytics specialist", "10+ years in technology"]}
+          quote="What gets measured gets protected. Every post, every shift, on the record."
         />
       </Chapter>
 

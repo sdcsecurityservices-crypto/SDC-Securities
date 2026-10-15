@@ -3235,15 +3235,18 @@ a:hover > .v2-btn-arrow {
 }
 /* Leader card on Home expands into the portrait on About (cross-document view transition) */
 ::view-transition-group(vt-leader-lokesh),
-::view-transition-group(vt-leader-vijay) {
+::view-transition-group(vt-leader-vijay),
+::view-transition-group(vt-leader-soundarya) {
   animation-duration: 640ms;
   animation-timing-function: cubic-bezier(0.22, 0.8, 0.2, 1);
   z-index: 50;
 }
 ::view-transition-old(vt-leader-lokesh),
 ::view-transition-old(vt-leader-vijay),
+::view-transition-old(vt-leader-soundarya),
 ::view-transition-new(vt-leader-lokesh),
-::view-transition-new(vt-leader-vijay) {
+::view-transition-new(vt-leader-vijay),
+::view-transition-new(vt-leader-soundarya) {
   height: 100%;
   object-fit: cover;
   animation-duration: 640ms;
@@ -5397,6 +5400,132 @@ a:hover > .v2-btn-arrow {
   }
   .v2-helpline-actions .v2-btn {
     width: 100%;
+  }
+}
+
+/* ---------- Soundarya CV: photo plates and home spotlight ---------- */
+/* Her portraits are photographs on a light backdrop (not cut-outs), so they are
+   multiplied onto the panel colour to sit like the other leaders. */
+.v2-duo-photo--plate img,
+.v2-spot-photo img,
+#soundarya .v2-leader-portrait img {
+  mix-blend-mode: multiply;
+}
+.v2-duo-photo--plate img {
+  object-fit: cover !important;
+  object-position: 50% 0% !important;
+  transform: scale(1.5) !important;
+  transform-origin: 50% 2% !important;
+}
+#soundarya .v2-leader-portrait img {
+  filter: none;
+  height: 96%;
+}
+.v2-spot {
+  background: var(--canvas);
+  border-top: 1px solid var(--line);
+  padding: clamp(72px, 8vw, 120px) 0;
+}
+.v2-spot-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+.v2-spot-photo {
+  position: sticky;
+  top: 130px;
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 42%, #ffffff 0%, #f6f3ec 55%, var(--stone) 100%);
+  border: 1px solid var(--line);
+  box-shadow: var(--e2);
+  aspect-ratio: 4 / 5;
+}
+.v2-spot-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+  display: block;
+}
+.v2-spot-copy .v2-eyebrow {
+  margin-top: 0;
+}
+.v2-spot-copy .v2-lead {
+  margin-top: 18px;
+}
+.v2-spot-record {
+  margin: 28px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 2px solid var(--navy-900);
+}
+.v2-spot-record > div {
+  padding: 14px 14px 0 0;
+}
+.v2-spot-record > div + div {
+  padding-left: 14px;
+  border-left: 1px solid var(--line);
+}
+.v2-spot-record dt {
+  font-size: clamp(22px, 2.4vw, 30px);
+  color: var(--navy-900);
+}
+.v2-spot-record dd {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-3);
+}
+.v2-spot-sub {
+  margin-top: 36px;
+  color: var(--gold-700);
+}
+.v2-spot-list {
+  list-style: none;
+  margin: 14px 0 28px;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+.v2-spot-list li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.v2-spot-list li > .v2-mono {
+  color: var(--gold-700);
+  font-size: 15px;
+  padding-top: 2px;
+}
+.v2-spot-list strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 650;
+  color: var(--navy-900);
+}
+.v2-spot-list p {
+  margin-top: 4px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+@media (max-width: 900px) {
+  .v2-spot-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v2-spot-photo {
+    position: relative;
+    top: 0;
+    max-width: 420px;
+  }
+}
+@media (max-width: 560px) {
+  .v2-duo .v2-duo-card {
+    flex: 0 1 calc(50% - 9px);
   }
 }
 
