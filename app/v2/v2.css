@@ -3235,15 +3235,18 @@ a:hover > .v2-btn-arrow {
 }
 /* Leader card on Home expands into the portrait on About (cross-document view transition) */
 ::view-transition-group(vt-leader-lokesh),
-::view-transition-group(vt-leader-vijay) {
+::view-transition-group(vt-leader-vijay),
+::view-transition-group(vt-leader-soundarya) {
   animation-duration: 640ms;
   animation-timing-function: cubic-bezier(0.22, 0.8, 0.2, 1);
   z-index: 50;
 }
 ::view-transition-old(vt-leader-lokesh),
 ::view-transition-old(vt-leader-vijay),
+::view-transition-old(vt-leader-soundarya),
 ::view-transition-new(vt-leader-lokesh),
-::view-transition-new(vt-leader-vijay) {
+::view-transition-new(vt-leader-vijay),
+::view-transition-new(vt-leader-soundarya) {
   height: 100%;
   object-fit: cover;
   animation-duration: 640ms;
@@ -5398,5 +5401,33 @@ a:hover > .v2-btn-arrow {
   .v2-helpline-actions .v2-btn {
     width: 100%;
   }
+}
+
+/* ---------- leaders placed by their faces: heads level, same size ---------- */
+/* Home cards: values are pixels for a 230px-tall photo box, scaled by --fk.
+   About portraits: values are container-width units (cqw). */
+.v2-face {
+  --fk: 1;
+}
+.v2-face img,
+.v2-duo-card:first-child .v2-face img,
+.v2-duo-card:last-child .v2-face img {
+  position: absolute !important;
+  left: 50% !important;
+  top: calc(var(--ft) * var(--fk) * 1px) !important;
+  width: calc(var(--fw) * var(--fk) * 1px) !important;
+  height: auto !important;
+  max-width: none !important;
+  margin-left: calc(var(--fl) * var(--fk) * 1px) !important;
+  object-fit: fill !important;
+  transform: none !important;
+}
+.v2-face--cq {
+  container-type: inline-size;
+}
+.v2-face--cq img {
+  top: calc(var(--ft) * 1cqw) !important;
+  width: calc(var(--fw) * 1cqw) !important;
+  margin-left: calc(var(--fl) * 1cqw) !important;
 }
 
