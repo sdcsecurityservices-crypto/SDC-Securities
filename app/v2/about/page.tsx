@@ -1,4 +1,4 @@
-import { founderCredo, soundarya } from "@/components/v2/extras-data";
+import { faceVars, founderCredo, soundarya } from "@/components/v2/extras-data";
 import type { Metadata } from "next";
 import { BASE, iso, mission, values, vision } from "@/components/v2/data";
 import { Accent, Btn, Chain, Chapter, CtaBand, Eyebrow, HeroCompact, Intro, Pic, Rings, Rule, Seals } from "@/components/v2/ui";
@@ -64,7 +64,7 @@ function Leader({
 }) {
   return (
     <article id={id.replace("leader-", "")} className={`v2-leader${flip ? " v2-leader--flip" : ""}`} aria-labelledby={id}>
-      <div className="v2-leader-portrait" style={{ viewTransitionName: `vt-${id}` }}>
+      <div className="v2-leader-portrait v2-face v2-face--cq" style={{ viewTransitionName: `vt-${id}`, ...faceVars(img, 37.5, 8.5) }}>
         <Rings />
         <img src={img} alt={alt} width={w} height={h} loading="lazy" />
         <p className="v2-leader-tag v2-mono-cap">{role}</p>

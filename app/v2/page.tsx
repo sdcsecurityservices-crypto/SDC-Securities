@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
-import { soundarya } from "@/components/v2/extras-data";
+import { faceVars, soundarya } from "@/components/v2/extras-data";
 import { BASE, DEMO_URL, dayInSystem, facts, industries, onboarding } from "@/components/v2/data";
 import { HeroSlideshow } from "@/components/v2/hero-slideshow";
 import { ServiceSelector } from "@/components/v2/service-selector";
@@ -80,7 +80,7 @@ export default function HomePage() {
             </p>
             <div className="v2-duo" aria-label="SDC leadership">
               <a className="v2-duo-card" href={`${BASE}/about#lokesh`} aria-label="Lokesh PN, Founder and Managing Director: read the full profile">
-                <div className="v2-duo-photo" style={{ viewTransitionName: "vt-leader-lokesh" }}>
+                <div className="v2-duo-photo v2-face" style={{ viewTransitionName: "vt-leader-lokesh", ...faceVars("/images/founder-lokesh.png", 95, 26) }}>
                   <img src="/images/founder-lokesh.png" alt="Lokesh PN, Founder and Managing Director" width={449} height={731} loading="lazy" />
                 </div>
                 <span className="v2-duo-cap">
@@ -90,7 +90,7 @@ export default function HomePage() {
                 </span>
               </a>
               <a className="v2-duo-card" href={`${BASE}/about#vijay`} aria-label="Vijay Kumar G, Director: read the full profile">
-                <div className="v2-duo-photo" style={{ viewTransitionName: "vt-leader-vijay" }}>
+                <div className="v2-duo-photo v2-face" style={{ viewTransitionName: "vt-leader-vijay", ...faceVars("/images/director-vijay.png", 95, 26) }}>
                   <img src="/images/director-vijay.png" alt="Vijay Kumar G, Director" width={560} height={995} loading="lazy" />
                 </div>
                 <span className="v2-duo-cap">
@@ -100,7 +100,7 @@ export default function HomePage() {
                 </span>
               </a>
               <a className="v2-duo-card" href={`${BASE}/about#soundarya`} aria-label="Soundarya CV, Director: read the full profile">
-                <div className="v2-duo-photo v2-duo-photo--plate" style={{ viewTransitionName: "vt-leader-soundarya" }}>
+                <div className="v2-duo-photo v2-face" style={{ viewTransitionName: "vt-leader-soundarya", ...faceVars(soundarya.photos[soundarya.photo].src, 95, 26) }}>
                   <img src={soundarya.photos[soundarya.photo].src} alt="Soundarya CV, Director" width={soundarya.photos[soundarya.photo].w} height={soundarya.photos[soundarya.photo].h} loading="lazy" />
                 </div>
                 <span className="v2-duo-cap">

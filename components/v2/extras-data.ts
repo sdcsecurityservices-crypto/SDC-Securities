@@ -39,8 +39,8 @@ export const soundarya = {
   role: "Director",
   photo: "suit" as "saree" | "suit",
   photos: {
-    saree: { src: "/images/v2/director-soundarya-saree.jpg", w: 763, h: 1024 },
-    suit: { src: "/images/v2/director-soundarya-suit.jpg", w: 764, h: 1024 },
+    saree: { src: "/images/v2/director-soundarya-saree.png", w: 533, h: 993 },
+    suit: { src: "/images/v2/director-soundarya-suit.png", w: 458, h: 995 },
   },
   line: "10+ years in data analytics at leading technology companies.",
   record: [
@@ -71,3 +71,26 @@ export const soundarya = {
     },
   ],
 };
+
+/** Face position in each leader cut-out (image pixels): eye line, eye-to-mouth
+ *  distance and face centre. Used to place every portrait so heads are level and
+ *  the same size across the leadership cards and About portraits. */
+export type FaceFit = { w: number; eye: number; em: number; cx: number };
+export const faceFit: Record<string, FaceFit> = {
+  "/images/founder-lokesh.png": { w: 449, eye: 100, em: 50, cx: 218 },
+  "/images/director-vijay.png": { w: 560, eye: 148, em: 74, cx: 239 },
+  "/images/v2/director-soundarya-suit.png": { w: 458, eye: 155, em: 70, cx: 228 },
+  "/images/v2/director-soundarya-saree.png": { w: 533, eye: 152, em: 70, cx: 239 },
+};
+/** CSS variables that place a portrait by its face. Units are "per unit of the
+ *  frame": --fw width, --ft top, --fl left offset of the face centre. */
+export function faceVars(src: string, eyeAt: number, faceSize: number) {
+  const f = faceFit[src];
+  if (!f) return {};
+  const k = faceSize / f.em;
+  return {
+    ["--fw" as string]: String(f.w * k),
+    ["--ft" as string]: String(eyeAt - f.eye * k),
+    ["--fl" as string]: String(-f.cx * k),
+  } as React.CSSProperties;
+}
