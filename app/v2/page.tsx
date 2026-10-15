@@ -149,7 +149,13 @@ export default function HomePage() {
           <div className="v2-spot-copy">
             <p className="v2-eyebrow">On the board · Director</p>
             <h2 className="v2-h2" id="home-soundarya">
-              Soundarya. <Accent>Data behind every shift.</Accent>
+              Soundarya.
+              <br />
+              <Accent>
+                Data behind
+                <br />
+                every shift.
+              </Accent>
             </h2>
             <p className="v2-lead">
               A specialist in data analytics with more than ten years at leading technology companies, Soundarya brings
