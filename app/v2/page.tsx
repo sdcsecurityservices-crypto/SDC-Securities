@@ -89,23 +89,23 @@ export default function HomePage() {
                   <span className="v2-duo-line">17 years, Indian Army Air Defence. Kargil and Operation Parakram.</span>
                 </span>
               </a>
-              <a className="v2-duo-card" href={`${BASE}/about#vijay`} aria-label="Vijay Kumar G, Director: read the full profile">
+              <a className="v2-duo-card" href={`${BASE}/about#vijay`} aria-label="Vijay Kumar, Director: read the full profile">
                 <div className="v2-duo-photo v2-face" style={{ viewTransitionName: "vt-leader-vijay", ...faceVars("/images/director-vijay.png", 95, 26) }}>
-                  <img src="/images/director-vijay.png" alt="Vijay Kumar G, Director" width={560} height={995} loading="lazy" />
+                  <img src="/images/director-vijay.png" alt="Vijay Kumar, Director" width={560} height={995} loading="lazy" />
                 </div>
                 <span className="v2-duo-cap">
                   <span className="v2-mono-cap">Director</span>
-                  <strong>Vijay Kumar G</strong>
+                  <strong>Vijay Kumar</strong>
                   <span className="v2-duo-line">21 years in marketing and client relationships. 5,000+ customers guided.</span>
                 </span>
               </a>
-              <a className="v2-duo-card" href={`${BASE}/about#soundarya`} aria-label="Soundarya CV, Director: read the full profile">
+              <a className="v2-duo-card" href={`${BASE}/about#soundarya`} aria-label="Soundarya, Director: read the full profile">
                 <div className="v2-duo-photo v2-face" style={{ viewTransitionName: "vt-leader-soundarya", ...faceVars(soundarya.photos[soundarya.photo].src, 95, 26) }}>
-                  <img src={soundarya.photos[soundarya.photo].src} alt="Soundarya CV, Director" width={soundarya.photos[soundarya.photo].w} height={soundarya.photos[soundarya.photo].h} loading="lazy" />
+                  <img src={soundarya.photos[soundarya.photo].src} alt="Soundarya, Director" width={soundarya.photos[soundarya.photo].w} height={soundarya.photos[soundarya.photo].h} loading="lazy" />
                 </div>
                 <span className="v2-duo-cap">
                   <span className="v2-mono-cap">Director</span>
-                  <strong>Soundarya CV</strong>
+                  <strong>Soundarya</strong>
                   <span className="v2-duo-line">10+ years in data analytics at leading tech companies.</span>
                 </span>
               </a>
@@ -143,13 +143,13 @@ export default function HomePage() {
       {/* Director spotlight: what Soundarya CV brings to SDC */}
       <section className="v2-spot" aria-labelledby="home-soundarya">
         <div className="v2-wrap v2-spot-grid">
-          <a className="v2-spot-photo" href={`${BASE}/about#soundarya`} aria-label="Read Soundarya CV's full profile">
-            <img src={soundarya.photos[soundarya.photo].src} alt="Soundarya CV, Director of SDC" width={soundarya.photos[soundarya.photo].w} height={soundarya.photos[soundarya.photo].h} loading="lazy" />
+          <a className="v2-spot-photo" href={`${BASE}/about#soundarya`} aria-label="Read Soundarya's full profile">
+            <img src={soundarya.photos[soundarya.photo].src} alt="Soundarya, Director of SDC" width={soundarya.photos[soundarya.photo].w} height={soundarya.photos[soundarya.photo].h} loading="lazy" />
           </a>
           <div className="v2-spot-copy">
             <p className="v2-eyebrow">On the board · Director</p>
             <h2 className="v2-h2" id="home-soundarya">
-              Soundarya CV. <Accent>Data behind every shift.</Accent>
+              Soundarya. <Accent>Data behind every shift.</Accent>
             </h2>
             <p className="v2-lead">
               A specialist in data analytics with more than ten years at leading technology companies, Soundarya brings
