@@ -567,11 +567,12 @@ export const photos = {
 export type PhotoKey = keyof typeof photos;
 
 /* ---------- clients ---------- */
-export type ClientFilter = "healthcare" | "infrastructure" | "industry" | "homes" | "retail";
+export type ClientFilter = "healthcare" | "education" | "infrastructure" | "industry" | "homes" | "retail";
 export const clientFilters: { id: ClientFilter | "all"; label: string }[] = [
   { id: "all", label: "All" },
   { id: "infrastructure", label: "Infrastructure" },
   { id: "healthcare", label: "Healthcare" },
+  { id: "education", label: "Education" },
   { id: "industry", label: "Industry & FMCG" },
   { id: "homes", label: "Homes & real estate" },
   { id: "retail", label: "Automotive & retail" },
@@ -599,10 +600,12 @@ export const clients: Client[] = [
   { name: "Asal Foods", logo: "/clients/asal.png", sector: "Food", filter: "industry", shape: "mid" },
   { name: "Saify Ind", logo: "/clients/saify.png", sector: "Manufacturing", filter: "industry", shape: "mid" },
   { name: "Sri Devaraj Urs Medical College", place: "Kolar", logo: "/clients/sdumc.webp", sector: "Medical education", filter: "healthcare", shape: "square", marquee: true },
+  { name: "National Public School", place: "Sarjapur Road", logo: "/clients/nps.png", sector: "School", filter: "education", shape: "square" },
   { name: "Milky Mist", logo: "/clients/milky-mist.png", sector: "Dairy & FMCG", filter: "industry", shape: "wide", marquee: true },
   { name: "Indya Estates", logo: "/clients/indya-estates.png", sector: "Real estate", filter: "homes", shape: "mid" },
   { name: "RK Gardenia", logo: "/clients/rk-gardenia.png", sector: "Residential", filter: "homes", shape: "mid" },
   { name: "Subha Builders & Developers", span: true, logo: "/clients/subha.png", sector: "Real estate", filter: "homes", shape: "mid" },
+  { name: "National Public School", place: "M.S. Palya", logo: "/clients/nps.png", sector: "School", filter: "education", shape: "square" },
   { name: "Power Hills Construction", logo: "/clients/power-hills.png", sector: "Construction", filter: "infrastructure", shape: "mid" },
   { name: "Ramalingam Construction", logo: "/clients/ramalingam.png", sector: "Construction", filter: "infrastructure", shape: "square" },
   { name: "Shrishaila Electricals", logo: "/images/v2/shrishaila.png", sector: "Electrical contracting", filter: "infrastructure", shape: "square" },
