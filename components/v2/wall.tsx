@@ -68,7 +68,7 @@ export function WallOfHonour({ mode = "full" }: { mode?: "full" | "condensed" })
         </div>
       )}
       <ul className="v2-wall-grid" aria-label="Client organisations">
-        {list.map((c, i) => (filter === "all" || c.filter === filter ? <Plaque key={c.name} c={c} i={i} /> : null))}
+        {list.map((c, i) => (filter === "all" || c.filter === filter ? <Plaque key={`${c.name}|${c.place ?? ""}`} c={c} i={i} /> : null))}
       </ul>
     </div>
   );
