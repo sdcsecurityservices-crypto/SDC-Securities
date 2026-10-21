@@ -3,6 +3,7 @@ import { json, clientIp } from "@/lib/foundation/http";
 import { cappedJson } from "@/lib/foundation/body";
 import { applicationSchema, filesSchema, normalisePhone } from "@/lib/careers/options";
 import { anonDb, careersTenant } from "@/lib/careers/server";
+import { SITE_URL } from "@/lib/site";
 export const dynamic = "force-dynamic";
 
 // Public application endpoint. Layers, in order:
@@ -44,6 +45,10 @@ function allowedOrigin(req: Request) {
   if (!origin) return false;
   const allowed = new Set<string>([new URL(req.url).origin]);
   if (process.env.APP_URL) allowed.add(new URL(process.env.APP_URL).origin);
+  // The public address fronts this app through a proxy, so the browser's
+  // origin is the public one even though the request lands here.
+  allowed.add(new URL(SITE_URL).origin);
+  allowed.add(new URL(SITE_URL).origin.replace("://", "://www."));
   const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
   if (host) {
     allowed.add("https://" + host);

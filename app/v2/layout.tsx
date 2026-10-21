@@ -4,13 +4,12 @@ import { SiteHeader } from "@/components/v2/header";
 import { SiteFooter } from "@/components/v2/footer";
 import { Motion } from "@/components/v2/motion";
 
-// Multi-page website. Kept out of search results until approved.
+// Multi-page website, the public site at sdcsecurity.in.
 export const metadata: Metadata = {
   title: {
     default: "SDC | Security & Facility Services in Bengaluru",
     template: "%s | SDC Security & Facility Services",
   },
-  robots: { index: false, follow: false },
 };
 
 const FONTS =
