@@ -780,6 +780,23 @@ a:hover > .v2-btn-arrow {
 .v2-menu-promo .v2-mono-cap {
   color: var(--gold-400);
 }
+.v2-menu--right {
+  left: auto;
+  right: -8px;
+  width: min(660px, calc(100vw - 48px));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.v2-menu--right .v2-menu-list {
+  grid-template-columns: 1fr;
+}
+.v2-menu--right .v2-menu-promo img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.v2-menu-note {
+  font-size: 13px;
+  color: var(--text-on-dark-2, rgba(255, 255, 255, 0.72));
+}
 .v2-menu-logos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

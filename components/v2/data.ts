@@ -656,11 +656,12 @@ export const nav: { label: string; href?: string; kind?: "mega" | "list"; childr
   },
   {
     label: "Careers",
-    kind: "list",
+    kind: "mega",
     children: [
       { label: "Careers at SDC", href: `${BASE}/careers`, note: "Roles, training and why join" },
       { label: "Open positions", href: "/careers", note: "Current openings in English, ಕನ್ನಡ, हिन्दी" },
       { label: "Apply online", href: CAREERS_APPLY_URL, note: "Two minutes on your phone, CV optional" },
+      { label: "ಕನ್ನಡದಲ್ಲಿ ಉದ್ಯೋಗಗಳು", href: CAREERS_KN_URL, note: "Careers in Kannada" },
     ],
   },
 ];

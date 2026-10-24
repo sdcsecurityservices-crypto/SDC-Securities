@@ -2,8 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, ChevronDown, LayoutGrid, Menu, MessageCircle, Phone, ShieldCheck, ShieldUser, X, type LucideIcon } from "lucide-react";
-import { BASE, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, SURVEY_URL, clients, company, industries, iso, nav, services, whatsappLink } from "./data";
+import { ArrowRight, ArrowUpRight, BriefcaseBusiness, ChevronDown, Languages, LayoutGrid, ListChecks, Smartphone, Menu, MessageCircle, Phone, ShieldCheck, ShieldUser, X, type LucideIcon } from "lucide-react";
+import { BASE, CAREERS_APPLY_URL, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, SURVEY_URL, clients, company, industries, iso, nav, services, whatsappLink } from "./data";
 import { industryIcons, serviceIcons } from "./ui";
 
 // Icons for the mega menus, in the order of each menu's children.
@@ -13,6 +13,7 @@ function menuIcon(menu: string, i: number): LucideIcon | null {
     if (i < industries.length) return industryIcons[industries[i].icon];
     return i === industries.length ? ShieldUser : LayoutGrid;
   }
+  if (menu === "Careers") return [BriefcaseBusiness, ListChecks, Smartphone, Languages][i] ?? null;
   return null;
 }
 
@@ -135,7 +136,7 @@ function Dropdown({ item, pathname }: { item: (typeof nav)[number]; pathname: st
         {item.label}
         <ChevronDown size={15} aria-hidden="true" />
       </button>
-      <div className={`v2-menu${mega ? " v2-menu--mega" : ""}`} id={id} hidden={!open}>
+      <div className={`v2-menu${mega ? " v2-menu--mega" : ""}${item.label === "Careers" ? " v2-menu--right" : ""}`} id={id} hidden={!open}>
         <ul className="v2-menu-list">
           {item.children!.map((c, i) => {
             const Icon = mega ? menuIcon(item.label, i) : null;
@@ -169,6 +170,17 @@ function Dropdown({ item, pathname }: { item: (typeof nav)[number]; pathname: st
             </span>
             <span className="v2-link">
               See our clients <ArrowRight size={15} aria-hidden="true" />
+            </span>
+          </a>
+        )}
+        {mega && item.label === "Careers" && (
+          <a className="v2-menu-promo v2-dark" href={CAREERS_APPLY_URL}>
+            <span className="v2-mono-cap">Join 1000+ on post</span>
+            <strong>Guards, lady guards and facility staff, hiring now</strong>
+            <img src="/images/v2/photos/lineup-960.jpg" alt="" width={960} height={640} loading="lazy" />
+            <span className="v2-menu-note">SDC never charges a fee for a job.</span>
+            <span className="v2-link">
+              Apply in two minutes <ArrowRight size={15} aria-hidden="true" />
             </span>
           </a>
         )}
