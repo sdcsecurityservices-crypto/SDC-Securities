@@ -135,6 +135,7 @@ export function HeroSlideshow() {
         {slides.map((sl, i) => (
           <div key={sl.label} className={`v2-slide-img${i === active ? " is-active" : ""}`} aria-hidden={i !== active}>
             <SlideImage photo={sl.photo} pos={sl.pos} first={i === 0} />
+            {(photos[sl.photo] as { illustrative?: boolean }).illustrative && <span className="v2-illus-tag">Illustrative image</span>}
           </div>
         ))}
       </div>

@@ -125,18 +125,17 @@ export function SiteFooter() {
             uniform in SDC’s name, do not pay, and call us on {company.phoneDisplay}.
           </span>
         </p>
-        <nav className="v2-footer-legal" aria-label="Legal">
-          <ul>
-            {legalLinks.map((l) => (
-              <li key={l.href}>
-                <a href={l.href}>{l.label}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="v2-footer-bottom">
-          <span>© 2026 SDC Security &amp; Facility Services Pvt. Ltd.</span>
-          <span>The night scene of a guard outside an office building is illustrative imagery. All other photos are of SDC’s own people.</span>
+        <div className="v2-footer-legal">
+          <span className="v2-footer-copy">© 2026 SDC Security &amp; Facility Services Pvt. Ltd.</span>
+          <nav aria-label="Legal">
+            <ul>
+              {legalLinks.map((l) => (
+                <li key={l.href}>
+                  <a href={l.href}>{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </div>
     </footer>
