@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { AlertTriangle, ArrowUpRight, BadgeCheck, FileCheck2, Landmark, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
+import { AlertTriangle, BadgeCheck, FileCheck2, Landmark, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { BASE, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, addressLines, company, industries, iso, mapsUrl, services, whatsappLink, CAREERS_APPLY_URL } from "./data";
 import { Wordmark } from "./header";
 import { legalLinks } from "./legal-data";
@@ -138,9 +137,6 @@ export function SiteFooter() {
         <div className="v2-footer-bottom">
           <span>© 2026 SDC Security &amp; Facility Services Pvt. Ltd.</span>
           <span>The night scene of a guard outside an office building is illustrative imagery. All other photos are of SDC’s own people.</span>
-          <Link href="/">
-            One-page site <ArrowUpRight size={14} aria-hidden="true" />
-          </Link>
         </div>
       </div>
     </footer>
