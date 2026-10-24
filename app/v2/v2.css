@@ -2574,6 +2574,23 @@ a:hover > .v2-btn-arrow {
   color: var(--on-dark-2);
 }
 
+/* A label on photos that are not of SDC's own people or sites */
+.v2-illus-tag {
+  position: absolute;
+  right: 24px;
+  top: 20px;
+  z-index: 3;
+  padding: 4px 9px;
+  border-radius: 4px;
+  background: rgba(3, 12, 28, 0.62);
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
 /* ---------- forms ---------- */
 .v2-form {
   display: grid;

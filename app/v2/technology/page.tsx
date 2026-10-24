@@ -106,6 +106,7 @@ export default function TechnologyPage() {
       <section className="v2-product-hero v2-dark" aria-labelledby="v2-page-title" data-torch="">
         <div className="v2-product-bg">
           <Pic photo="campus" priority sizes="100vw" />
+          <span className="v2-illus-tag">Illustrative image</span>
         </div>
         <div className="v2-hero-shade" aria-hidden="true" />
         <div className="v2-torch" aria-hidden="true" />
