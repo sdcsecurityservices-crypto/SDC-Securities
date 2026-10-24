@@ -635,7 +635,7 @@ export const nav: { label: string; href?: string; kind?: "mega" | "list"; childr
   },
   {
     label: "Industries",
-    kind: "list",
+    kind: "mega",
     children: [
       ...industries.map((i) => ({ label: i.name, href: `${BASE}/industries#${i.slug}`, note: i.line })),
       { label: "Women’s safety", href: `${BASE}/industries#womens-safety`, note: "Women’s posts, guarded by women" },
@@ -645,7 +645,7 @@ export const nav: { label: string; href?: string; kind?: "mega" | "list"; childr
   { label: "Technology", href: `${BASE}/technology` },
   {
     label: "About",
-    kind: "list",
+    kind: "mega",
     children: [
       { label: "About SDC", href: `${BASE}/about`, note: "Story, leadership and values" },
       { label: "Training", href: `${BASE}/training`, note: "Selection and the training cycle" },
@@ -656,11 +656,12 @@ export const nav: { label: string; href?: string; kind?: "mega" | "list"; childr
   },
   {
     label: "Careers",
-    kind: "list",
+    kind: "mega",
     children: [
       { label: "Careers at SDC", href: `${BASE}/careers`, note: "Roles, training and why join" },
       { label: "Open positions", href: "/careers", note: "Current openings in English, ಕನ್ನಡ, हिन्दी" },
       { label: "Apply online", href: CAREERS_APPLY_URL, note: "Two minutes on your phone, CV optional" },
+      { label: "ಕನ್ನಡದಲ್ಲಿ ಉದ್ಯೋಗಗಳು", href: CAREERS_KN_URL, note: "Careers in Kannada" },
     ],
   },
 ];
