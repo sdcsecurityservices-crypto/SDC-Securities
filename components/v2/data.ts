@@ -645,7 +645,7 @@ export const nav: { label: string; href?: string; kind?: "mega" | "list"; childr
   { label: "Technology", href: `${BASE}/technology` },
   {
     label: "About",
-    kind: "list",
+    kind: "mega",
     children: [
       { label: "About SDC", href: `${BASE}/about`, note: "Story, leadership and values" },
       { label: "Training", href: `${BASE}/training`, note: "Selection and the training cycle" },

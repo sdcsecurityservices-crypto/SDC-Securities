@@ -2,9 +2,25 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, BriefcaseBusiness, ChevronDown, Languages, LayoutGrid, ListChecks, Smartphone, Menu, MessageCircle, Phone, ShieldCheck, ShieldUser, X, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Award, BadgeCheck, BriefcaseBusiness, GraduationCap, Users, ChevronDown, Languages, LayoutGrid, ListChecks, Smartphone, Menu, MessageCircle, Phone, ShieldCheck, ShieldUser, X, type LucideIcon } from "lucide-react";
 import { BASE, CAREERS_APPLY_URL, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, SURVEY_URL, clients, company, industries, iso, nav, services, whatsappLink } from "./data";
 import { industryIcons, serviceIcons } from "./ui";
+import { faceFit, soundarya } from "./extras-data";
+
+// A portrait cropped to a 72px circle around the face: eyes at 30px, eye-to-mouth 15px.
+function facePlace(src: string): React.CSSProperties {
+  const f = faceFit[src];
+  if (!f) return {};
+  const k = 15 / f.em;
+  return { width: f.w * k, left: 36 - f.cx * k, top: 30 - f.eye * k };
+}
+
+// Portraits for the About menu card.
+const leaders = [
+  { name: "Lokesh PN", src: "/images/founder-lokesh.png" },
+  { name: "Vijay Kumar", src: "/images/director-vijay.png" },
+  { name: "Soundarya", src: soundarya.photos[soundarya.photo].src },
+];
 
 // Icons for the mega menus, in the order of each menu's children.
 function menuIcon(menu: string, i: number): LucideIcon | null {
@@ -13,6 +29,7 @@ function menuIcon(menu: string, i: number): LucideIcon | null {
     if (i < industries.length) return industryIcons[industries[i].icon];
     return i === industries.length ? ShieldUser : LayoutGrid;
   }
+  if (menu === "About") return [Users, GraduationCap, Award, BadgeCheck, Phone][i] ?? null;
   if (menu === "Careers") return [BriefcaseBusiness, ListChecks, Smartphone, Languages][i] ?? null;
   return null;
 }
@@ -136,7 +153,7 @@ function Dropdown({ item, pathname }: { item: (typeof nav)[number]; pathname: st
         {item.label}
         <ChevronDown size={15} aria-hidden="true" />
       </button>
-      <div className={`v2-menu${mega ? " v2-menu--mega" : ""}${item.label === "Careers" ? " v2-menu--right" : ""}`} id={id} hidden={!open}>
+      <div className={`v2-menu${mega ? " v2-menu--mega" : ""}${item.label === "Careers" || item.label === "About" ? " v2-menu--right" : ""}`} id={id} hidden={!open}>
         <ul className="v2-menu-list">
           {item.children!.map((c, i) => {
             const Icon = mega ? menuIcon(item.label, i) : null;
@@ -170,6 +187,26 @@ function Dropdown({ item, pathname }: { item: (typeof nav)[number]; pathname: st
             </span>
             <span className="v2-link">
               See our clients <ArrowRight size={15} aria-hidden="true" />
+            </span>
+          </a>
+        )}
+        {mega && item.label === "About" && (
+          <a className="v2-menu-promo v2-dark" href={`${BASE}/about`}>
+            <span className="v2-mono-cap">Veteran-led since 2017</span>
+            <strong>An ex-servicemen enterprise, run on discipline</strong>
+            <span className="v2-menu-leaders" aria-hidden="true">
+              {leaders.map((l) => (
+                <span key={l.name}>
+                  <span className="v2-menu-face">
+                    <img src={l.src} alt="" loading="lazy" style={facePlace(l.src)} />
+                  </span>
+                  <small>{l.name}</small>
+                </span>
+              ))}
+            </span>
+            <span className="v2-menu-note">PSARA licensed · ISO 9001:2015 · EPF and ESI for every employee</span>
+            <span className="v2-link">
+              Meet the leadership <ArrowRight size={15} aria-hidden="true" />
             </span>
           </a>
         )}
