@@ -2,9 +2,22 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, ChevronDown, Menu, MessageCircle, Phone, ShieldCheck, X } from "lucide-react";
-import { BASE, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, SURVEY_URL, company, iso, nav, services, whatsappLink } from "./data";
-import { serviceIcons } from "./ui";
+import { ArrowRight, ArrowUpRight, ChevronDown, LayoutGrid, Menu, MessageCircle, Phone, ShieldCheck, ShieldUser, X, type LucideIcon } from "lucide-react";
+import { BASE, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, SURVEY_URL, clients, company, industries, iso, nav, services, whatsappLink } from "./data";
+import { industryIcons, serviceIcons } from "./ui";
+
+// Icons for the mega menus, in the order of each menu's children.
+function menuIcon(menu: string, i: number): LucideIcon | null {
+  if (menu === "Services") return i < services.length ? serviceIcons[services[i].icon] : null;
+  if (menu === "Industries") {
+    if (i < industries.length) return industryIcons[industries[i].icon];
+    return i === industries.length ? ShieldUser : LayoutGrid;
+  }
+  return null;
+}
+
+// Logos for the Industries menu card: the headline clients.
+const menuClients = clients.filter((c) => c.marquee && c.logo).slice(0, 6);
 
 function isCurrent(pathname: string, href?: string) {
   if (!href) return false;
@@ -125,7 +138,7 @@ function Dropdown({ item, pathname }: { item: (typeof nav)[number]; pathname: st
       <div className={`v2-menu${mega ? " v2-menu--mega" : ""}`} id={id} hidden={!open}>
         <ul className="v2-menu-list">
           {item.children!.map((c, i) => {
-            const Icon = mega && i < services.length ? serviceIcons[services[i].icon] : null;
+            const Icon = mega ? menuIcon(item.label, i) : null;
             return (
               <li key={c.href}>
                 <a href={c.href} aria-current={c.href === pathname ? "page" : undefined}>
@@ -143,7 +156,23 @@ function Dropdown({ item, pathname }: { item: (typeof nav)[number]; pathname: st
             );
           })}
         </ul>
-        {mega && (
+        {mega && item.label === "Industries" && (
+          <a className="v2-menu-promo v2-dark" href={`${BASE}/clients`}>
+            <span className="v2-mono-cap">Wall of honour</span>
+            <strong>{clients.length} organisations across Karnataka</strong>
+            <span className="v2-menu-logos" aria-hidden="true">
+              {menuClients.map((c) => (
+                <span key={c.name}>
+                  <img src={c.logo!} alt="" loading="lazy" />
+                </span>
+              ))}
+            </span>
+            <span className="v2-link">
+              See our clients <ArrowRight size={15} aria-hidden="true" />
+            </span>
+          </a>
+        )}
+        {mega && item.label === "Services" && (
           <a className="v2-menu-promo v2-dark" href={`${BASE}/technology`}>
             <span className="v2-mono-cap">SDC Command</span>
             <strong>See the guard app and client portal</strong>

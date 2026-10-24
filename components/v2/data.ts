@@ -635,7 +635,7 @@ export const nav: { label: string; href?: string; kind?: "mega" | "list"; childr
   },
   {
     label: "Industries",
-    kind: "list",
+    kind: "mega",
     children: [
       ...industries.map((i) => ({ label: i.name, href: `${BASE}/industries#${i.slug}`, note: i.line })),
       { label: "Women’s safety", href: `${BASE}/industries#womens-safety`, note: "Women’s posts, guarded by women" },

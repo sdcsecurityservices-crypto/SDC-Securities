@@ -80,7 +80,7 @@ export default function HomePage() {
             </p>
             <div className="v2-duo" aria-label="SDC leadership">
               <a className="v2-duo-card" href={`${BASE}/about#lokesh`} aria-label="Lokesh PN, Founder and Managing Director: read the full profile">
-                <div className="v2-duo-photo v2-face" style={{ viewTransitionName: "vt-leader-lokesh", ...faceVars("/images/founder-lokesh.png", 95, 26) }}>
+                <div className="v2-duo-photo v2-face" style={{ viewTransitionName: "vt-leader-lokesh", ...faceVars("/images/founder-lokesh.png", 92, 30.5) }}>
                   <img src="/images/founder-lokesh.png" alt="Lokesh PN, Founder and Managing Director" width={449} height={731} loading="lazy" />
                 </div>
                 <span className="v2-duo-cap">
