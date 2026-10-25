@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { KeepNavigation } from "@/components/runtime/keep-navigation";
+import { SITE_URL } from "@/lib/site";
 
-const base = process.env.APP_URL || "https://sdc-command-production-ec49.up.railway.app";
 const description =
   "SDC Security & Facility Services is an ex-servicemen-led, PSARA-licensed and ISO 9001:2015-certified security agency in Bengaluru, providing security guards, facility management, housekeeping and manpower across Karnataka.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(base),
+  metadataBase: new URL(SITE_URL),
   title: "SDC | Security & Facility Services in Bengaluru",
   description,
   keywords: [
