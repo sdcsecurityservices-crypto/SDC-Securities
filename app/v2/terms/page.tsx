@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BASE, company } from "@/components/v2/data";
+import { BASE, HOME, company } from "@/components/v2/data";
 import { LegalBody, LegalHero, Ph, Sec } from "@/components/v2/legal";
 import { legal } from "@/components/v2/legal-data";
 import { Accent } from "@/components/v2/ui";
@@ -43,7 +43,7 @@ export default function TermsPage() {
         <Sec id="acceptance" title="1. Accepting these terms">
           <p>
             These terms apply to the websites run by SDC Security &amp; Facility Services Pvt. Ltd. (“SDC”, “we”, “us”),
-            including the multi-page site under <a href={BASE}>/v2</a>, the one-page site and the careers pages. By using
+            including <a href={HOME}>sdcsecurity.in</a> and the careers pages. By using
             them, you agree to these terms. If you do not agree, please do not use the sites.
           </p>
           <p>

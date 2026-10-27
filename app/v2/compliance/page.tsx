@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Building2, CheckCircle2, FileBadge, Landmark, ReceiptText, ShieldCheck, Store, Users, XCircle } from "lucide-react";
-import { company, iso } from "@/components/v2/data";
+import { BASE, company, iso } from "@/components/v2/data";
 import { Accent, Btn, Chapter, CtaBand, Eyebrow, HeroCompact, Intro, Rule } from "@/components/v2/ui";
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default function CompliancePage() {
   return (
     <>
       <HeroCompact
-        crumbs={[{ label: "About", href: "/v2/about" }, { label: "Compliance" }]}
+        crumbs={[{ label: "About", href: `${BASE}/about` }, { label: "Compliance" }]}
         eyebrow="Compliance"
         title={
           <>

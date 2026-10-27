@@ -5,7 +5,11 @@ import { company, whatsappLink } from "@/lib/company";
 
 export { company, whatsappLink };
 
-export const BASE = "/v2";
+// Where the website lives. "/v2" on the app server; the public static copy on
+// sdcsecurity.in is built with this set to "" so pages sit at the root.
+export const BASE: string = "/v2";
+/** The home page: BASE, or "/" when the site sits at the root. */
+export const HOME = BASE || "/";
 export const PORTAL_URL = "/command";
 export const CAREERS_APPLY_URL = "/careers/apply";
 export const CAREERS_KN_URL = "/careers?lang=kn";
