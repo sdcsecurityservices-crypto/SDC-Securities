@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, Award, BadgeCheck, BriefcaseBusiness, GraduationCap, Users, ChevronDown, Languages, LayoutGrid, ListChecks, Smartphone, Menu, MessageCircle, Phone, ShieldCheck, ShieldUser, X, type LucideIcon } from "lucide-react";
-import { BASE, CAREERS_APPLY_URL, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, SURVEY_URL, clients, company, industries, iso, nav, services, whatsappLink } from "./data";
+import { BASE, HOME, CAREERS_APPLY_URL, CAREERS_KN_URL, DEMO_URL, PORTAL_URL, SURVEY_URL, clients, company, industries, iso, nav, services, whatsappLink } from "./data";
 import { industryIcons, serviceIcons } from "./ui";
 import { faceFit, soundarya } from "./extras-data";
 
@@ -40,13 +40,13 @@ const menuClients = clients.filter((c) => c.marquee && c.logo).slice(0, 6);
 function isCurrent(pathname: string, href?: string) {
   if (!href) return false;
   const path = href.split("#")[0];
-  if (path === BASE) return pathname === BASE || pathname === `${BASE}/`;
+  if (path === HOME) return pathname === HOME || pathname === `${BASE}/`;
   return pathname === path || pathname.startsWith(`${path}/`);
 }
 
 export function Wordmark({ tone = "dark" }: { tone?: "dark" | "light" }) {
   return (
-    <a className={`v2-brand v2-brand--${tone}`} href={BASE} aria-label="SDC Security & Facility Services, home">
+    <a className={`v2-brand v2-brand--${tone}`} href={HOME} aria-label="SDC Security & Facility Services, home">
       <img className="v2-brand-crest" src="/brand/sdc-logo.png" alt="" width={64} height={64} />
       <span className="v2-brand-word" aria-hidden="true">
         <span className="v2-bw-main">
@@ -237,7 +237,10 @@ function Dropdown({ item, pathname }: { item: (typeof nav)[number]; pathname: st
 }
 
 export function SiteHeader() {
-  const pathname = usePathname() || BASE;
+  // When the site is published at the root, pages are still rendered from /v2 on the
+  // build server; read those paths as their public ones so the active menu item matches.
+  const raw = usePathname() || HOME;
+  const pathname = BASE ? raw : raw.replace(/^\/v2(?=\/|$)/, "") || "/";
   const [mobile, setMobile] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const headerRef = useRef<HTMLElement>(null);

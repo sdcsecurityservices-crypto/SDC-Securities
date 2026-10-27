@@ -25,6 +25,7 @@ import {
 import type { ReactNode } from "react";
 import {
   BASE,
+  HOME,
   SURVEY_URL,
   company,
   iso,
@@ -192,7 +193,7 @@ export function Rings({ className = "" }: { className?: string }) {
 export type Crumb = { label: string; href?: string };
 
 export function Breadcrumbs({ items }: { items: Crumb[] }) {
-  const all: Crumb[] = [{ label: "Home", href: BASE }, ...items];
+  const all: Crumb[] = [{ label: "Home", href: HOME }, ...items];
   return (
     <nav className="v2-crumbs" aria-label="Breadcrumb">
       <ol>

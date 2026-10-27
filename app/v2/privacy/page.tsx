@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BASE, company } from "@/components/v2/data";
+import { BASE, HOME, company } from "@/components/v2/data";
 import { LegalBody, LegalHero, Ph, Sec, Summary, Val } from "@/components/v2/legal";
 import { legal } from "@/components/v2/legal-data";
 import { Accent } from "@/components/v2/ui";
@@ -78,8 +78,8 @@ export default function PrivacyPage() {
             into force.
           </p>
           <p>
-            This policy covers our public websites: the multi-page site under <a href={BASE}>/v2</a>, the one-page site,
-            and the careers pages at <a href="/careers">/careers</a>. It does not cover sites we link to.
+            This policy covers our public website, <a href={HOME}>sdcsecurity.in</a>, including
+            the careers pages. It does not cover sites we link to.
           </p>
         </Sec>
 

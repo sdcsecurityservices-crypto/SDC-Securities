@@ -5,7 +5,7 @@
 // Under reduced motion only the first slide shows and nothing advances by itself.
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play, Radar, Check } from "lucide-react";
-import { DEMO_URL, SURVEY_URL, photos, type PhotoKey } from "./data";
+import { BASE, DEMO_URL, SURVEY_URL, photos, type PhotoKey } from "./data";
 
 const slides: {
   label: string;
@@ -24,7 +24,7 @@ const slides: {
     title: "Human vigilance.",
     accent: "Machine intelligence.",
     text: "Exceptional people. Connected systems. Complete peace of mind. Security and facility services for Karnataka, run with military discipline and our own technology.",
-    link: { href: "/v2/technology", label: "See how SDC Command works" },
+    link: { href: `${BASE}/technology`, label: "See how SDC Command works" },
     photo: "campus",
     pos: "62% 50%",
     card: "One connected operation",
@@ -35,7 +35,7 @@ const slides: {
     title: "The right people.",
     accent: "Where it matters.",
     text: "From your front gate to your busiest shift: trained guards and lady guards, dependable facility teams and supervisors who answer for every post.",
-    link: { href: "/v2/services", label: "Explore our services" },
+    link: { href: `${BASE}/services`, label: "Explore our services" },
     photo: "lineup",
     pos: "50% 40%",
     card: "Built around your site",

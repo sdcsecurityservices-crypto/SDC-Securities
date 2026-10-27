@@ -4,7 +4,7 @@
 // visitor's email app or WhatsApp. Nothing is sent by the website itself.
 import { useEffect, useRef, useState } from "react";
 import { Mail, MessageCircle } from "lucide-react";
-import { company, services, whatsappLink } from "./data";
+import { BASE, company, services, whatsappLink } from "./data";
 
 const headcounts = ["1 to 5 people", "6 to 20 people", "21 to 50 people", "More than 50 people", "Not sure yet"];
 
@@ -98,7 +98,7 @@ export function EnquiryForm() {
         </button>
       </div>
       <p className="v2-form-privacy">
-        We use your details only to respond to your enquiry. See our <a href="/v2/privacy">Privacy Policy</a>.
+        We use your details only to respond to your enquiry. See our <a href={`${BASE}/privacy`}>Privacy Policy</a>.
       </p>
       {opened && (
         <p role="status" className="v2-form-note">
