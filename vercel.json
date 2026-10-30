@@ -1,5 +1,22 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "buildCommand": "next build"
+  "buildCommand": "next build",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "https://sdcsecurity.in/",
+      "permanent": false
+    },
+    {
+      "source": "/v2",
+      "destination": "https://sdcsecurity.in/",
+      "permanent": false
+    },
+    {
+      "source": "/v2/:path*",
+      "destination": "https://sdcsecurity.in/:path*",
+      "permanent": false
+    }
+  ]
 }
