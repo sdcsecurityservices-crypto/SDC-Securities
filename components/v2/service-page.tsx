@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { equipment } from "./extras-data";
+import { JsonLd, pageMeta, serviceSchema } from "./seo";
 import { BASE, SURVEY_URL, company, industryBySlug, iso, serviceBySlug, services, type ServiceSlug } from "./data";
 import {
   Accent,
@@ -18,12 +19,33 @@ import {
   industryIcons,
 } from "./ui";
 
+// What people search for, per service: the page title and description in Google.
+const serviceSearch: Record<ServiceSlug, { title: string; description: string }> = {
+  security: {
+    title: "Security Guard Services in Bengaluru | SDC Security",
+    description: "Trained, PSARA-licensed security guards and lady guards for offices, hospitals, colleges, factories and apartments in Bengaluru, led by ex-servicemen.",
+  },
+  "facility-management": {
+    title: "Facility Management Services in Bengaluru | SDC",
+    description: "Facility management in Bengaluru: building maintenance, electrical and plumbing, fire safety, pest control, landscaping and housekeeping from one partner.",
+  },
+  housekeeping: {
+    title: "Housekeeping Services in Bengaluru | SDC",
+    description: "Professional housekeeping and cleaning staff for offices, hospitals, colleges and apartments in Bengaluru: trained teams, eco-friendly products, supervised daily.",
+  },
+  manpower: {
+    title: "Manpower Supply Services in Bengaluru | SDC",
+    description: "Manpower supply in Bengaluru: verified, trained staff for security, housekeeping, factories, front office, logistics and catering, from one partner.",
+  },
+  "payroll-compliance": {
+    title: "Payroll & Statutory Compliance Services in Bengaluru | SDC",
+    description: "Payroll and statutory compliance for contract staff in Bengaluru: attendance, wages, EPF, ESI, professional tax and labour-law records kept up to date.",
+  },
+};
+
 export function serviceMetadata(slug: ServiceSlug) {
-  const s = serviceBySlug(slug);
-  return {
-    title: s.name,
-    description: `${s.summary} ${s.name} from SDC Security & Facility Services, Bengaluru: what is included, how we deliver it and what you see in the client portal.`,
-  };
+  const { title, description } = serviceSearch[slug];
+  return pageMeta(`/services/${slug}`, title, description);
 }
 
 const deliverySteps = () => [
@@ -74,6 +96,7 @@ export function ServicePage({ slug }: { slug: ServiceSlug }) {
   const survey = `${SURVEY_URL.replace("#survey", "")}?service=${slug}#survey`;
   return (
     <>
+      <JsonLd data={serviceSchema(`/services/${slug}`, s.name, serviceSearch[slug].description)} />
       <HeroSplit
         crumbs={[{ label: "Services", href: `${BASE}/services` }, { label: s.name }]}
         eyebrow={s.name}

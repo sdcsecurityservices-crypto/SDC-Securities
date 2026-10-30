@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { JsonLd, businessSchema, pageMeta } from "@/components/v2/seo";
 import { ArrowRight } from "lucide-react";
 import { faceVars, soundarya } from "@/components/v2/extras-data";
 import { BASE, DEMO_URL, dayInSystem, facts, industries, onboarding } from "@/components/v2/data";
@@ -22,15 +23,16 @@ import {
   StatBand,
 } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: { absolute: "SDC | Security & Facility Services in Bengaluru" },
-  description:
-    "Ex-servicemen-led, PSARA-licensed and ISO 9001:2015-certified security, facility management, housekeeping and manpower across Karnataka, run on SDC's own platform, SDC Command.",
-};
+export const metadata: Metadata = pageMeta(
+  "",
+  "Security Agency in Bengaluru | Guards & Facility Services | SDC",
+  "PSARA-licensed, ex-servicemen-led security agency in Bengaluru. Trained security guards, lady guards, housekeeping and facility teams across Karnataka.",
+);
 
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={businessSchema()} />
       <HeroSlideshow />
 
       {/* 1. Services: one large selector */}

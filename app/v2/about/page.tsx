@@ -1,13 +1,14 @@
 import { faceVars, founderCredo, soundarya } from "@/components/v2/extras-data";
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { BASE, iso, mission, values, vision } from "@/components/v2/data";
 import { Accent, Btn, Chain, Chapter, CtaBand, Eyebrow, HeroCompact, Intro, Pic, Rings, Rule, Seals } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "About SDC",
-  description:
-    "SDC Security & Facility Services is a Bengaluru company founded and led by ex-servicemen. Incorporated 2017, PSARA licensed 2019, ISO 9001:2015 certified.",
-};
+export const metadata: Metadata = pageMeta(
+  "/about",
+  "About SDC | Ex-Servicemen-Led Security Company in Bengaluru",
+  "SDC Security & Facility Services is a Bengaluru security company founded and led by ex-servicemen. Incorporated 2017, PSARA licensed, ISO 9001:2015 certified.",
+);
 
 const journey = [
   { year: "2017", title: "Incorporated in Bengaluru", text: "A private limited company, CIN U74999KA2017PTC103762." },

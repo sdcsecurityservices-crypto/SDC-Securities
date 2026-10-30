@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { Ban, BadgeCheck, CalendarClock, FileCheck2, Medal } from "lucide-react";
 import { BASE, selection, trainingCycle } from "@/components/v2/data";
 import { HeroVideo } from "@/components/v2/hero-video";
 import { Accent, Btn, Chapter, CtaBand, Eyebrow, HeroPhoto, Intro, Pic, Route, Rule, Screen } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Selection & training",
-  description:
-    "How SDC selects and trains its guards: four checks before joining, a five-stage training cycle, training in Kannada, Hindi or English, and certificates that block rostering when they lapse.",
-};
+export const metadata: Metadata = pageMeta(
+  "/training",
+  "Security Guard Selection & Training in Bengaluru | SDC",
+  "How SDC selects and trains security guards: background checks, a five-stage training cycle in Kannada, Hindi or English, and certificates tracked for every guard.",
+);
 
 const modules = [
   { title: "Before the first shift", items: ["PSARA basic security training", "Fire safety and evacuation", "First aid and CPR", "Conduct, POSH and anti-bribery", "Emergency response and SOS", "Site induction"] },

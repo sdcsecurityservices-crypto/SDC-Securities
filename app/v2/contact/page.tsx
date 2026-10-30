@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { ArrowRight, Briefcase, LayoutDashboard, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { CAREERS_APPLY_URL, PORTAL_URL, addressLines, company, mapsUrl, onboarding, whatsappLink } from "@/components/v2/data";
 import { EnquiryForm } from "@/components/v2/enquiry-form";
 import { Accent, Chapter, GuardHelpline, HeroCompact, Intro, Route } from "@/components/v2/ui";
 import { guardHelpline } from "@/components/v2/extras-data";
 
-export const metadata: Metadata = {
-  title: "Contact & site survey",
-  description:
-    "Request a free site survey, call or WhatsApp SDC on +91 99803 43925, or email sdcpvtltd01@gmail.com. Office near St. Philomena's School, Mariyappana Palya, Bengaluru 560 056.",
-};
+export const metadata: Metadata = pageMeta(
+  "/contact",
+  "Contact SDC Security, Bengaluru | Request a Free Site Survey",
+  "Call or WhatsApp +91 99803 43925, email sdcpvtltd01@gmail.com, or request a free security site survey. Office in Mariyappana Palya, Bengaluru 560056.",
+);
 
 const WA = whatsappLink("Hello SDC, I would like to discuss security services for my site.");
 

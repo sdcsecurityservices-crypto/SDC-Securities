@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { company } from "@/components/v2/data";
 import { LegalBody, LegalHero, Sec } from "@/components/v2/legal";
 import { Accent } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Accessibility statement",
-  description:
-    "SDC’s commitment to an accessible website: our WCAG 2.1 AA aim, what we have done, known limitations, and how to report a problem.",
-};
+export const metadata: Metadata = pageMeta(
+  "/accessibility",
+  "Accessibility Statement | SDC Security & Facility Services",
+  "SDC's commitment to an accessible website: our WCAG 2.1 AA aim, what we have done, known limitations and how to report a problem.",
+);
 
 const toc = [
   { id: "aim", label: "Our aim" },
