@@ -5,6 +5,72 @@
   "redirects": [
     {
       "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "careers.sdcsecurity.in"
+        }
+      ],
+      "destination": "/careers",
+      "permanent": false
+    },
+    {
+      "source": "/:p(command|login|activate|analytics|attendance|business|cctv|client-portal|control|deployment|employees|operations|settings|verify|verify-training|workspace|recruitment|training)/:rest*",
+      "has": [
+        {
+          "type": "host",
+          "value": "careers.sdcsecurity.in"
+        }
+      ],
+      "destination": "https://app.sdcsecurity.in/:p/:rest*",
+      "permanent": false
+    },
+    {
+      "source": "/:p(command|login|activate|analytics|attendance|business|cctv|client-portal|control|deployment|employees|operations|settings|verify|verify-training|workspace|recruitment|training)",
+      "has": [
+        {
+          "type": "host",
+          "value": "careers.sdcsecurity.in"
+        }
+      ],
+      "destination": "https://app.sdcsecurity.in/:p",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "app.sdcsecurity.in"
+        }
+      ],
+      "destination": "/login",
+      "permanent": false
+    },
+    {
+      "source": "/careers",
+      "has": [
+        {
+          "type": "host",
+          "value": "app.sdcsecurity.in"
+        }
+      ],
+      "destination": "https://careers.sdcsecurity.in/careers",
+      "permanent": false
+    },
+    {
+      "source": "/careers/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "app.sdcsecurity.in"
+        }
+      ],
+      "destination": "https://careers.sdcsecurity.in/careers/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/",
       "destination": "https://sdcsecurity.in/",
       "permanent": false
     },
