@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
-
 /* Public careers pages. Everything is scoped to .careers-page and uses
    careers- class names that do not overlap the one-page site's careers
    section (careers-intro, careers-perks, careers-role...). */
