@@ -2578,16 +2578,11 @@ a:hover > .v2-btn-arrow {
 .v2-illus-tag {
   position: absolute;
   right: 24px;
-  top: 20px;
+  top: 16px;
   z-index: 3;
-  padding: 4px 9px;
-  border-radius: 4px;
-  background: rgba(3, 12, 28, 0.62);
-  color: rgba(255, 255, 255, 0.82);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 8px;
+  letter-spacing: 0.02em;
   pointer-events: none;
 }
 
