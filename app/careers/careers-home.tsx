@@ -4,7 +4,7 @@ import { company, whatsappLink } from "@/lib/company";
 import type { Opening } from "@/lib/careers/server";
 import { optionKey } from "@/lib/careers/i18n";
 import { shifts } from "@/lib/careers/options";
-import { CareersFooter, CareersHeader, useCareersLang } from "./shared";
+import { CareersHeader, useCareersLang } from "./shared";
 
 const perks = [
   { icon: HeartPulse, t: "perkEpfT", d: "perkEpfD" },
@@ -30,7 +30,7 @@ export default function CareersHome({ openings }: { openings: Opening[] }) {
           </a>
         }
       />
-      <main>
+      <div className="careers-body">
         <section className="careers-hero">
           <div className="careers-hero-copy">
             <p className="careers-eyebrow">{t("heroEyebrow")}</p>
@@ -131,8 +131,7 @@ export default function CareersHome({ openings }: { openings: Opening[] }) {
             </a>
           </div>
         </section>
-      </main>
-      <CareersFooter t={t} />
+      </div>
     </div>
   );
 }

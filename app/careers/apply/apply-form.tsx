@@ -19,7 +19,7 @@ import {
   sources,
   spokenLanguages,
 } from "@/lib/careers/options";
-import { CareersFooter, CareersHeader, useCareersLang } from "../shared";
+import { CareersHeader, useCareersLang } from "../shared";
 
 type Form = {
   full_name: string;
@@ -376,7 +376,7 @@ export default function ApplyForm({
     return (
       <div className="careers-page careers-apply" data-lang={lang}>
         <CareersHeader lang={lang} onLang={choose} t={t} />
-        <main className="careers-form-wrap">
+        <div className="careers-form-wrap">
           <section className="careers-success" aria-live="polite">
             <CheckCircle2 size={52} strokeWidth={1.6} aria-hidden />
             <h1 ref={heading} tabIndex={-1}>
@@ -399,8 +399,7 @@ export default function ApplyForm({
               </a>
             </div>
           </section>
-        </main>
-        <CareersFooter t={t} />
+        </div>
       </div>
     );
 
@@ -427,7 +426,7 @@ export default function ApplyForm({
   return (
     <div className="careers-page careers-apply" data-lang={lang}>
       <CareersHeader lang={lang} onLang={choose} t={t} />
-      <main className="careers-form-wrap">
+      <div className="careers-form-wrap">
         <div className="careers-form-head">
           <a className="careers-back-link" href="/careers">
             <ArrowLeft size={16} aria-hidden /> {t("navCareers")}
@@ -789,8 +788,7 @@ export default function ApplyForm({
             </button>
           </div>
         </form>
-      </main>
-      <CareersFooter t={t} />
+      </div>
     </div>
   );
 }

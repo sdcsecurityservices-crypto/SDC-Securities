@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
-
 /* Public careers pages. Everything is scoped to .careers-page and uses
    careers- class names that do not overlap the one-page site's careers
    section (careers-intro, careers-perks, careers-role...). */
@@ -15,7 +13,6 @@
   --cr-soft: #f4f6f9;
   --cr-bad: #b42318;
   --cr-good: #137a3f;
-  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -51,7 +48,7 @@
 .careers-page .brand-word {
   font-family: inherit;
 }
-.careers-page main {
+.careers-page .careers-body {
   flex: 1;
 }
 
@@ -61,9 +58,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 5.2%;
+  padding: 10px 5.2%;
   border-bottom: 1px solid var(--cr-line);
-  background: #fff;
+  background: var(--cr-soft);
 }
 .careers-top .brand-crest {
   width: 56px;

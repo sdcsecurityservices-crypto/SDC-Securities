@@ -580,6 +580,9 @@ export const optionKey = (prefix: string, value: string) => (prefix + value) as 
 /** Initial language: saved choice, then the browser language, then English. */
 export function initialLang(): Lang {
   try {
+    // A link such as /careers?lang=kn picks the language outright.
+    const asked = new URLSearchParams(location.search).get("lang");
+    if (asked === "en" || asked === "kn" || asked === "hi") return asked;
     const saved = localStorage.getItem(LANG_KEY);
     if (saved === "en" || saved === "kn" || saved === "hi") return saved;
   } catch {}

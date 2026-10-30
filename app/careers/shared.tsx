@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { initialLang, languages, saveLang, translate, type Key, type Lang } from "@/lib/careers/i18n";
 
@@ -42,38 +41,12 @@ export function LanguageSwitch({ lang, onChange, label }: { lang: Lang; onChange
   );
 }
 
+/** Language switch and page action, under the website header. */
 export function CareersHeader({ lang, onLang, t, action }: { lang: Lang; onLang: (l: Lang) => void; t: (k: Key) => string; action?: React.ReactNode }) {
   return (
-    <header className="careers-top">
-      <Link className="brand" href="/" aria-label="SDC home">
-        <img className="brand-crest" src="/brand/sdc-logo.png" alt="SDC Security Services eagle crest" width={64} height={64} />
-        <strong className="brand-word" lang="en">
-          <span className="bw-main">
-            SDC Security &amp;
-            <br />
-            Facility Services
-          </span>
-          <span className="bw-tag">An ex-servicemen enterprise</span>
-        </strong>
-      </Link>
-      <div className="careers-top-actions">
-        <LanguageSwitch lang={lang} onChange={onLang} label={t("langLabel")} />
-        {action}
-      </div>
-    </header>
-  );
-}
-
-export function CareersFooter({ t }: { t: (k: Key, v?: Record<string, string | number>) => string }) {
-  return (
-    <footer className="careers-footer">
-      <p>
-        {t("privacyShort")} <a href="/v2/privacy">{t("privacyLink")}</a>
-      </p>
-      <p>
-        © {new Date().getFullYear()} SDC Security &amp; Facility Services Pvt. Ltd. ·{" "}
-        <a href="mailto:sdcpvtltd01@gmail.com">sdcpvtltd01@gmail.com</a>
-      </p>
-    </footer>
+    <div className="careers-top">
+      <LanguageSwitch lang={lang} onChange={onLang} label={t("langLabel")} />
+      {action && <div className="careers-top-actions">{action}</div>}
+    </div>
   );
 }
