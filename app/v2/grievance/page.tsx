@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { BASE, company, whatsappLink } from "@/components/v2/data";
 import { LegalBody, LegalHero, Ph, Sec, Val } from "@/components/v2/legal";
 import { legal } from "@/components/v2/legal-data";
 import { Accent, Btn } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Grievance redressal",
-  description:
-    "How to raise a privacy or other complaint with SDC Security & Facility Services, our Grievance Officer, response timelines, and escalation to the Data Protection Board of India.",
-};
+export const metadata: Metadata = pageMeta(
+  "/grievance",
+  "Grievance Redressal | SDC Security & Facility Services",
+  "How to raise a privacy or other complaint with SDC Security & Facility Services, who our Grievance Officer is, and how quickly we respond.",
+);
 
 const toc = [
   { id: "officer", label: "Grievance Officer" },

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { Building2, CheckCircle2, FileBadge, Landmark, ReceiptText, ShieldCheck, Store, Users, XCircle } from "lucide-react";
 import { BASE, company, iso } from "@/components/v2/data";
 import { Accent, Btn, Chapter, CtaBand, Eyebrow, HeroCompact, Intro, Rule } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Compliance & credentials",
-  description:
-    "SDC holds PSARA licence ISD/PSA-64/2019 and ISO 9001:2015 certificate QMS24221266, and is registered for EPF, ESI, GST, Shops and Establishments and Karnataka Professional Tax. CIN U74999KA2017PTC103762.",
-};
+export const metadata: Metadata = pageMeta(
+  "/compliance",
+  "PSARA Licence & ISO 9001:2015 Compliance | SDC Security",
+  "SDC holds PSARA licence ISD/PSA-64/2019 and ISO 9001:2015 certification, and is registered for EPF, ESI, GST and Karnataka Professional Tax.",
+);
 
 const pack = `mailto:${company.email}?subject=${encodeURIComponent("Request for SDC compliance pack")}&body=${encodeURIComponent(
   "Hello SDC,\n\nPlease share your compliance pack (PSARA licence, ISO 9001:2015 certificate and registration documents).\n\nName:\nOrganisation:\n",

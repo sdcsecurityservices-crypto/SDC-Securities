@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { ArrowRight, Check, Moon } from "lucide-react";
 import { BASE, industries, serviceBySlug, type IndustrySlug, type PhotoKey } from "@/components/v2/data";
 import { SubNav } from "@/components/v2/subnav";
 import { Accent, Btn, CtaBand, Eyebrow, HeroCompact, Pic, Rule, industryIcons } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Industries we serve",
-  description:
-    "Security, housekeeping, facility and manpower services for healthcare, education, corporate and technology, industrial and logistics sites and residential communities across Karnataka.",
-};
+export const metadata: Metadata = pageMeta(
+  "/industries",
+  "Security for Hospitals, Colleges & Offices in Bengaluru | SDC",
+  "Security guards and facility teams for hospitals, schools and colleges, IT parks and offices, factories, warehouses and residential communities across Karnataka.",
+);
 
 // Illustrative shifts, built only from how SDC works.
 const scenario: Record<IndustrySlug, { title: string; beats: [string, string][] }> = {

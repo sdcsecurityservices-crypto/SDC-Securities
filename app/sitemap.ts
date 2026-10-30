@@ -23,5 +23,6 @@ const pages: [path: string, freq: "weekly" | "monthly" | "yearly", priority: num
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return pages.map(([path, changeFrequency, priority]) => ({ url: `${SITE_URL}${path}`, changeFrequency, priority }));
+  const lastModified = new Date();
+  return pages.map(([path, changeFrequency, priority]) => ({ url: `${SITE_URL}${path}`, lastModified, changeFrequency, priority }));
 }

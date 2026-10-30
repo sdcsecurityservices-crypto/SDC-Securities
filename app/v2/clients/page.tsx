@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { BASE, clients } from "@/components/v2/data";
 import { WallOfHonour } from "@/components/v2/wall";
 import { Accent, Breadcrumbs, Btn, CtaBand, Eyebrow, Numeral, Rule } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Clients",
-  description:
-    "Organisations SDC Security & Facility Services has served across Karnataka, from Namma Metro, KPTCL and Lamborghini Bangalore to hospitals, medical colleges, manufacturers and residential developers.",
-};
+export const metadata: Metadata = pageMeta(
+  "/clients",
+  "Our Clients: Namma Metro, KPTCL & More | SDC Security",
+  "50+ organisations trust SDC for security and facility services, from Namma Metro, KPTCL and Lamborghini Bangalore to hospitals, schools and manufacturers.",
+);
 
 export default function ClientsPage() {
   return (

@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { BASE, HOME, company } from "@/components/v2/data";
 import { LegalBody, LegalHero, Ph, Sec, Summary, Val } from "@/components/v2/legal";
 import { legal } from "@/components/v2/legal-data";
 import { Accent } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description:
-    "How SDC Security & Facility Services collects, uses, stores and protects personal data from job applications, enquiries and website visits, and how to use your rights under India’s DPDP Act 2023.",
-};
+export const metadata: Metadata = pageMeta(
+  "/privacy",
+  "Privacy Policy | SDC Security & Facility Services",
+  "How SDC Security & Facility Services collects, uses and protects personal data from job applications, enquiries and website visits under the DPDP Act 2023.",
+);
 
 const toc = [
   { id: "who-we-are", label: "Who we are" },

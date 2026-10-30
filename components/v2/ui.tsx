@@ -1,6 +1,7 @@
 // Building blocks for the multi-page site (/v2). Styling lives in app/v2/v2.css.
 // Motion hooks are data attributes (data-scan, data-seal, data-tick) that
 // components/v2/motion.tsx enhances; everything is visible without JavaScript.
+import { JsonLd, breadcrumbSchema } from "./seo";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -196,6 +197,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
   const all: Crumb[] = [{ label: "Home", href: HOME }, ...items];
   return (
     <nav className="v2-crumbs" aria-label="Breadcrumb">
+      <JsonLd data={breadcrumbSchema(all)} />
       <ol>
         {all.map((c, i) => (
           <li key={c.label + i}>

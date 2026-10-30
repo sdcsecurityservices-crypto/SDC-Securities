@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { BASE, HOME, company } from "@/components/v2/data";
 import { LegalBody, LegalHero, Ph, Sec } from "@/components/v2/legal";
 import { legal } from "@/components/v2/legal-data";
 import { Accent } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Terms of Use",
-  description:
-    "The terms for using the SDC Security & Facility Services websites: information on the site, the SDC Command demo, intellectual property, recruitment fraud, liability and governing law.",
-};
+export const metadata: Metadata = pageMeta(
+  "/terms",
+  "Terms of Use | SDC Security & Facility Services",
+  "The terms for using the SDC Security & Facility Services websites, the SDC Command demo and our content.",
+);
 
 const toc = [
   { id: "acceptance", label: "Accepting these terms" },

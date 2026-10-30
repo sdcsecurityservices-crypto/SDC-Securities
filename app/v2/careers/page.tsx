@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { AlertTriangle, ArrowRight, Medal, ShieldCheck, SprayCan, UserCog, UserRound } from "lucide-react";
 import { BASE, CAREERS_APPLY_URL, CAREERS_KN_URL, company, perks, whatsappLink } from "@/components/v2/data";
 import { Accent, Btn, Chain, Chapter, Eyebrow, GuardHelpline, HeroPhoto, Intro, Pic, Route, Rule } from "@/components/v2/ui";
 import { guardHelpline } from "@/components/v2/extras-data";
 
-export const metadata: Metadata = {
-  title: "Careers",
-  description:
-    "Join SDC Security & Facility Services in Bengaluru: security guards, lady guards, supervisors, housekeeping and facility staff. EPF and ESI, training at our academy, clear career progression. Ex-servicemen especially welcome.",
-};
+export const metadata: Metadata = pageMeta(
+  "/careers",
+  "Security Guard Jobs in Bengaluru | Careers at SDC",
+  "Security guard, lady guard, supervisor and housekeeping jobs in Bengaluru. EPF and ESI, paid training, no fees ever. Ex-servicemen welcome. Apply in two minutes.",
+);
 
 const roles = [
   { icon: ShieldCheck, title: "Security guards", text: "Access control, patrols and visitor management at corporate, healthcare, industrial and residential sites." },

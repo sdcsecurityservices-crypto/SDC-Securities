@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { Ban, Camera, ClipboardList, Database, Eye, FileText, Fingerprint, History, MapPin, Siren, WifiOff, Languages } from "lucide-react";
 import { DEMO_URL, SURVEY_URL, dayInSystem } from "@/components/v2/data";
 import { DayTimeline } from "@/components/v2/day-timeline";
 import { Accent, Breadcrumbs, Btn, Chapter, CtaBand, Eyebrow, Intro, Numeral, Pic, Rule, Screen } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Technology: SDC Command",
-  description:
-    "SDC Command is SDC's own operations platform: a guard app with selfie and GPS check-in, an operations desk that blocks roster clashes, and a client portal that shows you what you pay for.",
-};
+export const metadata: Metadata = pageMeta(
+  "/technology",
+  "SDC Command | GPS Guard Attendance & Patrol Software",
+  "SDC Command: guard app with selfie and GPS check-in, roster planning that blocks clashes, patrol checkpoints and a client portal for every SDC site.",
+);
 
 function PhoneMock() {
   return (

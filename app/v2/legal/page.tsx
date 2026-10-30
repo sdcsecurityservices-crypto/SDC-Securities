@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { ArrowRight, FileDown } from "lucide-react";
 import { BASE, addressLines, company, iso } from "@/components/v2/data";
 import { LegalBody, LegalHero, Sec } from "@/components/v2/legal";
 import { legal } from "@/components/v2/legal-data";
 import { Accent } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Legal & disclosures",
-  description:
-    "SDC Security & Facility Services Pvt. Ltd.: Privacy Policy, Terms of Use, grievance redressal, accessibility, and corporate disclosures including CIN U74999KA2017PTC103762 and PSARA licence ISD/PSA-64/2019.",
-};
+export const metadata: Metadata = pageMeta(
+  "/legal",
+  "Legal & Disclosures | SDC Security & Facility Services",
+  "Privacy Policy, Terms of Use, grievance redressal, accessibility and corporate disclosures for SDC Security & Facility Services Pvt. Ltd., Bengaluru.",
+);
 
 const pages = [
   { href: `${BASE}/privacy`, title: "Privacy Policy", text: "What data we collect, why, how long we keep it, and your rights under the DPDP Act 2023." },

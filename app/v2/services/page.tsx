@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/components/v2/seo";
 import { ArrowRight } from "lucide-react";
 import { BASE, industryBySlug, onboarding, services } from "@/components/v2/data";
 import { Accent, Btn, Chapter, CtaBand, HeroPhoto, Intro, Pic, Route, Rule, Eyebrow, Ticks, serviceIcons } from "@/components/v2/ui";
 
-export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Security guards, facility management, housekeeping, manpower supply and payroll & compliance from one accountable, ex-servicemen-led partner in Bengaluru.",
-};
+export const metadata: Metadata = pageMeta(
+  "/services",
+  "Security, Housekeeping & Facility Services in Bengaluru | SDC",
+  "Security guards, lady guards, facility management, housekeeping, manpower supply and payroll compliance from one ex-servicemen-led company in Bengaluru.",
+);
 
 export default function ServicesPage() {
   return (
